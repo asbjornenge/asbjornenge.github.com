@@ -11,7 +11,7 @@ body
     bottom   : 0
     left     : 0
     right    : 0
-    background-color : green
+    color    : #555
     @media #{$ipad-portrait}
         background-color: yellow
     @media #{$smartphone-portrait}
@@ -24,8 +24,49 @@ body
     right    : 0
     height   : 100px
     border-bottom : 1px solid black
-    background-color : pink
     @media #{$ipad-portrait}
         height : 50px
     @media #{$smartphone-portrait}
         height : 30px
+
+#menu
+    display : block
+    float   : right
+    width   : 300px
+    list-style : none
+    font-family  : Ratio, sans-serif
+    font-size    : 1em
+    line-height  : 1.8
+
+#menu li
+    float   : right
+    cursor  : pointer
+    margin-top   : 78px
+    margin-right : 8px
+
+#menu li.selected
+    border-bottom : 1px solid red
+
+#label
+    position : absolute
+    top      : 20px
+    left     : 105px
+    color    : black
+    font-family: 'Arizonia', cursive
+    font-size: 66px
+
+#logo
+    width  : 80px
+    height : 80px
+    margin-top : 10px
+    margin-left : 10px
+    border-radius : 10px
+
+#content
+    font-family  : Ratio, sans-serif
+    font-size    : 1em
+    line-height  : 1.8
+    text-rendering: optimizeLegibility
+    -webkit-font-feature-settings: 'liga', 'dlig'
+
+
