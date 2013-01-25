@@ -1,1 +1,5 @@
+.Python
+bin/
+include/
+lib/
 css/.sass-cache/
