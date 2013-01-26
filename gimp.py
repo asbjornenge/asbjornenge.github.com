@@ -5,10 +5,16 @@
 
 import sys, os, json
 
+from mako.template import Template
+from mako.lookup import TemplateLookup
+mylookup = TemplateLookup(directories=['.'])
+
 def read_config():
     return json.loads(open('gimp.json').read())
+
 def save_config(config):
     open('gimp.json','w').write(json.dumps(config))
+
 def add_blog(config):
     name = len(sys.argv) > 2 and sys.argv[2] or ""
     if name == "":
@@ -17,10 +23,24 @@ def add_blog(config):
     if not os.path.exists(name):
         os.makedirs(name)
         config['blogs'].append(name)
+
 def build(config):
-    # first build an object graph
+    build_mako(config)
+    build_blog(config)
+
+def build_mako(config):
+    # first build an object graph ?? isn't that just config?
     # os.walk('.') to find .mako files and render
-    return
+    makofiles = []
+    for (path, dirs, files) in os.walk('.'):
+        for file in files:
+            if file.endswith('.mako'):
+                makofiles.append('%s/%s' % (path, file))
+    for mf in makofiles:
+        tmpl = Template(filename=mf, lookup=mylookup)
+        html = tmpl.render()
+        open(mf.replace('.mako','.html'),'w').write(html)
+
 def build_blog(config):
     # for each blog look for markdown files and render with 
     # inherit=settings.blogparent OR main.blogparent
@@ -28,7 +48,7 @@ def build_blog(config):
 
 action_map = {
     'build' : build,
-    'add'   : add_blog
+    'blog'  : add_blog
 }
 
 if __name__ == "__main__":
