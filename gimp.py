@@ -4,10 +4,12 @@
 ###
 
 import sys, os, json
-
+import misaka as m
 from mako.template import Template
 from mako.lookup import TemplateLookup
 mylookup = TemplateLookup(directories=['.'])
+gimp_template = """<%inherit file="base.html"/><%block name="content">${content}</%block>"""
+
 
 def read_config():
     return json.loads(open('gimp.json').read())
@@ -32,14 +34,27 @@ def build_mako(config):
     # first build an object graph ?? isn't that just config?
     # os.walk('.') to find .mako files and render
     makofiles = []
+    mdfiles = []
     for (path, dirs, files) in os.walk('.'):
         for file in files:
             if file.endswith('.mako'):
                 makofiles.append('%s/%s' % (path, file))
-    for mf in makofiles:
-        tmpl = Template(filename=mf, lookup=mylookup)
-        html = tmpl.render()
-        open(mf.replace('.mako','.html'),'w').write(html)
+            if file.endswith('.md'):
+                mdfiles.append('%s/%s' % (path, file))
+    # for mf in makofiles:
+    #     tmpl = Template(filename=mf, lookup=mylookup)
+    #     html = tmpl.render()
+    #     open(mf.replace('.mako','.html'),'w').write(html)
+    for mf in mdfiles:
+        content  = m.html(open(mf).read())
+        makofile = mf.replace('.md','.mako')
+        if (os.path.exists(makofile)):
+            template = open(makofile).read()
+        else:
+            template = gimp_template
+        tmpl = Template(template, lookup=mylookup)
+        html = tmpl.render(cnt=content)
+        open(mf.replace('.md','.html'),'w').write(html)
 
 def build_blog(config):
     # for each blog look for markdown files and render with 
