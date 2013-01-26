@@ -1,3 +1,8 @@
+###
+# Gimp - Github Markdown Poster
+#
+###
+
 import sys, os, json
 
 def read_config():
