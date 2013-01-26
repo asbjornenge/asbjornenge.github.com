@@ -1,3 +1,5 @@
 <%inherit file="base.html"/>
 
-<%block name="title">Web Code & Coffee</%block>
+<%block name="content">
+	loop over blog here...
+</%block>

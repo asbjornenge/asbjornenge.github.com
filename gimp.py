@@ -8,7 +8,7 @@ import misaka as m
 from mako.template import Template
 from mako.lookup import TemplateLookup
 mylookup = TemplateLookup(directories=['.'])
-gimp_template = """<%inherit file="base.html"/><%block name="content">${content}</%block>"""
+gimp_template = """<%inherit file="base.html"/><%block name="content">${cnt}</%block>"""
 
 
 def read_config():
@@ -41,20 +41,22 @@ def build_mako(config):
                 makofiles.append('%s/%s' % (path, file))
             if file.endswith('.md'):
                 mdfiles.append('%s/%s' % (path, file))
-    # for mf in makofiles:
-    #     tmpl = Template(filename=mf, lookup=mylookup)
-    #     html = tmpl.render()
-    #     open(mf.replace('.mako','.html'),'w').write(html)
-    for mf in mdfiles:
-        content  = m.html(open(mf).read())
-        makofile = mf.replace('.md','.mako')
+    for mdf in mdfiles:
+        content  = m.html(open(mdf).read())
+        makofile = mdf.replace('.md','.mako')
         if (os.path.exists(makofile)):
             template = open(makofile).read()
         else:
             template = gimp_template
         tmpl = Template(template, lookup=mylookup)
         html = tmpl.render(cnt=content)
-        open(mf.replace('.md','.html'),'w').write(html)
+        open(mdf.replace('.md','.html'),'w').write(html)
+    for mf in makofiles:
+        mdfile = mf.replace('.mako','.md')
+        if (not os.path.exists(mdfile)):
+            tmpl = Template(filename=mf, lookup=mylookup)
+            html = tmpl.render()
+            open(mf.replace('.mako','.html'),'w').write(html)
 
 def build_blog(config):
     # for each blog look for markdown files and render with 
