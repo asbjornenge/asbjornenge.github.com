@@ -24,7 +24,7 @@ blockquote:before {
   @media only screen and (max-width: 1024px) {
     blockquote:before {
       font-size: 30px; } }
-  @media only screen and (max-width: 520px) {
+  @media only screen and (min-device-width: 320px) and (max-device-width: 480px) {
     blockquote:before {
       font-size: 20px; } }
 
@@ -37,7 +37,7 @@ blockquote p {
   @media only screen and (max-width: 1024px) {
     blockquote p {
       margin-top: 5px; } }
-  @media only screen and (max-width: 520px) {
+  @media only screen and (min-device-width: 320px) and (max-device-width: 480px) {
     blockquote p {
       margin-top: -2px; } }
 
@@ -96,7 +96,7 @@ body {
       top: 9px;
       left: 59px;
       font-size: 34px; } }
-  @media only screen and (max-width: 520px) {
+  @media only screen and (min-device-width: 320px) and (max-device-width: 480px) {
     #label {
       display: none; } }
 
@@ -130,7 +130,7 @@ body {
       margin-top: 60px;
       margin-left: 10%;
       margin-right: 10%; } }
-  @media only screen and (max-width: 520px) {
+  @media only screen and (min-device-width: 320px) and (max-device-width: 480px) {
     #content {
       font-size: 0.9em;
       line-height: 1.7;

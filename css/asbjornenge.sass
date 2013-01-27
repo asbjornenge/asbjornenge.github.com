@@ -1,4 +1,4 @@
-
+$smartphone : "only screen and (min-device-width : 320px) and (max-device-width : 480px)"
 $smartphone-landscape : "only screen and (min-width : 521px)"
 $smartphone-portrait  : "only screen and (max-width : 520px)"
 $ipad-landscape : "only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape)"
@@ -29,7 +29,7 @@ blockquote:before
     color : #eee
     @media #{$ipad-portrait}
         font-size  : 30px
-    @media #{$smartphone-portrait}
+    @media #{$smartphone}
         font-size : 20px 
 
 blockquote p
@@ -40,7 +40,7 @@ blockquote p
     font-style : italic
     @media #{$ipad-portrait}
         margin-top : 5px
-    @media #{$smartphone-portrait}
+    @media #{$smartphone}
         margin-top : -2px
 
 body
@@ -99,7 +99,7 @@ body
         top : 9px
         left : 59px
         font-size : 34px
-    @media #{$smartphone-portrait}
+    @media #{$smartphone}
         display : none
 
 #logo
@@ -130,7 +130,7 @@ body
         margin-top : 60px
         margin-left  : 10%
         margin-right : 10%
-    @media #{$smartphone-portrait}
+    @media #{$smartphone}
         font-size    : 0.9em
         line-height  : 1.7
         margin-left  : 5%
