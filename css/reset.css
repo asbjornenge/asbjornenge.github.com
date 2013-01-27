@@ -91,12 +91,10 @@ html {
 
 a {
 	color: #555;
-	text-decoration: none;
 }
 
 a:hover 
 {
 	color:#555; 
-	text-decoration:none; 
 	cursor:pointer;  
 }

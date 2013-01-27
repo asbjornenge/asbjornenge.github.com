@@ -10,6 +10,9 @@ $(document).ready(function() {
 		case '/software.html':
 			$('#menu .software').addClass('selected');
 			break;
+		case '/':
+			$('#menu .blog').addClass('selected');
+			break;
 		default:
 			console.log('Unknown path '+window.location.pathname);
 	}
