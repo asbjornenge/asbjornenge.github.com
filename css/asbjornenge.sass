@@ -4,6 +4,8 @@ $smartphone : "only screen and (max-width : 560px)"
 //$ipad-portrait  : "only screen and (min-device-width : 768px) and (max-device-width : 1024px)"
 $tablet : "only screen and (max-width : 1024px)"
 
+$separator-color : #f06d19
+
 a
     color : #555
 a:hover 
@@ -65,27 +67,28 @@ body
 #menu
     display : block
     float   : right
-    // width   : 212px
     list-style : none
     font-family  : Ratio, sans-serif
-    font-size    : 1em
-    line-height  : 1.8
-    // @media #{$smartphone}
-    //     font-size    : 0.9em
-    //     line-height  : 2    
+    font-size    : 19px
+    line-height  : 1.8em
+    @media #{$smartphone}
+        font-size    : 17px
+        line-height  : 2.2em 
 
 #menu li
     float   : right
     cursor  : pointer
     margin-top   : 71px
-    margin-right : 10px
-    font-size : 19px
+    margin-right : 5px
     @media #{$tablet}
         margin-top : 22px
 
 #menu li a
     text-decoration: none
 
+#menu li.separator
+    color  : lighten($separator-color, 8%)
+    
 #menu li.selected
     background-color : white
 
