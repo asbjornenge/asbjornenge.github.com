@@ -64,6 +64,24 @@ body
     @media #{$tablet}
         height : 50px
 
+#head .nav_selector
+    position : absolute
+    color    : black
+    top      : 91px
+    display  : list-item
+    list-style-position : inside
+    -webkit-transition: left 0.45s ease-in-out, color 0.25s ease-in-out
+    -moz-transition: left 0.45s ease-in-out, color 0.25s ease-in-out
+    -o-transition: left 0.45s ease-in-out, color 0.25s ease-in-out
+    transition: left 0.45s ease-in-out, color 0.25s ease-in-out
+    @media #{$tablet}
+        top : 41px
+    @media #{$smartphone}
+        top : 41px
+
+#head .nav_selector.loading
+    color : $separator-color
+
 #menu
     display : block
     float   : right
@@ -90,7 +108,7 @@ body
     color  : lighten($separator-color, 8%)
     
 #menu li.selected
-    background-color : white
+    // background-color : white
 
 #label
     position  : absolute
