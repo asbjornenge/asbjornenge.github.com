@@ -1,11 +1,9 @@
-# Centipede
+# [Centipede](https://github.com/asbjornenge/centipede)
 
 > A tiny RESTful API framework
 
-[Centipede](http://asbjornenge.com/soft/centipede.html) aims to facilitate the creation RESTful API's.
+Centipede aims to facilitate the creation RESTful API's.
 
-# TapJS
+# [TapJS](https://github.com/asbjornenge/tapjs)
 
 > Touch events for touch devices
-
-Trallaleiiiii
