@@ -52,11 +52,9 @@ body
     //     background-color: red
 
 #head
-    position : fixed
-    top      : 0
-    left     : 0
-    right    : 0
-    height   : 100px
+    width  : 100%
+    height : 100%
+    height : 100px
     border-bottom : 1px solid black
     background-color : white
     @media #{$tablet}
@@ -118,21 +116,26 @@ body
         margin-left: 10px
 
 #content
-    font-family   : Ratio, sans-serif
-    font-size     : 1em
-    line-height   : 1.8
-    margin-top    : 120px
-    margin-left   : 20%
-    margin-right  : 20%
-    margin-bottom : 140px
+    font-family    : Ratio, sans-serif
+    font-size      : 1em
+    line-height    : 1.8
+    min-height     : 640px
+    margin-top     : 14px
+    margin-left    : 20%
+    margin-right   : 20%
+    margin-bottom  : -100px
+    padding-bottom : 20px
     text-rendering: optimizeLegibility
     -webkit-font-feature-settings: 'liga', 'dlig'
     @media #{$tablet}
-        margin-top    : 60px
+        min-height    : 568px
+        margin-top    : 10px
         margin-left   : 10%
         margin-right  : 10%
-        margin-bottom : 95px
+        margin-bottom : -50px
     @media #{$smartphone}
+        min-height   : 0 
+        margin-top   : 8px
         font-size    : 0.9em
         line-height  : 1.7
         margin-left  : 5%
@@ -142,15 +145,13 @@ body
     text-decoration: underline!important
 
 #footer
-    position : fixed
-    bottom : 0
-    left : 0
-    right : 0
-    height : 120px
+    width  : 100%
     background-color : white
     border-top : 1px solid black
+
+#footer, .push
+    height : 100px
     @media #{$tablet}
-        height : 80px
+        height : 50px
     @media #{$smartphone}
         display : none
-
