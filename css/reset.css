@@ -88,3 +88,15 @@ html {
   -webkit-text-size-adjust: 100%;
       -ms-text-size-adjust: 100%;
 }
+
+a {
+	color: #555;
+	text-decoration: none;
+}
+
+a:hover 
+{
+	color:#555; 
+	text-decoration:none; 
+	cursor:pointer;  
+}

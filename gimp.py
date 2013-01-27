@@ -44,7 +44,7 @@ def build_mako(config):
     for mdf in mdfiles:
         content  = m.html(open(mdf).read())
         makofile = mdf.replace('.md','.mako')
-        if (os.path.exists(makofile)):
+        if (makofile in makofiles):
             template = open(makofile).read()
         else:
             template = gimp_template
@@ -53,7 +53,7 @@ def build_mako(config):
         open(mdf.replace('.md','.html'),'w').write(html)
     for mf in makofiles:
         mdfile = mf.replace('.mako','.md')
-        if (not os.path.exists(mdfile)):
+        if (mdfile not in mdfiles):
             tmpl = Template(filename=mf, lookup=mylookup)
             html = tmpl.render()
             open(mf.replace('.mako','.html'),'w').write(html)

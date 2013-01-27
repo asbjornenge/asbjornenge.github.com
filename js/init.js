@@ -1,5 +1,18 @@
 $(document).ready(function() {
-	$a.menu.bind();
+	// $a.menu.bind();
+	switch(window.location.pathname) {
+		case '/about.html':
+			$('#menu .about').addClass('selected');
+			break;
+		case '/crly.html':
+			$('#menu .crly').addClass('selected');
+			break;
+		case '/software.html':
+			$('#menu .software').addClass('selected');
+			break;
+		default:
+			console.log('Unknown path '+window.location.pathname);
+	}
 })
 
 $a = {}

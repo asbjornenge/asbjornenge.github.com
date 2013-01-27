@@ -12,10 +12,10 @@ body
     left     : 0
     right    : 0
     color    : #555
-    @media #{$ipad-portrait}
-        background-color: yellow
-    @media #{$smartphone-portrait}
-        background-color: red
+    // @media #{$ipad-portrait}
+    //     background-color: yellow
+    // @media #{$smartphone-portrait}
+    //     background-color: red
 
 #head
     position : fixed
@@ -26,8 +26,6 @@ body
     border-bottom : 1px solid black
     @media #{$ipad-portrait}
         height : 50px
-    @media #{$smartphone-portrait}
-        height : 30px
 
 #menu
     display : block
@@ -43,17 +41,25 @@ body
     cursor  : pointer
     margin-top   : 78px
     margin-right : 8px
+    @media #{$ipad-portrait}
+        margin-top : 28px
 
 #menu li.selected
-    border-bottom : 1px solid red
+    background-color : white
 
 #label
-    position : absolute
-    top      : 20px
-    left     : 105px
-    color    : black
-    font-family: 'Arizonia', cursive
-    font-size: 66px
+    position  : absolute
+    top       : 20px
+    left      : 105px
+    color     : black
+    font-size : 66px
+    font-family : 'Bilbo Swash Caps', cursive
+    @media #{$ipad-portrait}
+        top : 9px
+        left : 59px
+        font-size : 34px
+    @media #{$smartphone-portrait}
+        display : none
 
 #logo
     width  : 80px
@@ -61,6 +67,14 @@ body
     margin-top : 10px
     margin-left : 10px
     border-radius : 10px
+    -webkit-box-shadow: 0px 0px 6px rgba(50,50,50,1)
+    -moz-box-shadow: 0px 0px 6px rgba(50,50,50,1)
+    box-shadow: 0px 0px 6px rgba(50,50,50,1)
+    @media #{$ipad-portrait}
+        width: 40px
+        height: 40px
+        margin-top: 6px
+        margin-left: 10px
 
 #content
     font-family  : Ratio, sans-serif
@@ -71,5 +85,14 @@ body
     margin-right : 20%
     text-rendering: optimizeLegibility
     -webkit-font-feature-settings: 'liga', 'dlig'
+    @media #{$ipad-portrait}
+        margin-top : 60px
+        margin-left  : 10%
+        margin-right : 10%
+    @media #{$smartphone-portrait}
+        font-size    : 0.9em
+        line-height  : 1.7
+        margin-left  : 5%
+        margin-right : 5%
 
 

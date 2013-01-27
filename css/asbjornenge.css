@@ -5,12 +5,6 @@ body {
   left: 0;
   right: 0;
   color: #555555; }
-  @media only screen and (max-width: 1024px) {
-    body {
-      background-color: yellow; } }
-  @media only screen and (max-width: 520px) {
-    body {
-      background-color: red; } }
 
 #head {
   position: fixed;
@@ -22,9 +16,6 @@ body {
   @media only screen and (max-width: 1024px) {
     #head {
       height: 50px; } }
-  @media only screen and (max-width: 520px) {
-    #head {
-      height: 30px; } }
 
 #menu {
   display: block;
@@ -40,24 +31,44 @@ body {
   cursor: pointer;
   margin-top: 78px;
   margin-right: 8px; }
+  @media only screen and (max-width: 1024px) {
+    #menu li {
+      margin-top: 28px; } }
 
 #menu li.selected {
-  border-bottom: 1px solid red; }
+  background-color: white; }
 
 #label {
   position: absolute;
   top: 20px;
   left: 105px;
   color: black;
-  font-family: "Arizonia", cursive;
-  font-size: 66px; }
+  font-size: 66px;
+  font-family: "Bilbo Swash Caps", cursive; }
+  @media only screen and (max-width: 1024px) {
+    #label {
+      top: 9px;
+      left: 59px;
+      font-size: 34px; } }
+  @media only screen and (max-width: 520px) {
+    #label {
+      display: none; } }
 
 #logo {
   width: 80px;
   height: 80px;
   margin-top: 10px;
   margin-left: 10px;
-  border-radius: 10px; }
+  border-radius: 10px;
+  -webkit-box-shadow: 0px 0px 6px #323232;
+  -moz-box-shadow: 0px 0px 6px #323232;
+  box-shadow: 0px 0px 6px #323232; }
+  @media only screen and (max-width: 1024px) {
+    #logo {
+      width: 40px;
+      height: 40px;
+      margin-top: 6px;
+      margin-left: 10px; } }
 
 #content {
   font-family: Ratio, sans-serif;
@@ -68,3 +79,14 @@ body {
   margin-right: 20%;
   text-rendering: optimizeLegibility;
   -webkit-font-feature-settings: "liga", "dlig"; }
+  @media only screen and (max-width: 1024px) {
+    #content {
+      margin-top: 60px;
+      margin-left: 10%;
+      margin-right: 10%; } }
+  @media only screen and (max-width: 520px) {
+    #content {
+      font-size: 0.9em;
+      line-height: 1.7;
+      margin-left: 5%;
+      margin-right: 5%; } }

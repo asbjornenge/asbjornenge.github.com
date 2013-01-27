@@ -1,6 +1,6 @@
 # About
 
-My name is Asbjorn, and that's about it.
+We're all gonna die, let's make a fucking nice cake!?
 
 ## Software
 
