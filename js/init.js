@@ -16,15 +16,10 @@ $(document).ready(function() {
 		default:
 			console.log('Unknown path '+window.location.pathname);
 	}
+	if (tap_event === 'tap') {
+		$('a').click(function(e) {
+			e.preventDefault();
+			window.location = $(this).attr('href');
+		})
+	}
 })
-
-$a = {}
-
-$a.menu = {}
-
-$a.menu.bind = function() {
-	$('#menu li').click(function() {
-		$('#menu li.selected').removeClass('selected');
-		$(this).addClass('selected');
-	})
-}

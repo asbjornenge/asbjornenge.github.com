@@ -27,7 +27,7 @@ blockquote:before {
   @media only screen and (max-width: 1024px) {
     blockquote:before {
       font-size: 30px; } }
-  @media only screen and (max-width: 520px) {
+  @media only screen and (max-width: 560px) {
     blockquote:before {
       font-size: 20px; } }
 
@@ -40,7 +40,7 @@ blockquote p {
   @media only screen and (max-width: 1024px) {
     blockquote p {
       margin-top: 5px; } }
-  @media only screen and (max-width: 520px) {
+  @media only screen and (max-width: 560px) {
     blockquote p {
       margin-top: -2px; } }
 
@@ -62,7 +62,6 @@ body {
 #menu {
   display: block;
   float: right;
-  width: 212px;
   list-style: none;
   font-family: Ratio, sans-serif;
   font-size: 1em;
@@ -71,11 +70,12 @@ body {
 #menu li {
   float: right;
   cursor: pointer;
-  margin-top: 78px;
-  margin-right: 8px; }
+  margin-top: 71px;
+  margin-right: 10px;
+  font-size: 19px; }
   @media only screen and (max-width: 1024px) {
     #menu li {
-      margin-top: 28px; } }
+      margin-top: 22px; } }
 
 #menu li a {
   text-decoration: none; }
@@ -95,7 +95,7 @@ body {
       top: 9px;
       left: 59px;
       font-size: 34px; } }
-  @media only screen and (max-width: 520px) {
+  @media only screen and (max-width: 560px) {
     #label {
       display: none; } }
 
@@ -134,7 +134,7 @@ body {
       margin-left: 10%;
       margin-right: 10%;
       margin-bottom: -50px; } }
-  @media only screen and (max-width: 520px) {
+  @media only screen and (max-width: 560px) {
     #content {
       min-height: 0;
       margin-top: 8px;
@@ -153,6 +153,6 @@ body {
   @media only screen and (max-width: 1024px) {
     #footer, .push {
       height: 50px; } }
-  @media only screen and (max-width: 520px) {
+  @media only screen and (max-width: 560px) {
     #footer, .push {
       display: none; } }

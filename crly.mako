@@ -3,6 +3,5 @@
 <%block name="label">Curly Bracket</%block>
 <%block name="content">
 	<p>
-		Exciting stuff will appear here soon :-D
 	</p>
 </%block>
