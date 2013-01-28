@@ -3,9 +3,9 @@ $(document).ready(function() {
 
 	move_nav_button(window.location.pathname);
 
-	$('a').click(function(e) {
+	$('.nav_item').click(function(e) {
 		e.preventDefault();
-		move_nav_button($(this).attr('href'));
+		move_nav_button($(this).attr('link'));
 		// window.location = $(this).attr('href');
 	})
 
