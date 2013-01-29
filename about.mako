@@ -1,3 +1,3 @@
 <%inherit file="base.html"/>
-<%block name="label">About</%block>
+<%block name="label">@asbjornenge</%block>
 <%block name="content">${cnt}</%block>

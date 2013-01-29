@@ -1,5 +1,5 @@
 <%inherit file="base.html"/>
 
 <%block name="content">
-	loop over blog here... and some things
+	Blog arriving soon!
 </%block>
