@@ -128,6 +128,7 @@ body {
   margin-top: 10px;
   margin-left: 10px;
   border-radius: 10px;
+  display: inline;
   -webkit-box-shadow: 0px 0px 6px #323232;
   -moz-box-shadow: 0px 0px 6px #323232;
   box-shadow: 0px 0px 6px #323232; }

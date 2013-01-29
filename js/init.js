@@ -5,16 +5,29 @@ $(document).ready(function() {
 
 	$('.nav_item').click(function(e) {
 		e.preventDefault();
-		move_nav_button($(this).attr('link'));
+		var path = $(this).attr('link');
+		move_nav_button(path);
+		load_page(path);
 		// window.location = $(this).attr('href');
 	})
 
-})
+	window.addEventListener('popstate', function(event) {
+		// console.log('popstate fired!');
+		console.log(event.state);
+		var path = window.location.pathname;
+		move_nav_button(path)
+		console.log(event.state != null)
+		if (event.state != null)
+			update_content(path, event.state);
+		else
+			history.replaceState($('html')[0].outerHTML, null, path);
+	});
 
+
+})
 var current_xhr;
 
 function move_nav_button(path) {
-	load_page(path)
 	switch(path) {
 		case '/about.html':
 			position_nav_button($('#menu .about'))
@@ -29,7 +42,7 @@ function move_nav_button(path) {
 			position_nav_button($('#menu .blog'))
 			break;
 		default:
-			console.log('Unknown path '+window.location.pathname);
+			console.log('Unknown path '+path);
 	}
 }
 
@@ -47,11 +60,37 @@ function load_page(path) {
 		setTimeout(function() {
 			$('#head .nav_selector').removeClass('loading');
 		}, 450);
-		var nc = $(data).find('.push').parent();
-		$("#content").html(nc);
 		current_xhr = null;
+		update_content(path, data);
+		// console.log(data);
 		if (window.history != undefined)
-			history.pushState(null, null, path)
+			history.pushState(data, null, path)
 	})
-	console.log(current_xhr);
+}
+
+function update_content(path, data) {
+	var new_label = $("#label", data).text();
+	var old_label = $("#label").text();
+	var new_logo  = $("#logo", data).attr('src');
+	var old_logo  = $("#logo").attr('src');
+	var new_content = $(data).find('.push').parent();
+	// console.log(new_label, old_label);
+	if (new_label != old_label)
+		$("#label").text(new_label);
+	if (new_logo != old_logo)
+		$("#logo").attr('src', new_logo);
+	$("#content").html(new_content);
+
+	// switch(path) {
+	// 	case '/about.html':
+	// 		break;
+	// 	case '/crly.html':
+	// 		break;
+	// 	case '/software.html':
+	// 		break;
+	// 	case '/':
+	// 		break;
+	// 	default:
+	// 		console.log('Unknown path '+path);
+	// }
 }
