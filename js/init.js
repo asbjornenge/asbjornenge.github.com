@@ -1,5 +1,4 @@
 $(document).ready(function() {
-	// $a.menu.bind();
 
 	move_nav_button(window.location.pathname);
 
@@ -8,24 +7,26 @@ $(document).ready(function() {
 		var path = $(this).attr('link');
 		move_nav_button(path);
 		load_page(path);
-		// window.location = $(this).attr('href');
+		if (window.history != undefined)
+			history.pushState("", "", path)
 	})
 
 	window.addEventListener('popstate', function(event) {
-		// console.log('popstate fired!');
-		console.log(event.state);
 		var path = window.location.pathname;
 		move_nav_button(path)
-		console.log(event.state != null)
 		if (event.state != null)
-			update_content(path, event.state);
+			load_page(path);
 		else
-			history.replaceState($('html')[0].outerHTML, null, path);
+			history.replaceState("", "", path);
 	});
 
+	var resize_timeout;
+	$(window).resize(function(){
+		clearTimeout(resize_timeout);
+		resize_timeout = setTimeout(function(){ move_nav_button(window.location.pathname) }, 300);
+	});
 
 })
-var current_xhr;
 
 function move_nav_button(path) {
 	switch(path) {
@@ -53,18 +54,18 @@ function position_nav_button(selected) {
 	$('#head .nav_selector').css('left',left);
 }
 
+var current_xhr;
+var load_animation_timeout;
 function load_page(path) {
 	if (current_xhr != null) current_xhr.abort();
+	clearTimeout(load_animation_timeout);
 	$('#head .nav_selector').addClass('loading');
 	current_xhr = $.get(path, function(data) {
-		setTimeout(function() {
+		load_animation_timeout = setTimeout(function() {
 			$('#head .nav_selector').removeClass('loading');
 		}, 450);
 		current_xhr = null;
 		update_content(path, data);
-		// console.log(data);
-		if (window.history != undefined)
-			history.pushState(data, null, path)
 	})
 }
 
@@ -74,23 +75,9 @@ function update_content(path, data) {
 	var new_logo  = $("#logo", data).attr('src');
 	var old_logo  = $("#logo").attr('src');
 	var new_content = $(data).find('.push').parent();
-	// console.log(new_label, old_label);
 	if (new_label != old_label)
 		$("#label").text(new_label);
 	if (new_logo != old_logo)
 		$("#logo").attr('src', new_logo);
-	$("#content").html(new_content);
-
-	// switch(path) {
-	// 	case '/about.html':
-	// 		break;
-	// 	case '/crly.html':
-	// 		break;
-	// 	case '/software.html':
-	// 		break;
-	// 	case '/':
-	// 		break;
-	// 	default:
-	// 		console.log('Unknown path '+path);
-	// }
+	$("#content").replaceWith(new_content);
 }
