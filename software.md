@@ -1,8 +1,8 @@
 # [Centipede](https://github.com/asbjornenge/centipede)
 
-> A tiny RESTful API framework
+> A tiny python RESTful API framework
 
-Centipede aims to facilitate the creation RESTful API's.
+Centipede aims to facilitate quick creation of RESTful API's.
 
 # [TapJS](https://github.com/asbjornenge/tapjs)
 
