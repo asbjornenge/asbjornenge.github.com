@@ -15,21 +15,40 @@ config_file = 'gymb.json'
 mylookup = TemplateLookup(directories=['.'])
 gimp_template = """<%inherit file="base.html"/><%block name="content">${cnt}</%block>"""
 
+## Config actions
+#
+
 def read_config():
     return json.loads(open(config_file).read())
 
 def save_config(config):
     open(config_file,'w').write(json.dumps(config))
 
+## Blog actions
+#
+
 def add_blog(config, args):
-    print "adding blog"
+    if os.path.exists(args.path):
+        sys.exit("ERROR: %s already exists." % args.path)
+    path = args.path.split('/')
+    if len(path) > 2:
+        sys.exit("ERROR: Too long path. Gymb only support 1 level deep blogs.")
+    blog = path[0]
+    if blog not in config['blogs']:
+        os.makedirs(blog)
+        config['blogs'].append(blog)
+        config[blog] = {}
+        save_config(config)
+        print "Added blog %s" % blog
+    if len(path) == 2:
+        post = path[1]
+        if not post.endswith('.md'):
+            sys.exit("ERROR: For now posts need's to use the .md (markdown) extension.")
+        open(args.path, 'w').close()
+        print "Added %s to %s" % (post,blog)
 
 def del_blog(config, args):
     print "removing blog"
-
-blog_action_map = {
-    'add' : add_blog
-}
 
 def blog(config):
     if len(sys.argv) < 2:
@@ -52,14 +71,10 @@ def blog(config):
             sys.exit("Usage: <blogname> <add>")
         blog_action_map[arg2](config)
 
-def build(config):
-    # TODO: Perhaps I only need the one function?
-    build_mako(config)
-    build_blog(config)
+## Build actions
+#
 
-def build_mako(config):
-    # first build an object graph ?? isn't that just config?
-    # os.walk('.') to find .mako files and render
+def build(config):
     makofiles = []
     mdfiles = []
     for (path, dirs, files) in os.walk('.'):
@@ -85,17 +100,12 @@ def build_mako(config):
             html = tmpl.render()
             open(mf.replace('.mako','.html'),'w').write(html)
 
-def build_blog(config):
-    # for each blog look for markdown files and render with 
-    # inherit=settings.blogparent OR main.blogparent
-    return
-
 blog_action_map = {
     'add' : add_blog,
     'del' : del_blog
 }
 
-parser = argparse.ArgumentParser(description='Gimb ~ The Github Markdown Blogger.')
+parser = argparse.ArgumentParser(description='Gymb ~ The Github Python Markdown Blogger.')
 subparsers = parser.add_subparsers()
 parser_build = subparsers.add_parser('build', help='Generate html from .md and .mako files.')
 parser_build.set_defaults(intent='build')
