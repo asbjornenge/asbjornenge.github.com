@@ -1,0 +1,120 @@
+#!/usr/bin/env python
+
+###
+# Gimb - Github Markdown Blogger
+###
+
+import sys, os, json, argparse
+import misaka as m
+from mako.template import Template
+from mako.lookup import TemplateLookup
+
+version_number = "0.1"
+config_file = 'gymb.json'
+
+mylookup = TemplateLookup(directories=['.'])
+gimp_template = """<%inherit file="base.html"/><%block name="content">${cnt}</%block>"""
+
+def read_config():
+    return json.loads(open(config_file).read())
+
+def save_config(config):
+    open(config_file,'w').write(json.dumps(config))
+
+def add_blog(config, args):
+    print "adding blog"
+
+def del_blog(config, args):
+    print "removing blog"
+
+blog_action_map = {
+    'add' : add_blog
+}
+
+def blog(config):
+    if len(sys.argv) < 2:
+        sys.exit("Usage: <add> or <blogname>")
+    arg = sys.argv[2]
+    if arg != 'add' and arg not in config['blogs']:
+        sys.exit("Usage: <add> or <blogname>")
+    if arg == 'add':
+        name = len(sys.argv) > 2 and sys.argv[3] or ""
+        if name == "":
+            sys.exit("Usage: <add> <blogname>")
+        if not os.path.exists(name):
+            os.makedirs(name)
+            config['blogs'].append(name)
+            config[name] = {}
+    else:
+        blog = config[arg]
+        arg2 = len(sys.argv) > 2 and sys.argv[3] or ""
+        if arg2 not in blog_action_map.keys():
+            sys.exit("Usage: <blogname> <add>")
+        blog_action_map[arg2](config)
+
+def build(config):
+    build_mako(config)
+    build_blog(config)
+
+def build_mako(config):
+    # first build an object graph ?? isn't that just config?
+    # os.walk('.') to find .mako files and render
+    makofiles = []
+    mdfiles = []
+    for (path, dirs, files) in os.walk('.'):
+        for file in files:
+            if file.endswith('.mako'):
+                makofiles.append('%s/%s' % (path, file))
+            if file.endswith('.md'):
+                mdfiles.append('%s/%s' % (path, file))
+    for mdf in mdfiles:
+        content  = m.html(open(mdf).read())
+        makofile = mdf.replace('.md','.mako')
+        if (makofile in makofiles):
+            template = open(makofile).read()
+        else:
+            template = gimp_template
+        tmpl = Template(template, lookup=mylookup)
+        html = tmpl.render(cnt=content)
+        open(mdf.replace('.md','.html'),'w').write(html)
+    for mf in makofiles:
+        mdfile = mf.replace('.mako','.md')
+        if (mdfile not in mdfiles):
+            tmpl = Template(filename=mf, lookup=mylookup)
+            html = tmpl.render()
+            open(mf.replace('.mako','.html'),'w').write(html)
+
+def build_blog(config):
+    # for each blog look for markdown files and render with 
+    # inherit=settings.blogparent OR main.blogparent
+    return
+
+blog_action_map = {
+    'add' : add_blog,
+    'del' : del_blog
+}
+
+parser = argparse.ArgumentParser(description='Gimb ~ The Github Markdown Blogger.')
+
+subparsers = parser.add_subparsers()
+
+parser_build = subparsers.add_parser('build', help='Generate html from .md and .mako files.')
+parser_build.set_defaults(intent='build')
+
+parser_blog = subparsers.add_parser('blog', help='Add, del or interact with a blog')
+parser_blog.set_defaults(intent='blog')
+parser_blog.add_argument('action', choices=['add','del'], help='Add or del a blog or a post')
+parser_blog.add_argument('path', type=str, help='Path to blog or post')
+
+parser.add_argument('--version', action='version', version='%(prog)s '+version_number)
+args = parser.parse_args()
+
+if __name__ == "__main__":
+    args = parser.parse_args()
+    print args.intent
+    config = read_config()
+    if args.intent == 'build':
+        build_blog()
+    if args.intent == 'blog':
+        blog_action_map[args.action](config, args)
+    save_config(config)
