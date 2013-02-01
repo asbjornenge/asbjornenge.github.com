@@ -108,10 +108,9 @@ args = parser.parse_args()
 
 if __name__ == "__main__":
     args = parser.parse_args()
-    print args.intent
     config = read_config()
     if args.intent == 'build':
-        build()
+        build(config)
     if args.intent == 'blog':
         blog_action_map[args.action](config, args)
     save_config(config)
