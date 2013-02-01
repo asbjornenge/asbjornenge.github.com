@@ -53,6 +53,7 @@ def blog(config):
         blog_action_map[arg2](config)
 
 def build(config):
+    # TODO: Perhaps I only need the one function?
     build_mako(config)
     build_blog(config)
 
@@ -95,17 +96,13 @@ blog_action_map = {
 }
 
 parser = argparse.ArgumentParser(description='Gimb ~ The Github Markdown Blogger.')
-
 subparsers = parser.add_subparsers()
-
 parser_build = subparsers.add_parser('build', help='Generate html from .md and .mako files.')
 parser_build.set_defaults(intent='build')
-
 parser_blog = subparsers.add_parser('blog', help='Add, del or interact with a blog')
 parser_blog.set_defaults(intent='blog')
 parser_blog.add_argument('action', choices=['add','del'], help='Add or del a blog or a post')
 parser_blog.add_argument('path', type=str, help='Path to blog or post')
-
 parser.add_argument('--version', action='version', version='%(prog)s '+version_number)
 args = parser.parse_args()
 
@@ -114,7 +111,7 @@ if __name__ == "__main__":
     print args.intent
     config = read_config()
     if args.intent == 'build':
-        build_blog()
+        build()
     if args.intent == 'blog':
         blog_action_map[args.action](config, args)
     save_config(config)
