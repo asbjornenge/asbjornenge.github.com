@@ -4,13 +4,20 @@
 # Gimb - Github Markdown Blogger
 ###
 
-import sys, os, json, argparse
+import sys, os, json, argparse, uuid
 import misaka as m
 from mako.template import Template
 from mako.lookup import TemplateLookup
 
 version_number = "0.1"
-config_file = 'gymb.json'
+config_file    = 'gymb.json'
+post_structure = {
+    "uid"       : "",
+    "title"     : "",
+    "created"   : "",
+    "updated"   : "",
+    "published" : False
+}
 
 mylookup = TemplateLookup(directories=['.'])
 gimp_template = """<%inherit file="base.html"/><%block name="content">${cnt}</%block>"""
@@ -22,54 +29,49 @@ def read_config():
     return json.loads(open(config_file).read())
 
 def save_config(config):
-    open(config_file,'w').write(json.dumps(config))
+    open(config_file,'w').write(json.dumps(config, sort_keys=True, indent=4, separators=(',', ' : ')))
 
 ## Blog actions
 #
 
-def add_blog(config, args):
-    if os.path.exists(args.path):
-        sys.exit("ERROR: %s already exists." % args.path)
+def get_path(args):
     path = args.path.split('/')
     if len(path) > 2:
         sys.exit("ERROR: Too long path. Gymb only support 1 level deep blogs.")
     blog = path[0]
+    post = len(path) > 1 and path[1] or None
+    return blog, post
+
+def add_blog(config, args):
+    if os.path.exists(args.path):
+        sys.exit("ERROR: %s already exists." % args.path)
+    blog, post = get_path(args)
     if blog not in config['blogs']:
         os.makedirs(blog)
         config['blogs'].append(blog)
         config[blog] = {}
         save_config(config)
         print "Added blog %s" % blog
-    if len(path) == 2:
-        post = path[1]
+    if post != None:
         if not post.endswith('.md'):
             sys.exit("ERROR: For now posts need's to use the .md (markdown) extension.")
         open(args.path, 'w').close()
+#        uid = uuid.uuid4().hex[:8]
+        config[blog][post] = post_structure
+#        config[blog][post]['uid'] = uid
         print "Added %s to %s" % (post,blog)
 
 def del_blog(config, args):
     print "removing blog"
 
-def blog(config):
-    if len(sys.argv) < 2:
-        sys.exit("Usage: <add> or <blogname>")
-    arg = sys.argv[2]
-    if arg != 'add' and arg not in config['blogs']:
-        sys.exit("Usage: <add> or <blogname>")
-    if arg == 'add':
-        name = len(sys.argv) > 2 and sys.argv[3] or ""
-        if name == "":
-            sys.exit("Usage: <add> <blogname>")
-        if not os.path.exists(name):
-            os.makedirs(name)
-            config['blogs'].append(name)
-            config[name] = {}
-    else:
-        blog = config[arg]
-        arg2 = len(sys.argv) > 2 and sys.argv[3] or ""
-        if arg2 not in blog_action_map.keys():
-            sys.exit("Usage: <blogname> <add>")
-        blog_action_map[arg2](config)
+def meta_blog(config, args):
+    blog, post = get_path(args)
+    if post == None:
+        return
+    if args.title != None:
+        config[blog][post]['title'] = args.title
+    if args.published != None:
+        config[blog][post]['published'] = args.published
 
 ## Build actions
 #
@@ -101,8 +103,9 @@ def build(config):
             open(mf.replace('.mako','.html'),'w').write(html)
 
 blog_action_map = {
-    'add' : add_blog,
-    'del' : del_blog
+    'add'  : add_blog,
+    'del'  : del_blog,
+    'meta' : meta_blog
 }
 
 parser = argparse.ArgumentParser(description='Gymb ~ The Github Python Markdown Blogger.')
@@ -111,7 +114,9 @@ parser_build = subparsers.add_parser('build', help='Generate html from .md and .
 parser_build.set_defaults(intent='build')
 parser_blog = subparsers.add_parser('blog', help='Add, del or interact with a blog')
 parser_blog.set_defaults(intent='blog')
-parser_blog.add_argument('action', choices=['add','del'], help='Add or del a blog or a post')
+parser_blog.add_argument('action', choices=['add','del','meta'], help='Add or del a blog or a post')
+parser_blog.add_argument('--title', type=str, help='Post title')
+parser_blog.add_argument('--published', type=str, help='Post publish date, use "now" for current date')
 parser_blog.add_argument('path', type=str, help='Path to blog or post')
 parser.add_argument('--version', action='version', version='%(prog)s '+version_number)
 args = parser.parse_args()

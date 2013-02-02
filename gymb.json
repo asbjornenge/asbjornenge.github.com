@@ -1,1 +1,14 @@
-{"blogs": []}
+{
+    "blogs" : [
+        "wwc"
+    ],
+    "wwc" : {
+        "introducing_gymb.md" : {
+            "created" : "",
+            "published" : false,
+            "title" : "",
+            "uid" : "",
+            "updated" : ""
+        }
+    }
+}
