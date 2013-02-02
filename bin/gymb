@@ -93,13 +93,13 @@ def build(config):
         else:
             template = gimp_template
         tmpl = Template(template, lookup=mylookup)
-        html = tmpl.render(cnt=content)
+        html = tmpl.render(cnt=content,cfg=config)
         open(mdf.replace('.md','.html'),'w').write(html)
     for mf in makofiles:
         mdfile = mf.replace('.mako','.md')
         if (mdfile not in mdfiles):
             tmpl = Template(filename=mf, lookup=mylookup)
-            html = tmpl.render()
+            html = tmpl.render(cfg=config)
             open(mf.replace('.mako','.html'),'w').write(html)
 
 blog_action_map = {
