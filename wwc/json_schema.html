@@ -37,9 +37,182 @@
         </div>
         <div style="clear:both"></div>
         <div id="content">
-            <h1>JSON Schema</h1>
+            <h1>JSON Schema Validation</h1>
 
-<p>boyah</p>
+<p>Your probably pulling &amp; pushing data to and from a JSON RESTful api, right? At least you should be.<br>
+If you care about making a great application, you need to care about error handling. Both on the client and the server side. Handling timeouts and dead API&#39;s is easy enough, but handling corrupt data can be kind of hard.</p>
+
+<p>Protecting against corrupt data usually leaves an ugly footprint in your code. Lot&#39;s of <strong>if</strong>&#39;s and <strong>hasOwnProperty</strong>&#39;s. Instead, using <a href="http://json-schema.org">json-schema</a>, you can validate your JSON data first and be sure it is as expected.</p>
+
+<h2>JSON-Schema</h2>
+
+<blockquote>
+<p>A JSON Media Type for Describing the Structure and Meaning of JSON Documents</p>
+</blockquote>
+
+<p>As usual this is best illustrated by an example. If you have some simple JSON data:</p>
+
+<pre><code>{
+    &quot;title&quot; : &quot;Kapsokisio&quot;
+}
+</code></pre>
+
+<p>Your corresponding JSON Schema:</p>
+
+<pre><code>{
+    &quot;type&quot; : &quot;object&quot;,
+    &quot;required&quot; : [&quot;title&quot;]
+    &quot;properties&quot; : {
+        &quot;title&quot; : { &quot;type&quot; : &quot;string&quot; } 
+    }
+}
+</code></pre>
+
+<p>Validating your data using that schema, you can be sure the data is an object containing a title property of type string.</p>
+
+<h3>Version 4</h3>
+
+<p>The latest <a href="http://www.ieft.org">IETF</a> draft is currently <a href="http://tools.ietf.org/html/draft-zyp-json-schema-03">v3</a>, but they have a v4 &quot;<em>…being prepared for submission in early 2013</em>&quot;.</p>
+
+<p>This post will focus on <strong>v4</strong>.</p>
+
+<h2>Software</h2>
+
+<p>There is a variety of <a href="http://json-schema.org/implementations.html">implementations</a> available. Since I choose to focus on v4 and since I&#39;m a webnerd, I&#39;ll be using the <a href="https://github.com/geraintluff/tv4">tv4</a> validator for the examples.</p>
+
+<h2>Usage</h2>
+
+<p>I&#39;m not going to cover the whole specification here, but I&#39;ll highlight a few of the possibilites.</p>
+
+<h4><em>type</em></h4>
+
+<p>Type defines the datatype required for the current object. Available properties are;</p>
+
+<ul>
+<li>object</li>
+<li>array</li>
+<li>string</li>
+<li>boolean</li>
+<li>number</li>
+<li>null</li>
+</ul>
+
+<p>The value can be a string or an array.</p>
+
+<pre><code>{
+    &quot;type&quot; : [&quot;object&quot;,&quot;string&quot;]
+}
+</code></pre>
+
+<p>This requires the data to be either an object <strong>or</strong> a string.</p>
+
+<h4><em>enum</em></h4>
+
+<p>Enum can be an array with elements of any type. Data must be equal to one of the elements to validate.</p>
+
+<pre><code>{
+    &quot;enum&quot; : [[1,true,0], {}, 28, 34, &quot;Burbon&quot;]
+}
+</code></pre>
+
+<h4><em>required</em> [object]</h4>
+
+<p>Required is an array of required properties. It implicitly requires the type object. It needs to be an array of strings.</p>
+
+<pre><code>{
+    &quot;required&quot; : [&quot;title&quot;,&quot;origin&quot;,&quot;variety&quot;,&quot;process&quot;]
+}
+</code></pre>
+
+<h4><em>properties</em> [object]</h4>
+
+<p>Properties provide a way to further specify an objects properties. It is an object where each value is a separate schema.</p>
+
+<pre><code>{
+    &quot;propeties&quot; : {
+        &quot;title&quot;   : { &quot;type&quot; : &quot;string&quot; },
+        &quot;origin&quot;  : { &quot;type&quot; : &quot;string&quot; },
+        &quot;variety&quot; : { &quot;enum&quot; : [28,34,&quot;Burbon&quot;] }
+    }
+}
+</code></pre>
+
+<h4><em>items</em> [array]</h4>
+
+<p>Items define the items in an array. It can be a single schema or an array of schemas.</p>
+
+<pre><code>{
+    items : [
+        { &quot;type&quot; : &quot;string&quot; },
+        { &quot;type&quot; : &quot;object&quot; }
+    ]
+}
+</code></pre>
+
+<p>Requires the elements in this array to be a string <strong>or</strong> an object.</p>
+
+<h4><em>pattern</em> [string]</h4>
+
+<p>Pattern allows you to validate using regular expressions.</p>
+
+<pre><code>{
+    &quot;properties&quot; : {
+        &quot;url&quot; : { &quot;type&quot; : &quot;string&quot;, &quot;pattern&quot; : /(http|ftp|https):\/\/[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;amp;:\/~+#-]*[\w@?^=%&amp;amp;\/~+#-])?/ }
+    }
+}
+</code></pre>
+
+<h4><em>$ref</em></h4>
+
+<p>This is a way of referencing other schemas. It requires a URI or an # for self referencing.</p>
+
+<pre><code>{
+    &quot;properties&quot; : {
+        &quot;beans&quot; : {
+            &quot;type&quot;  : &quot;array&quot;,
+            &quot;items&quot; : { &quot;$ref&quot; : &quot;#/definitions/bean&quot;}
+        }
+    }
+}
+</code></pre>
+
+<h4><em>oneOf</em></h4>
+
+<h4>Use <em>definitions</em></h4>
+
+<h3>More…</h3>
+
+<p><em>numerics</em>, string <em>minLength</em> <em>maxLength</em></p>
+
+<h2>Furter reading</h2>
+
+<h2>Missing</h2>
+
+<p>I would like to see better dependency handling.</p>
+
+<h2>Pros</h2>
+
+<ul>
+<li>Cleaner code</li>
+<li>Better maintainability</li>
+<li>Better apps</li>
+</ul>
+
+<h2>Complex example</h2>
+
+<pre><code>{
+    &quot;title&quot;   : &quot;Kapsokisio&quot;,
+    &quot;origin&quot;  : &quot;Kenya&quot;,
+    &quot;variety&quot; : [SL28,SL34],
+    &quot;process&quot; : WASHED,
+    &quot;weight&quot;  : { 
+        &quot;amount&quot; : 350, 
+        &quot;unit&quot;   : &quot;g&quot; 
+    },
+    &quot;roast&quot;   : &quot;light&quot;,
+    &quot;roasted&quot; : &lt;date&gt;
+}
+</code></pre>
 
             <div class="push"></div>
         </div>

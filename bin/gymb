@@ -4,11 +4,12 @@
 # Gymb - Github Python Markdown Blogger
 ###
 
-import sys, os, json, argparse, uuid
+import sys, os, json, argparse, uuid, codecs
 import misaka as m
 from mako.template import Template
 from mako.lookup import TemplateLookup
 
+open = codecs.open
 version_number = "0.1"
 config_file    = 'gymb.json'
 post_structure = {
@@ -25,7 +26,7 @@ gimp_template = """<%inherit file="base.html"/><%block name="content">${markdown
 #
 
 def read_config():
-    return json.loads(open(config_file).read())
+    return json.loads(open(config_file, encoding="utf-8").read())
 
 def clean_config(config):
     if config.has_key('markdown'):
@@ -36,7 +37,7 @@ def clean_config(config):
 
 def save_config(config):
     clean_config(config)
-    open(config_file,'w').write(json.dumps(config, sort_keys=True, indent=4, separators=(',', ' : ')))
+    open(config_file,'w',encoding="utf-8").write(json.dumps(config, sort_keys=True, indent=4, separators=(',', ' : ')))
 
 ## Blog actions
 #
@@ -62,7 +63,7 @@ def add_blog(config, args):
         if not post.endswith('.md'):
             sys.exit("ERROR: For now posts need's to use the .md (markdown) extension.")
         if not os.path.exists(args.path):
-            open(args.path, 'w').close()
+            open(args.path, 'w', encoding="utf-8").close()
         uid = uuid.uuid4().hex[:8]
         config[blog][post] = post_structure
         config[blog][post]['id'] = uid
@@ -94,15 +95,15 @@ def build(config, args):
             if file.endswith('.md'):
                 mdfiles.append('%s/%s' % (path, file))
     for mdf in mdfiles:
-        content  = m.html(open(mdf).read())
+        content  = m.html(open(mdf,"r",encoding="utf-8").read())
         makofile = mdf.replace('.md','.mako')
         if (makofile in makofiles):
-            template = open(makofile).read()
+            template = open(makofile, encoding="utf-8").read()
         else:
             template = gimp_template
         tmpl = Template(template, lookup=mylookup)
         html = tmpl.render(markdown=content,config=config)
-        open(mdf.replace('.md','.html'),'w').write(html)
+        open(mdf.replace('.md','.html'),'w', encoding="utf-8").write(html)
         blog_post = mdf.split('/')
         if blog_post[1] in config['blogs']:
             if blog_post[2] in config[blog_post[1]]:
@@ -112,7 +113,7 @@ def build(config, args):
         if (mdfile not in mdfiles):
             tmpl = Template(filename=mf, lookup=mylookup)
             html = tmpl.render(config=config)
-            open(mf.replace('.mako','.html'),'w').write(html)
+            open(mf.replace('.mako','.html'),'w', encoding="utf-8").write(html)
 
 action_map = {
     'build' : build,
