@@ -65,10 +65,10 @@ body {
   top: 91px;
   display: list-item;
   list-style-position: inside;
-  -webkit-transition: left 0.45s ease-in-out, color 0.25s ease-in-out;
-  -moz-transition: left 0.45s ease-in-out, color 0.25s ease-in-out;
-  -o-transition: left 0.45s ease-in-out, color 0.25s ease-in-out;
-  transition: left 0.45s ease-in-out, color 0.25s ease-in-out; }
+  -webkit-transition: left 0.35s ease-in-out, color 0.25s ease-in-out;
+  -moz-transition: left 0.35s ease-in-out, color 0.25s ease-in-out;
+  -o-transition: left 0.35s ease-in-out, color 0.25s ease-in-out;
+  transition: left 0.35s ease-in-out, color 0.25s ease-in-out; }
   @media only screen and (max-width: 1024px) {
     #head .nav_selector {
       top: 41px; } }

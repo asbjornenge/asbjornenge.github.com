@@ -4,11 +4,16 @@
     ],
     "wwc" : {
         "introducing_gymb.md" : {
-            "created" : "",
+            "id" : "f134a8e7",
+            "path" : "wwc/introducing_gymb.html",
             "published" : false,
-            "title" : "Introducing Gymb",
-            "uid" : "",
-            "updated" : ""
+            "title" : "Introducing Gymb"
+        },
+        "json_schema.md" : {
+            "id" : "68fef665",
+            "path" : "wwc/json_schema.html",
+            "published" : false,
+            "title" : "JSON Schema"
         }
     }
 }

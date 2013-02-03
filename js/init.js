@@ -29,6 +29,7 @@ $(document).ready(function() {
 })
 
 function move_nav_button(path) {
+	if (/^(\/wwc\/)/.test(path)) path = "/"
 	switch(path) {
 		case '/about.html':
 			position_nav_button($('#menu .about'))
