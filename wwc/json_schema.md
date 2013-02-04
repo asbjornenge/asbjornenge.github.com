@@ -1,9 +1,7 @@
 # JSON Schema Validation
 
-Your probably pulling & pushing data to and from a JSON RESTful api, right? At least you should be.   
-If you care about making a great application, you need to care about error handling. Both on the client and the server side. Handling timeouts and dead API's is easy enough, but handling corrupt data can be kind of hard.
-  
-Protecting against corrupt data usually leaves an ugly footprint in your code. Lot's of **if**'s and **hasOwnProperty**'s. Instead, using [json-schema](http://json-schema.org), you can validate your JSON data first and be sure it is as expected.
+Your probably pulling & pushing data to and from a JSON RESTful api, right?  
+If you care about making a great application, you need to care about error handling. Both on the client and the server side. Handling timeouts and dead API's is easy enough, but handling corrupt data can be tricky. Protecting against corrupt data usually leaves an ugly footprint in your code. Lot's of **if**'s and **hasOwnProperty**'s. Instead, using [json-schema](http://json-schema.org), you can validate your JSON data first and be sure it is as expected.
 
 ## JSON-Schema
 

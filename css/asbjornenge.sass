@@ -4,12 +4,26 @@ $smartphone : "only screen and (max-width : 560px)"
 //$ipad-portrait  : "only screen and (min-device-width : 768px) and (max-device-width : 1024px)"
 $tablet : "only screen and (max-width : 1024px)"
 
+$text-color : #333
 $separator-color : #f06d19
 
+// Margins
+
+h1
+    margin : 25px 0px 25px 0px
+    font-family : "museo-slab",Georiga,serif
+    line-height : 1.6
+    border-bottom : 1px solid #ccc
+p
+    margin : 5px 0 50px 0
+
+pre
+    margin : 50px 0 50px 0
+
 a
-    color : #555
+    color : $text-color
 a:hover 
-    color  : #555
+    color  : $text-color
     cursor : pointer
 h1
     font-weight : normal
@@ -49,7 +63,8 @@ blockquote p
 body
     width  : 100%
     height : 100%
-    color  : #555
+    color  : $text-color
+    font-family    : "museo-sans",sans-serif
     // @media #{$tablet}
     //     background-color: yellow
     // @media #{$smartphone-portrait}
@@ -66,7 +81,7 @@ body
 
 #head .nav_selector
     position : absolute
-    color    : black
+    color    : $text-color
     top      : 91px
     display  : list-item
     list-style-position : inside
@@ -86,17 +101,14 @@ body
     display : block
     float   : right
     list-style : none
-    font-family  : Ratio, sans-serif
-    font-size    : 19px
-    line-height  : 1.8em
+    font-size    : 25px
     @media #{$smartphone}
         font-size    : 17px
-        line-height  : 2.2em 
 
 #menu li
     float   : right
     cursor  : pointer
-    margin-top   : 71px
+    margin-top   : 69px
     margin-right : 5px
     @media #{$tablet}
         margin-top : 22px
@@ -114,7 +126,7 @@ body
     position  : absolute
     top       : 20px
     left      : 105px
-    color     : black
+    color     : $text-color
     font-size : 66px
     font-family : 'Bilbo Swash Caps', cursive
     @media #{$tablet}
@@ -141,9 +153,9 @@ body
         margin-left: 10px
 
 #content
-    font-family    : Ratio, sans-serif
-    font-size      : 1em
-    line-height    : 1.8
+    color          : $text-color
+    font-size      : 20px
+    line-height    : 32px
     min-height     : 640px
     margin-top     : 14px
     margin-left    : 18%

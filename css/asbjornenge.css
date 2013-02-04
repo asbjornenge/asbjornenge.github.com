@@ -1,8 +1,20 @@
+h1 {
+  margin: 25px 0px 25px 0px;
+  font-family: "museo-slab", Georiga, serif;
+  line-height: 1.6;
+  border-bottom: 1px solid #cccccc; }
+
+p {
+  margin: 5px 0 50px 0; }
+
+pre {
+  margin: 50px 0 50px 0; }
+
 a {
-  color: #555555; }
+  color: #333333; }
 
 a:hover {
-  color: #555555;
+  color: #333333;
   cursor: pointer; }
 
 h1 {
@@ -47,7 +59,8 @@ blockquote p {
 body {
   width: 100%;
   height: 100%;
-  color: #555555; }
+  color: #333333;
+  font-family: "museo-sans", sans-serif; }
 
 #head {
   width: 100%;
@@ -61,7 +74,7 @@ body {
 
 #head .nav_selector {
   position: absolute;
-  color: black;
+  color: #333333;
   top: 91px;
   display: list-item;
   list-style-position: inside;
@@ -83,18 +96,15 @@ body {
   display: block;
   float: right;
   list-style: none;
-  font-family: Ratio, sans-serif;
-  font-size: 19px;
-  line-height: 1.8em; }
+  font-size: 25px; }
   @media only screen and (max-width: 560px) {
     #menu {
-      font-size: 17px;
-      line-height: 2.2em; } }
+      font-size: 17px; } }
 
 #menu li {
   float: right;
   cursor: pointer;
-  margin-top: 71px;
+  margin-top: 69px;
   margin-right: 5px; }
   @media only screen and (max-width: 1024px) {
     #menu li {
@@ -110,7 +120,7 @@ body {
   position: absolute;
   top: 20px;
   left: 105px;
-  color: black;
+  color: #333333;
   font-size: 66px;
   font-family: "Bilbo Swash Caps", cursive; }
   @media only screen and (max-width: 1024px) {
@@ -140,9 +150,9 @@ body {
       margin-left: 10px; } }
 
 #content {
-  font-family: Ratio, sans-serif;
-  font-size: 1em;
-  line-height: 1.8;
+  color: #333333;
+  font-size: 20px;
+  line-height: 32px;
   min-height: 640px;
   margin-top: 14px;
   margin-left: 18%;
