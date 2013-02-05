@@ -1,4 +1,4 @@
-$smartphone : "only screen and (max-width : 560px)"
+$smartphone : "only screen and (max-width : 640px)"
 // $smartphone  : "only screen and (max-width : 520px)"
 // $ipad-landscape : "only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape)"
 //$ipad-portrait  : "only screen and (min-device-width : 768px) and (max-device-width : 1024px)"
@@ -19,6 +19,8 @@ p
 
 pre
     margin : 50px 0 50px 0
+    width  : 100%
+    overflow : scroll
 
 a
     color : $text-color
@@ -84,7 +86,7 @@ body
     height : 100px
     position: absolute
     z-index: 0
-    background: url('../img/chemex_background.jpg') no-repeat center center fixed
+    background: url('../img/chemex_background.png') no-repeat
     -webkit-background-size: cover
     -moz-background-size: cover
     -o-background-size: cover
@@ -118,7 +120,7 @@ body
     list-style : none
     font-size  : 25px
     @media #{$smartphone}
-        font-size    : 17px
+        font-size    : 19px
 
 #menu li
     float   : right
@@ -126,7 +128,9 @@ body
     margin-top   : 69px
     margin-right : 5px
     @media #{$tablet}
-        margin-top : 22px
+        margin-top : 19px
+    @media #{$smartphone}
+        margin-top : 27px
 
 #menu li a
     text-decoration: none
@@ -138,16 +142,18 @@ body
     position  : absolute
     top       : 41px
     left      : 107px
-    color     : lighten($text-color, 6%)
+    color     : $text-color
+    opacity   : 0.3
     z-index   : 2
     font-size : 43px
+    text-rendering : optimizeLegibility
     font-style : italic
-    text-rendering: optimizeLegibility
+    font-weight : 300
     // -webkit-font-feature-settings: 'liga', 'dlig'
     // font-family : 'Bilbo Swash Caps', cursive
     @media #{$tablet}
-        top : 9px
-        left : 59px
+        top : 7px
+        left : 65px
         font-size : 34px
     @media #{$smartphone}
         display : none

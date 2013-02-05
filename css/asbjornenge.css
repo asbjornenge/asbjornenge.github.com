@@ -8,7 +8,9 @@ p {
   margin: 5px 0 50px 0; }
 
 pre {
-  margin: 50px 0 50px 0; }
+  margin: 50px 0 50px 0;
+  width: 100%;
+  overflow: scroll; }
 
 a {
   color: #333333; }
@@ -39,7 +41,7 @@ blockquote:before {
   @media only screen and (max-width: 1024px) {
     blockquote:before {
       font-size: 30px; } }
-  @media only screen and (max-width: 560px) {
+  @media only screen and (max-width: 640px) {
     blockquote:before {
       font-size: 20px; } }
 
@@ -52,7 +54,7 @@ blockquote p {
   @media only screen and (max-width: 1024px) {
     blockquote p {
       margin-top: 5px; } }
-  @media only screen and (max-width: 560px) {
+  @media only screen and (max-width: 640px) {
     blockquote p {
       margin-top: -2px; } }
 
@@ -81,7 +83,7 @@ body {
   height: 100px;
   position: absolute;
   z-index: 0;
-  background: url("../img/chemex_background.jpg") no-repeat center center fixed;
+  background: url("../img/chemex_background.png") no-repeat;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -103,7 +105,7 @@ body {
   @media only screen and (max-width: 1024px) {
     #head .nav_selector {
       top: 41px; } }
-  @media only screen and (max-width: 560px) {
+  @media only screen and (max-width: 640px) {
     #head .nav_selector {
       top: 41px; } }
 
@@ -117,9 +119,9 @@ body {
   float: right;
   list-style: none;
   font-size: 25px; }
-  @media only screen and (max-width: 560px) {
+  @media only screen and (max-width: 640px) {
     #menu {
-      font-size: 17px; } }
+      font-size: 19px; } }
 
 #menu li {
   float: right;
@@ -128,7 +130,10 @@ body {
   margin-right: 5px; }
   @media only screen and (max-width: 1024px) {
     #menu li {
-      margin-top: 22px; } }
+      margin-top: 19px; } }
+  @media only screen and (max-width: 640px) {
+    #menu li {
+      margin-top: 27px; } }
 
 #menu li a {
   text-decoration: none; }
@@ -140,17 +145,19 @@ body {
   position: absolute;
   top: 41px;
   left: 107px;
-  color: #424242;
+  color: #333333;
+  opacity: 0.3;
   z-index: 2;
   font-size: 43px;
+  text-rendering: optimizeLegibility;
   font-style: italic;
-  text-rendering: optimizeLegibility; }
+  font-weight: 300; }
   @media only screen and (max-width: 1024px) {
     #label {
-      top: 9px;
-      left: 59px;
+      top: 7px;
+      left: 65px;
       font-size: 34px; } }
-  @media only screen and (max-width: 560px) {
+  @media only screen and (max-width: 640px) {
     #label {
       display: none; } }
 
@@ -194,7 +201,7 @@ body {
       margin-left: 10%;
       margin-right: 10%;
       margin-bottom: -50px; } }
-  @media only screen and (max-width: 560px) {
+  @media only screen and (max-width: 640px) {
     #content {
       min-height: 0;
       margin-top: 8px;
@@ -213,6 +220,6 @@ body {
   @media only screen and (max-width: 1024px) {
     #footer, .push {
       height: 50px; } }
-  @media only screen and (max-width: 560px) {
+  @media only screen and (max-width: 640px) {
     #footer, .push {
       display: none; } }
