@@ -138,12 +138,13 @@ body {
 
 #label {
   position: absolute;
-  top: 20px;
+  top: 41px;
   left: 107px;
-  color: #333333;
+  color: #424242;
   z-index: 2;
-  font-size: 66px;
-  display: none; }
+  font-size: 43px;
+  font-style: italic;
+  text-rendering: optimizeLegibility; }
   @media only screen and (max-width: 1024px) {
     #label {
       top: 9px;

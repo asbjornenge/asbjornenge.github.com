@@ -136,12 +136,14 @@ body
 
 #label
     position  : absolute
-    top       : 20px
+    top       : 41px
     left      : 107px
-    color     : $text-color
+    color     : lighten($text-color, 6%)
     z-index   : 2
-    font-size : 66px
-    display : none
+    font-size : 43px
+    font-style : italic
+    text-rendering: optimizeLegibility
+    // -webkit-font-feature-settings: 'liga', 'dlig'
     // font-family : 'Bilbo Swash Caps', cursive
     @media #{$tablet}
         top : 9px
