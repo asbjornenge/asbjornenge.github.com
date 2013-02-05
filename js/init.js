@@ -51,7 +51,7 @@ function move_nav_button(path) {
 function position_nav_button(selected) {
 	var pos   = selected.position();
 	var width = selected.width();
-	var left  = pos.left + (width/2);
+	var left  = $(window).width() - $("#menu").width() + pos.left + (width/2);
 	$('#head .nav_selector').css('left',left);
 }
 

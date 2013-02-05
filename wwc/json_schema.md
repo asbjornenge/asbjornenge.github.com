@@ -38,7 +38,7 @@ There is a variety of [implementations](http://json-schema.org/implementations.h
 
 ## Usage
 
-I'm not going to cover the whole specification here, but I'll highlight a few of the possibilites.
+I'm not going to cover the whole specification here, but I'll try to highlight the most important bits and some of possibilites I found really useful.
 
 #### *type*
 
