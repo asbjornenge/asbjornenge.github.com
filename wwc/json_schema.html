@@ -48,14 +48,14 @@ If you care about making a great application, you need to care about error handl
 <p>A JSON Media Type for Describing the Structure and Meaning of JSON Documents</p>
 </blockquote>
 
-<p>As usual this is best illustrated by an example. If you have some simple JSON data:</p>
+<p>Example; If you have some simple JSON Data:</p>
 
 <pre><code>{
     &quot;title&quot; : &quot;Kapsokisio&quot;
 }
 </code></pre>
 
-<p>Your corresponding JSON Schema:</p>
+<p>You can define a corresponding JSON Schema:</p>
 
 <pre><code>{
     &quot;type&quot; : &quot;object&quot;,
@@ -66,45 +66,34 @@ If you care about making a great application, you need to care about error handl
 }
 </code></pre>
 
-<p>Validating your data using that schema, you can be sure the data is an object containing a title property of type string.</p>
+<p>You can validate your data using that schema. If it is valid, you can be sure the data is an object with a title property of type string.</p>
 
-<h3>Version 4</h3>
+<h3>Specification</h3>
 
-<p>The latest <a href="http://www.ieft.org">IETF</a> draft is currently <a href="http://tools.ietf.org/html/draft-zyp-json-schema-03">v3</a>, but they have a v4 &quot;<em>…being prepared for submission in early 2013</em>&quot;.</p>
+<p>The latest <a href="http://www.ieft.org">IETF</a> draft is currently <a href="http://tools.ietf.org/html/draft-zyp-json-schema-03">v3</a>, but they have a v4 &quot;<em>…being prepared for submission in early 2013</em>&quot;. This post will focus on <strong>v4</strong>.</p>
 
-<p>This post will focus on <strong>v4</strong>.</p>
-
-<h2>Software</h2>
+<h3>Software</h3>
 
 <p>There is a variety of <a href="http://json-schema.org/implementations.html">implementations</a> available. Since I choose to focus on v4 and since I&#39;m a webnerd, I&#39;ll be using the <a href="https://github.com/geraintluff/tv4">tv4</a> validator for the examples.</p>
 
 <h2>Usage</h2>
 
-<p>I&#39;m not going to cover the whole specification here, but I&#39;ll try to highlight the most important bits and some of possibilites I found really useful.</p>
+<p><strong>NB!</strong> This article is in no way a usage reference!!<br>
+It&#39;s more a collection of the things I stubled across trying to figure out how this JSON-Schema thing works. Some important bits, and some of the things I found really useful. See the <a href="#further">further reading</a> section for links to more possibilites and options.</p>
 
-<h4><em>type</em></h4>
+<h3><em>type</em></h3>
 
-<p>Type defines the datatype required for the current object. Available properties are;</p>
-
-<ul>
-<li>object</li>
-<li>array</li>
-<li>string</li>
-<li>boolean</li>
-<li>number</li>
-<li>null</li>
-</ul>
-
-<p>The value can be a string or an array.</p>
+<p>Type defines the datatype required for the current object. The value can be a string or an array. Available values are; <strong>object, array, string, boolean, number, null</strong>. The following requires the data to be either an object or a string.</p>
 
 <pre><code>{
     &quot;type&quot; : [&quot;object&quot;,&quot;string&quot;]
 }
+
+tv4.validate({}, schema) =&gt; true
+tv4.validate([], schema) =&gt; false
 </code></pre>
 
-<p>This requires the data to be either an object <strong>or</strong> a string.</p>
-
-<h4><em>enum</em></h4>
+<h3><em>enum</em></h3>
 
 <p>Enum can be an array with elements of any type. Data must be equal to one of the elements to validate.</p>
 
@@ -113,7 +102,7 @@ If you care about making a great application, you need to care about error handl
 }
 </code></pre>
 
-<h4><em>required</em> [object]</h4>
+<h3><em>required</em> [object]</h3>
 
 <p>Required is an array of required properties. It implicitly requires the type object. It needs to be an array of strings.</p>
 
@@ -122,7 +111,7 @@ If you care about making a great application, you need to care about error handl
 }
 </code></pre>
 
-<h4><em>properties</em> [object]</h4>
+<h3><em>properties</em> [object]</h3>
 
 <p>Properties provide a way to further specify an objects properties. It is an object where each value is a separate schema.</p>
 
@@ -135,9 +124,9 @@ If you care about making a great application, you need to care about error handl
 }
 </code></pre>
 
-<h4><em>items</em> [array]</h4>
+<h3><em>items</em> [array]</h3>
 
-<p>Items define the items in an array. It can be a single schema or an array of schemas.</p>
+<p>Items define the items in an array. It can be a single schema or an array of schemas. The following requires the elements in this array to be a string or an object.</p>
 
 <pre><code>{
     items : [
@@ -147,9 +136,7 @@ If you care about making a great application, you need to care about error handl
 }
 </code></pre>
 
-<p>Requires the elements in this array to be a string <strong>or</strong> an object.</p>
-
-<h4><em>pattern</em> [string]</h4>
+<h3><em>pattern</em> [string]</h3>
 
 <p>Pattern allows you to validate using regular expressions.</p>
 
@@ -160,7 +147,7 @@ If you care about making a great application, you need to care about error handl
 }
 </code></pre>
 
-<h4><em>$ref</em></h4>
+<h3><em>$ref</em></h3>
 
 <p>This is a way of referencing other schemas. It requires a URI or an # for self referencing.</p>
 
@@ -174,15 +161,15 @@ If you care about making a great application, you need to care about error handl
 }
 </code></pre>
 
-<h4><em>oneOf</em></h4>
+<h3><em>oneOf</em></h3>
 
-<h4>Use <em>definitions</em></h4>
+<h3>Use <em>definitions</em></h3>
 
 <h3>More…</h3>
 
 <p><em>numerics</em>, string <em>minLength</em> <em>maxLength</em></p>
 
-<h2>Furter reading</h2>
+<h2><a id="further"></a>Furter reading</h2>
 
 <h2>Missing</h2>
 

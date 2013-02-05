@@ -7,14 +7,14 @@ If you care about making a great application, you need to care about error handl
 
 >  A JSON Media Type for Describing the Structure and Meaning of JSON Documents
 
-As usual this is best illustrated by an example. If you have some simple JSON data:
+Example; If you have some simple JSON Data:
 
 	{
 		"title" : "Kapsokisio"
 	}
 
 
-Your corresponding JSON Schema:
+You can define a corresponding JSON Schema:
 
 	{
 		"type" : "object",
@@ -24,42 +24,33 @@ Your corresponding JSON Schema:
 		}
 	}
 
-Validating your data using that schema, you can be sure the data is an object containing a title property of type string.
+You can validate your data using that schema. If it is valid, you can be sure the data is an object with a title property of type string.
 
-### Version 4
+### Specification
 
-The latest [IETF](http://www.ieft.org) draft is currently [v3](http://tools.ietf.org/html/draft-zyp-json-schema-03), but they have a v4 "*…being prepared for submission in early 2013*".
+The latest [IETF](http://www.ieft.org) draft is currently [v3](http://tools.ietf.org/html/draft-zyp-json-schema-03), but they have a v4 "*…being prepared for submission in early 2013*". This post will focus on **v4**.
 
-This post will focus on **v4**.
-
-## Software
+### Software
 
 There is a variety of [implementations](http://json-schema.org/implementations.html) available. Since I choose to focus on v4 and since I'm a webnerd, I'll be using the [tv4](https://github.com/geraintluff/tv4) validator for the examples.
 
 ## Usage
 
-I'm not going to cover the whole specification here, but I'll try to highlight the most important bits and some of possibilites I found really useful.
+**NB!** This article is in no way a usage reference!!  
+It's more a collection of the things I stubled across trying to figure out how this JSON-Schema thing works. Some important bits, and some of the things I found really useful. See the [further reading](#further) section for links to more possibilites and options.
 
-#### *type*
+### *type*
 
-Type defines the datatype required for the current object. Available properties are;
-
-* object
-* array
-* string
-* boolean
-* number
-* null
-
-The value can be a string or an array.
+Type defines the datatype required for the current object. The value can be a string or an array. Available values are; **object, array, string, boolean, number, null**. The following requires the data to be either an object or a string.
 
 	{
 		"type" : ["object","string"]
 	}
+	
+	tv4.validate({}, schema) => true
+	tv4.validate([], schema) => false
 
-This requires the data to be either an object **or** a string.
-
-#### *enum*
+### *enum*
 
 Enum can be an array with elements of any type. Data must be equal to one of the elements to validate.
 
@@ -67,7 +58,7 @@ Enum can be an array with elements of any type. Data must be equal to one of the
 		"enum" : [[1,true,0], {}, 28, 34, "Burbon"]
 	}
 
-#### *required* [object]
+### *required* [object]
 
 Required is an array of required properties. It implicitly requires the type object. It needs to be an array of strings.
 
@@ -75,7 +66,7 @@ Required is an array of required properties. It implicitly requires the type obj
 		"required" : ["title","origin","variety","process"]
 	}
 
-#### *properties* [object]
+### *properties* [object]
 
 Properties provide a way to further specify an objects properties. It is an object where each value is a separate schema.
 
@@ -87,9 +78,9 @@ Properties provide a way to further specify an objects properties. It is an obje
 		}
 	}
 
-#### *items* [array]
+### *items* [array]
 
-Items define the items in an array. It can be a single schema or an array of schemas.
+Items define the items in an array. It can be a single schema or an array of schemas. The following requires the elements in this array to be a string or an object.
 
 	{
 		items : [
@@ -97,10 +88,8 @@ Items define the items in an array. It can be a single schema or an array of sch
 			{ "type" : "object" }
 		]
 	}
-	
-Requires the elements in this array to be a string **or** an object.
 
-#### *pattern* [string]
+### *pattern* [string]
 
 Pattern allows you to validate using regular expressions.
 
@@ -110,7 +99,7 @@ Pattern allows you to validate using regular expressions.
 		}
 	}
 
-#### *$ref*
+### *$ref*
 
 This is a way of referencing other schemas. It requires a URI or an # for self referencing.
 
@@ -123,15 +112,15 @@ This is a way of referencing other schemas. It requires a URI or an # for self r
     	}
     }
 
-#### *oneOf*
+### *oneOf*
 
-#### Use *definitions*
+### Use *definitions*
 
 ### More…
 
 *numerics*, string *minLength* *maxLength*
 
-## Furter reading
+## <a id="further"></a>Furter reading
 
 ## Missing
 
