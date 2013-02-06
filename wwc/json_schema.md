@@ -41,7 +41,7 @@ It's more a collection of the things I stubled across trying to figure out how t
 
 ### *type*
 
-Type defines the datatype required for the current object. The value can be a string or an array. Available values are; **object, array, string, boolean, number, null**. The following requires the data to be either an object or a string.
+Type defines the datatype required for the current object. The value can be a string or an array. Available values are; **object, array, string, boolean, integer, number, null**. The following requires the data to be either an object or a string.
 
 	{
 		"type" : ["object","string"]
@@ -57,28 +57,36 @@ Enum can be an array with elements of any type. Data must be equal to one of the
 	{
 		"enum" : [[1,true,0], {}, 28, 34, "Burbon"]
 	}
+	
+	t4.validate([1,true,0], schema) => true
+	t4.validate(31, schema) => false
+	
+### *required*
 
-### *required* [object]
-
-Required is an array of required properties. It implicitly requires the type object. It needs to be an array of strings.
+Required is an array of required properties. It's value is an array of strings.
 
 	{
-		"required" : ["title","origin","variety","process"]
+		"required" : ["title","origin"]
 	}
+	
+	t4.validate({"title" : "", "origin" : ""}, schema) => true
+	t4.validate({"title" : ""}, schema) => false
 
-### *properties* [object]
+### *properties*
 
 Properties provide a way to further specify an objects properties. It is an object where each value is a separate schema.
 
 	{
-		"propeties" : {
+		"properties" : {
 			"title"   : { "type" : "string" },
-			"origin"  : { "type" : "string" },
-			"variety" : { "enum" : [28,34,"Burbon"] }
+			"weight"  : { "type" : "number" }
 		}
 	}
 
-### *items* [array]
+	t4.validate({"title" : "", "weight" : 2}, schema) => true
+	t4.validate({"title" : "", "weight" : "2"}, schema) => false
+
+### *items*
 
 Items define the items in an array. It can be a single schema or an array of schemas. The following requires the elements in this array to be a string or an object.
 
@@ -88,8 +96,11 @@ Items define the items in an array. It can be a single schema or an array of sch
 			{ "type" : "object" }
 		]
 	}
+	
+	t4.validate(["",{}], schema) => true
+	t4.validate(["",true], schema) => false
 
-### *pattern* [string]
+### *pattern*
 
 Pattern allows you to validate using regular expressions.
 
@@ -98,39 +109,115 @@ Pattern allows you to validate using regular expressions.
 			"url" : { "type" : "string", "pattern" : /(http|ftp|https):\/\/[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/ }
 		}
 	}
+	
+	t4.validate({"url" : "http://google.com"}, schema) => true
+	t4.validate({"url" : "htt:/googleco.m"}, schema) => false
 
 ### *$ref*
 
 This is a way of referencing other schemas. It requires a URI or an # for self referencing.
 
 	{
-		"properties" : {
-			"beans" : {
-				"type"  : "array",
-				"items" : { "$ref" : "#/definitions/bean"}
+		"items" : { 
+			"$ref" : "#/definitions/bean"
+		},
+    	"definitions" : {
+    		"bean" : {
+    			"type" : "object",
+    			"required" : ["origin"],
+    			"properties" : {
+    				"origin" : { "enum" : ["kenya","rawanda"] }
+    			}
     		}
     	}
     }
+    
+    tv4.validate([{"origing" : "kenya"}], schema) => true
+    tv4.validate([{"origing" : "brazil"}], schema) => false
+    tv4.validate(["kenya","rawanda"], schema) => false
 
+### *allOf*
+
+Using "allOf" you can define an array of schemas where your data elements must validate against all of them.
+
+	{
+		"allOf" : [
+			{ "type" : "integer" },
+			{ "minumum" : 6 }
+		]
+	}
+	
+	tv4.validate(6, schema) => true
+	tv4.validate(5, schema) => false
+	
 ### *oneOf*
+
+Using "oneOf" you can define an array of schemas where your data elements must validate against one (and only one) of them.
+
+	{
+		"oneOf" : [
+			{ "type"    : "integer" },
+			{ "minimum" : 6 }
+		]
+	}
+	
+	tv4.validate(5, schema) => true
+	tv4.validate(6, schema) => false
+	
+### *anyOf*
+
+Using "anyOf" you can define an array of schemas where your data elements can validate against any (at least one) of them.
+
+	{
+		"anyOf" : [
+			{ "type" : "string"  },
+			{ "type" : "integer" }
+		]
+	}
+	
+	tv4.validate("", schema) => true
+	tv4.validate(4, schema) => true
+	tv4.validate(true, schema) => false
+
+### *not*
+
+Using "not" you can define a schema your data elements should to not validate against.
+
+	{
+		"not" : { "type" : "string" }
+	}
+	
+	tv4.validate(1, schema) => true
+	tv4.validate("test", schema) => false
 
 ### Use *definitions*
 
-### More…
+### Error handling (tv4 specific)
 
-*numerics*, string *minLength* *maxLength*
+I just thought I'd quickly mention how tv4 handles failure:
+
+	tv4.validate([],{"type" : "object"})
+	var err = tv4.error
+	console.log(err.dataPath, err.schemaPath, err.message)
+	$.each(err.subError, function(i,err) {
+		console.log(err.dataPath, err.schemaPath, err.message)
+	})
+
 
 ## <a id="further"></a>Furter reading
 
-## Missing
-
-I would like to see better dependency handling.
+I would really recommend reading through the [tests for tv4](https://github.com/geraintluff/tv4/tree/master/tests/tests), they provide excellent example of the different possibilites.  
+The JSON-Schema [website](http://json-schema.org/) also have lots of info and some great [examples](http://json-schema.org/example2.html). And of course the [documentation](http://json-schema.org/documentation.html).
 
 ## Pros
 
 * Cleaner code
 * Better maintainability
 * Better apps
+
+## Cons
+
+It can be quite tideous building a good schema describing your data. And of course, if you change your data structures, you need to update your schema (in addition to your code). But considering how this approach will simplify your codebase, I would definately say it's well worth it.
 
 ## Complex example
 
