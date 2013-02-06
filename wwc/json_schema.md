@@ -115,12 +115,10 @@ Using "pattern" you can validate using regular expressions. Powerful stuff!
 
 ### *$ref*
 
-This is a way of referencing other schemas. It requires a URI or an # for self referencing. Using "definitions" as a location for your "local" referenced schemas is not a requirement, it is simply a common practice.
+Using "$ref" you can reference other schemas. You can use a URI or an # for internal referencing. Using *definitions* as a location for your internal referenced schemas is not a rule but a common practice.
 
 	{
-		"items" : { 
-			"$ref" : "#/definitions/bean"
-		},
+		"items" : { "$ref" : "#/definitions/bean" },
     	"definitions" : {
     		"bean" : {
     			"type" : "object",
@@ -132,8 +130,8 @@ This is a way of referencing other schemas. It requires a URI or an # for self r
     	}
     }
     
-    tv4.validate([{"origing" : "kenya"}], schema) => true
-    tv4.validate([{"origing" : "brazil"}], schema) => false
+    tv4.validate([{"origin" : "kenya"}], schema) => true
+    tv4.validate([{"origin" : "brazil"}], schema) => false
     tv4.validate(["kenya","rawanda"], schema) => false
 
 ### *allOf*
