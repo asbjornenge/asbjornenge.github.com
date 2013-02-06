@@ -118,7 +118,9 @@ Using "pattern" you can validate using regular expressions. Powerful stuff!
 Using "$ref" you can reference other schemas. You can use a URI or an # for internal referencing. Using *definitions* as a location for your internal referenced schemas is not a rule but a common practice.
 
 	{
-		"items" : { "$ref" : "#/definitions/bean" },
+		"items" : { 
+			"$ref" : "#/definitions/bean"
+		},
     	"definitions" : {
     		"bean" : {
     			"type" : "object",
@@ -141,7 +143,7 @@ Using "allOf" you can define an array of schemas where your data elements must v
 	{
 		"allOf" : [
 			{ "type" : "integer" },
-			{ "minumum" : 6 }
+			{ "minimum" : 6 }
 		]
 	}
 	
@@ -168,14 +170,13 @@ Using "anyOf" you can define an array of schemas where your data elements can va
 
 	{
 		"anyOf" : [
-			{ "type" : "string"  },
-			{ "type" : "integer" }
+			{ "type"    : "integer"  },
+			{ "minimum" : 6 }
 		]
 	}
 	
-	tv4.validate("", schema) => true
-	tv4.validate(4, schema) => true
-	tv4.validate(true, schema) => false
+	tv4.validate(5, schema) => true
+	tv4.validate(6, schema) => true
 
 ### *not*
 
@@ -189,28 +190,25 @@ Using "not" you can define a schema your data elements should to not validate ag
 	tv4.validate("test", schema) => false
 
 
-### Error handling (tv4 specific)
+### Error handling
+**(tv4 specific)**
 
-I just thought I'd quickly mention how tv4 handles failure:
+I just thought I'd quickly mention how tv4 handles a failure:
 
 	tv4.validate([],{"type" : "object"})
 	var err = tv4.error
-	console.log(err.dataPath, err.schemaPath, err.message)
-	$.each(err.subError, function(i,err) {
-		console.log(err.dataPath, err.schemaPath, err.message)
-	})
+	while(err != null) {
+		console.log(err.message, err.schemaPath, err.dataPath)
+		err = err.subErrors
+	}
 
+## <a id="further"></a>Further reading
 
-## <a id="further"></a>Furter reading
-
-I would really recommend reading through the [tests for tv4](https://github.com/geraintluff/tv4/tree/master/tests/tests), they provide excellent example of the different possibilites.  
-The JSON-Schema [website](http://json-schema.org/) also have lots of info and some great [examples](http://json-schema.org/example2.html). And of course the [documentation](http://json-schema.org/documentation.html).
+I would really recommend reading through the [tests for tv4](https://github.com/geraintluff/tv4/tree/master/tests/tests), they provide excellent usage examples for the different possibilites. On the JSON-Schema [website](http://json-schema.org/) you will find the [documentation](http://json-schema.org/documentation.html) and some great [examples](http://json-schema.org/example2.html).
 
 ## Pros
 
-* Cleaner code
-* Better maintainability
-* Better apps
+One of the biggest benefits of using JSON-Schema validation is that it will allow you a cleaner codebase. You can trust your data. That in turn improves readability and maintainability which leads to better and more robust applications. In the end; a better user experience.
 
 ## Cons
 

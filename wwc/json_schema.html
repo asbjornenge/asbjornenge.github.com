@@ -163,7 +163,7 @@ tv4.validate({&quot;url&quot; : &quot;htt:/googleco.m&quot;}, schema) =&gt; fals
 
 <h3><em>$ref</em></h3>
 
-<p>This is a way of referencing other schemas. It requires a URI or an # for self referencing. Using &quot;definitions&quot; as a location for your &quot;local&quot; referenced schemas is not a requirement, it is simply a common practice.</p>
+<p>Using &quot;$ref&quot; you can reference other schemas. You can use a URI or an # for internal referencing. Using <em>definitions</em> as a location for your internal referenced schemas is not a rule but a common practice.</p>
 
 <pre><code>{
     &quot;items&quot; : { 
@@ -180,8 +180,8 @@ tv4.validate({&quot;url&quot; : &quot;htt:/googleco.m&quot;}, schema) =&gt; fals
     }
 }
 
-tv4.validate([{&quot;origing&quot; : &quot;kenya&quot;}], schema) =&gt; true
-tv4.validate([{&quot;origing&quot; : &quot;brazil&quot;}], schema) =&gt; false
+tv4.validate([{&quot;origin&quot; : &quot;kenya&quot;}], schema) =&gt; true
+tv4.validate([{&quot;origin&quot; : &quot;brazil&quot;}], schema) =&gt; false
 tv4.validate([&quot;kenya&quot;,&quot;rawanda&quot;], schema) =&gt; false
 </code></pre>
 
@@ -192,7 +192,7 @@ tv4.validate([&quot;kenya&quot;,&quot;rawanda&quot;], schema) =&gt; false
 <pre><code>{
     &quot;allOf&quot; : [
         { &quot;type&quot; : &quot;integer&quot; },
-        { &quot;minumum&quot; : 6 }
+        { &quot;minimum&quot; : 6 }
     ]
 }
 
@@ -221,14 +221,13 @@ tv4.validate(6, schema) =&gt; false
 
 <pre><code>{
     &quot;anyOf&quot; : [
-        { &quot;type&quot; : &quot;string&quot;  },
-        { &quot;type&quot; : &quot;integer&quot; }
+        { &quot;type&quot;    : &quot;integer&quot;  },
+        { &quot;minimum&quot; : 6 }
     ]
 }
 
-tv4.validate(&quot;&quot;, schema) =&gt; true
-tv4.validate(4, schema) =&gt; true
-tv4.validate(true, schema) =&gt; false
+tv4.validate(5, schema) =&gt; true
+tv4.validate(6, schema) =&gt; true
 </code></pre>
 
 <h3><em>not</em></h3>
@@ -243,30 +242,27 @@ tv4.validate(1, schema) =&gt; true
 tv4.validate(&quot;test&quot;, schema) =&gt; false
 </code></pre>
 
-<h3>Error handling (tv4 specific)</h3>
+<h3>Error handling</h3>
 
-<p>I just thought I&#39;d quickly mention how tv4 handles failure:</p>
+<p><strong>(tv4 specific)</strong></p>
+
+<p>I just thought I&#39;d quickly mention how tv4 handles a failure:</p>
 
 <pre><code>tv4.validate([],{&quot;type&quot; : &quot;object&quot;})
 var err = tv4.error
-console.log(err.dataPath, err.schemaPath, err.message)
-$.each(err.subError, function(i,err) {
-    console.log(err.dataPath, err.schemaPath, err.message)
-})
+while(err != null) {
+    console.log(err.message, err.schemaPath, err.dataPath)
+    err = err.subErrors
+}
 </code></pre>
 
-<h2><a id="further"></a>Furter reading</h2>
+<h2><a id="further"></a>Further reading</h2>
 
-<p>I would really recommend reading through the <a href="https://github.com/geraintluff/tv4/tree/master/tests/tests">tests for tv4</a>, they provide excellent example of the different possibilites.<br>
-The JSON-Schema <a href="http://json-schema.org/">website</a> also have lots of info and some great <a href="http://json-schema.org/example2.html">examples</a>. And of course the <a href="http://json-schema.org/documentation.html">documentation</a>.</p>
+<p>I would really recommend reading through the <a href="https://github.com/geraintluff/tv4/tree/master/tests/tests">tests for tv4</a>, they provide excellent usage examples for the different possibilites. On the JSON-Schema <a href="http://json-schema.org/">website</a> you will find the <a href="http://json-schema.org/documentation.html">documentation</a> and some great <a href="http://json-schema.org/example2.html">examples</a>.</p>
 
 <h2>Pros</h2>
 
-<ul>
-<li>Cleaner code</li>
-<li>Better maintainability</li>
-<li>Better apps</li>
-</ul>
+<p>One of the biggest benefits of using JSON-Schema validation is that it will allow you a cleaner codebase. You can trust your data. That in turn improves readability and maintainability which leads to better and more robust applications. In the end; a better user experience.</p>
 
 <h2>Cons</h2>
 
