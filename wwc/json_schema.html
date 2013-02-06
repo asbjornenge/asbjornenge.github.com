@@ -39,8 +39,8 @@
         <div id="content">
             <h1>JSON Schema Validation</h1>
 
-<p>Your probably pulling &amp; pushing data to and from a JSON RESTful api, right?<br>
-If you care about making a great application, you need to care about error handling. Both on the client and the server side. Handling timeouts and dead API&#39;s is easy enough, but handling corrupt data can be tricky. Protecting against corrupt data usually leaves an ugly footprint in your code. Lot&#39;s of <strong>if</strong>&#39;s and <strong>hasOwnProperty</strong>&#39;s. Instead, using <a href="http://json-schema.org">json-schema</a>, you can validate your JSON data first and be sure it is as expected.</p>
+<p>Your probably talking JSON with a RESTful api, right?<br>
+If you care about creating a great experience, you need to take error handling seriously. Handling timeouts and http error codes is pretty straight forward, but handling corrupt data can be tricky. It often leaves an ugly footprint in your code. Lot&#39;s of <strong>if</strong>&#39;s and <strong>hasOwnProperty</strong>&#39;s. Instead, using <a href="http://json-schema.org">json-schema</a>, you can validate your JSON data first and be sure it is as expected.</p>
 
 <h2>JSON-Schema</h2>
 
@@ -48,7 +48,7 @@ If you care about making a great application, you need to care about error handl
 <p>A JSON Media Type for Describing the Structure and Meaning of JSON Documents</p>
 </blockquote>
 
-<p>Example; If you have some simple JSON Data:</p>
+<p>Example; If you have some JSON Data:</p>
 
 <pre><code>{
     &quot;title&quot; : &quot;Kapsokisio&quot;
@@ -66,24 +66,24 @@ If you care about making a great application, you need to care about error handl
 }
 </code></pre>
 
-<p>You can validate your data using that schema. If it is valid, you can be sure the data is an object with a title property of type string.</p>
+<p>You can validate your data using that schema. If it is valid, you can be sure this data is an object with a title property of type string.</p>
 
 <h3>Specification</h3>
 
-<p>The latest <a href="http://www.ieft.org">IETF</a> draft is currently <a href="http://tools.ietf.org/html/draft-zyp-json-schema-03">v3</a>, but they have a v4 &quot;<em>…being prepared for submission in early 2013</em>&quot;. This post will focus on <strong>v4</strong>.</p>
+<p>The latest <a href="http://www.ieft.org">IETF</a> draft is currently <a href="http://tools.ietf.org/html/draft-zyp-json-schema-03">v3</a>, but they have a v4 &quot;<em>…being prepared for submission in early 2013</em>&quot;. <strong>This post will focus on v4</strong>.</p>
 
 <h3>Software</h3>
 
-<p>There is a variety of <a href="http://json-schema.org/implementations.html">implementations</a> available. Since I choose to focus on v4 and since I&#39;m a webnerd, I&#39;ll be using the <a href="https://github.com/geraintluff/tv4">tv4</a> validator for the examples.</p>
+<p>There is a variety of <a href="http://json-schema.org/implementations.html">implementations</a> available. Since I choose to focus on v4 and since I&#39;m a webnerd, <strong>I&#39;ll be using the <a href="https://github.com/geraintluff/tv4">tv4</a> validator for the examples</strong>.</p>
 
 <h2>Usage</h2>
 
 <p><strong>NB!</strong> This article is in no way a usage reference!!<br>
-It&#39;s more a collection of the things I stubled across trying to figure out how this JSON-Schema thing works. Some important bits, and some of the things I found really useful. See the <a href="#further">further reading</a> section for links to more possibilites and options.</p>
+It&#39;s more a collection of the things I stubled across trying to figure out how this JSON-Schema thing works. Some important bits, and some of the things I found really useful. See the <a href="#further">further reading</a> section for more possibilites and options.</p>
 
 <h3><em>type</em></h3>
 
-<p>Type defines the datatype required for the current object. The value can be a string or an array. Available values are; <strong>object, array, string, boolean, integer, number, null</strong>. The following requires the data to be either an object or a string.</p>
+<p>Using &quot;type&quot; you can specify the datatype required for the current object. The value can be a string or an array. Available values are; <strong>object, array, string, boolean, integer, number, null</strong>. The following requires the data to be either an object or a string.</p>
 
 <pre><code>{
     &quot;type&quot; : [&quot;object&quot;,&quot;string&quot;]
@@ -95,31 +95,31 @@ tv4.validate([], schema) =&gt; false
 
 <h3><em>enum</em></h3>
 
-<p>Enum can be an array with elements of any type. Data must be equal to one of the elements to validate.</p>
+<p>Using &quot;enum&quot; you can define an array with elements of any type. Data must be equal to one of the elements to validate.</p>
 
 <pre><code>{
-    &quot;enum&quot; : [[1,true,0], {}, 28, 34, &quot;Burbon&quot;]
+    &quot;enum&quot; : [[1,true,0], {}, 28, &quot;Burbon&quot;]
 }
 
-t4.validate([1,true,0], schema) =&gt; true
-t4.validate(31, schema) =&gt; false
+tv4.validate([1,true,0], schema) =&gt; true
+tv4.validate(34, schema) =&gt; false
 </code></pre>
 
 <h3><em>required</em></h3>
 
-<p>Required is an array of required properties. It&#39;s value is an array of strings.</p>
+<p>Using &quot;required&quot; you can define an array of required properties. It&#39;s value is an array of strings.</p>
 
 <pre><code>{
     &quot;required&quot; : [&quot;title&quot;,&quot;origin&quot;]
 }
 
-t4.validate({&quot;title&quot; : &quot;&quot;, &quot;origin&quot; : &quot;&quot;}, schema) =&gt; true
-t4.validate({&quot;title&quot; : &quot;&quot;}, schema) =&gt; false
+tv4.validate({&quot;title&quot; : &quot;&quot;, &quot;origin&quot; : &quot;&quot;}, schema) =&gt; true
+tv4.validate({&quot;title&quot; : &quot;&quot;}, schema) =&gt; false
 </code></pre>
 
 <h3><em>properties</em></h3>
 
-<p>Properties provide a way to further specify an objects properties. It is an object where each value is a separate schema.</p>
+<p>Using &quot;properties&quot; you can further specify an objects properties. It is an object where each value is a separate schema.</p>
 
 <pre><code>{
     &quot;properties&quot; : {
@@ -128,13 +128,13 @@ t4.validate({&quot;title&quot; : &quot;&quot;}, schema) =&gt; false
     }
 }
 
-t4.validate({&quot;title&quot; : &quot;&quot;, &quot;weight&quot; : 2}, schema) =&gt; true
-t4.validate({&quot;title&quot; : &quot;&quot;, &quot;weight&quot; : &quot;2&quot;}, schema) =&gt; false
+tv4.validate({&quot;title&quot; : &quot;&quot;, &quot;weight&quot; : 2}, schema) =&gt; true
+tv4.validate({&quot;title&quot; : &quot;&quot;, &quot;weight&quot; : &quot;2&quot;}, schema) =&gt; false
 </code></pre>
 
 <h3><em>items</em></h3>
 
-<p>Items define the items in an array. It can be a single schema or an array of schemas. The following requires the elements in this array to be a string or an object.</p>
+<p>Using &quot;items&quot; you can specify the requirements for the items in an array. It can be a single schema or an array of schemas. The following requires the elements in this array to be a string or an object.</p>
 
 <pre><code>{
     items : [
@@ -143,13 +143,13 @@ t4.validate({&quot;title&quot; : &quot;&quot;, &quot;weight&quot; : &quot;2&quot
     ]
 }
 
-t4.validate([&quot;&quot;,{}], schema) =&gt; true
-t4.validate([&quot;&quot;,true], schema) =&gt; false
+tv4.validate([&quot;&quot;,{}], schema) =&gt; true
+tv4.validate([&quot;&quot;,true], schema) =&gt; false
 </code></pre>
 
 <h3><em>pattern</em></h3>
 
-<p>Pattern allows you to validate using regular expressions.</p>
+<p>Using &quot;pattern&quot; you can validate using regular expressions. Powerful stuff!</p>
 
 <pre><code>{
     &quot;properties&quot; : {
@@ -157,8 +157,8 @@ t4.validate([&quot;&quot;,true], schema) =&gt; false
     }
 }
 
-t4.validate({&quot;url&quot; : &quot;http://google.com&quot;}, schema) =&gt; true
-t4.validate({&quot;url&quot; : &quot;htt:/googleco.m&quot;}, schema) =&gt; false
+tv4.validate({&quot;url&quot; : &quot;http://google.com&quot;}, schema) =&gt; true
+tv4.validate({&quot;url&quot; : &quot;htt:/googleco.m&quot;}, schema) =&gt; false
 </code></pre>
 
 <h3><em>$ref</em></h3>

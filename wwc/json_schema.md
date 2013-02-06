@@ -1,13 +1,13 @@
 # JSON Schema Validation
 
-Your probably pulling & pushing data to and from a JSON RESTful api, right?  
-If you care about making a great application, you need to care about error handling. Both on the client and the server side. Handling timeouts and dead API's is easy enough, but handling corrupt data can be tricky. Protecting against corrupt data usually leaves an ugly footprint in your code. Lot's of **if**'s and **hasOwnProperty**'s. Instead, using [json-schema](http://json-schema.org), you can validate your JSON data first and be sure it is as expected.
+Your probably talking JSON with a RESTful api, right?  
+If you care about creating a great experience, you need to take error handling seriously. Handling timeouts and http error codes is pretty straight forward, but handling corrupt data can be tricky. It often leaves an ugly footprint in your code. Lot's of **if**'s and **hasOwnProperty**'s. Instead, using [json-schema](http://json-schema.org), you can validate your JSON data first and be sure it is as expected.
 
 ## JSON-Schema
 
 >  A JSON Media Type for Describing the Structure and Meaning of JSON Documents
 
-Example; If you have some simple JSON Data:
+Example; If you have some JSON Data:
 
 	{
 		"title" : "Kapsokisio"
@@ -24,24 +24,24 @@ You can define a corresponding JSON Schema:
 		}
 	}
 
-You can validate your data using that schema. If it is valid, you can be sure the data is an object with a title property of type string.
+You can validate your data using that schema. If it is valid, you can be sure this data is an object with a title property of type string.
 
 ### Specification
 
-The latest [IETF](http://www.ieft.org) draft is currently [v3](http://tools.ietf.org/html/draft-zyp-json-schema-03), but they have a v4 "*…being prepared for submission in early 2013*". This post will focus on **v4**.
+The latest [IETF](http://www.ieft.org) draft is currently [v3](http://tools.ietf.org/html/draft-zyp-json-schema-03), but they have a v4 "*…being prepared for submission in early 2013*". **This post will focus on v4**.
 
 ### Software
 
-There is a variety of [implementations](http://json-schema.org/implementations.html) available. Since I choose to focus on v4 and since I'm a webnerd, I'll be using the [tv4](https://github.com/geraintluff/tv4) validator for the examples.
+There is a variety of [implementations](http://json-schema.org/implementations.html) available. Since I choose to focus on v4 and since I'm a webnerd, **I'll be using the [tv4](https://github.com/geraintluff/tv4) validator for the examples**.
 
 ## Usage
 
 **NB!** This article is in no way a usage reference!!  
-It's more a collection of the things I stubled across trying to figure out how this JSON-Schema thing works. Some important bits, and some of the things I found really useful. See the [further reading](#further) section for links to more possibilites and options.
+It's more a collection of the things I stubled across trying to figure out how this JSON-Schema thing works. Some important bits, and some of the things I found really useful. See the [further reading](#further) section for more possibilites and options.
 
 ### *type*
 
-Type defines the datatype required for the current object. The value can be a string or an array. Available values are; **object, array, string, boolean, integer, number, null**. The following requires the data to be either an object or a string.
+Using "type" you can specify the datatype required for the current object. The value can be a string or an array. Available values are; **object, array, string, boolean, integer, number, null**. The following requires the data to be either an object or a string.
 
 	{
 		"type" : ["object","string"]
@@ -52,29 +52,29 @@ Type defines the datatype required for the current object. The value can be a st
 
 ### *enum*
 
-Enum can be an array with elements of any type. Data must be equal to one of the elements to validate.
+Using "enum" you can define an array with elements of any type. Data must be equal to one of the elements to validate.
 
 	{
-		"enum" : [[1,true,0], {}, 28, 34, "Burbon"]
+		"enum" : [[1,true,0], {}, 28, "Burbon"]
 	}
 	
-	t4.validate([1,true,0], schema) => true
-	t4.validate(31, schema) => false
+	tv4.validate([1,true,0], schema) => true
+	tv4.validate(34, schema) => false
 	
 ### *required*
 
-Required is an array of required properties. It's value is an array of strings.
+Using "required" you can define an array of required properties. It's value is an array of strings.
 
 	{
 		"required" : ["title","origin"]
 	}
 	
-	t4.validate({"title" : "", "origin" : ""}, schema) => true
-	t4.validate({"title" : ""}, schema) => false
+	tv4.validate({"title" : "", "origin" : ""}, schema) => true
+	tv4.validate({"title" : ""}, schema) => false
 
 ### *properties*
 
-Properties provide a way to further specify an objects properties. It is an object where each value is a separate schema.
+Using "properties" you can further specify an objects properties. It is an object where each value is a separate schema.
 
 	{
 		"properties" : {
@@ -83,12 +83,12 @@ Properties provide a way to further specify an objects properties. It is an obje
 		}
 	}
 
-	t4.validate({"title" : "", "weight" : 2}, schema) => true
-	t4.validate({"title" : "", "weight" : "2"}, schema) => false
+	tv4.validate({"title" : "", "weight" : 2}, schema) => true
+	tv4.validate({"title" : "", "weight" : "2"}, schema) => false
 
 ### *items*
 
-Items define the items in an array. It can be a single schema or an array of schemas. The following requires the elements in this array to be a string or an object.
+Using "items" you can specify the requirements for the items in an array. It can be a single schema or an array of schemas. The following requires the elements in this array to be a string or an object.
 
 	{
 		items : [
@@ -97,12 +97,12 @@ Items define the items in an array. It can be a single schema or an array of sch
 		]
 	}
 	
-	t4.validate(["",{}], schema) => true
-	t4.validate(["",true], schema) => false
+	tv4.validate(["",{}], schema) => true
+	tv4.validate(["",true], schema) => false
 
 ### *pattern*
 
-Pattern allows you to validate using regular expressions.
+Using "pattern" you can validate using regular expressions. Powerful stuff!
 
 	{
 		"properties" : {
@@ -110,8 +110,8 @@ Pattern allows you to validate using regular expressions.
 		}
 	}
 	
-	t4.validate({"url" : "http://google.com"}, schema) => true
-	t4.validate({"url" : "htt:/googleco.m"}, schema) => false
+	tv4.validate({"url" : "http://google.com"}, schema) => true
+	tv4.validate({"url" : "htt:/googleco.m"}, schema) => false
 
 ### *$ref*
 
