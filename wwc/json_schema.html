@@ -163,7 +163,7 @@ t4.validate({&quot;url&quot; : &quot;htt:/googleco.m&quot;}, schema) =&gt; false
 
 <h3><em>$ref</em></h3>
 
-<p>This is a way of referencing other schemas. It requires a URI or an # for self referencing.</p>
+<p>This is a way of referencing other schemas. It requires a URI or an # for self referencing. Using &quot;definitions&quot; as a location for your &quot;local&quot; referenced schemas is not a requirement, it is simply a common practice.</p>
 
 <pre><code>{
     &quot;items&quot; : { 
@@ -242,8 +242,6 @@ tv4.validate(true, schema) =&gt; false
 tv4.validate(1, schema) =&gt; true
 tv4.validate(&quot;test&quot;, schema) =&gt; false
 </code></pre>
-
-<h3>Use <em>definitions</em></h3>
 
 <h3>Error handling (tv4 specific)</h3>
 

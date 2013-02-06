@@ -115,7 +115,7 @@ Pattern allows you to validate using regular expressions.
 
 ### *$ref*
 
-This is a way of referencing other schemas. It requires a URI or an # for self referencing.
+This is a way of referencing other schemas. It requires a URI or an # for self referencing. Using "definitions" as a location for your "local" referenced schemas is not a requirement, it is simply a common practice.
 
 	{
 		"items" : { 
@@ -190,7 +190,6 @@ Using "not" you can define a schema your data elements should to not validate ag
 	tv4.validate(1, schema) => true
 	tv4.validate("test", schema) => false
 
-### Use *definitions*
 
 ### Error handling (tv4 specific)
 
