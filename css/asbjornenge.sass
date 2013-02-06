@@ -16,11 +16,15 @@ h1
     border-bottom : 1px solid #ccc
 p
     margin : 5px 0 45px 0
+    @media #{$smartphone}
+        margin : -1px 0 25px 0 
 
 pre
     margin : 45px 0 45px 0
     width  : 100%
     overflow : scroll
+    @media #{$smartphone}
+        margin : 25px 0 25px 0
 
 a
     color : $text-color
@@ -43,13 +47,14 @@ blockquote:before
     float: left
     font-size : 40px
     margin-left : -10px
-    margin-top : -1px
+    margin-top : -8px
     font-family : georgia,serif
     color : #eee
     @media #{$tablet}
-        font-size  : 30px
+        margin-top : -15px
     @media #{$smartphone}
-        font-size : 20px 
+        font-size : 25px 
+        margin-top : -25px
 
 blockquote p
     font-weight : 300
@@ -199,7 +204,7 @@ body
     @media #{$smartphone}
         min-height   : 0 
         margin-top   : 8px
-        font-size    : 0.9em
+        font-size    : 14px
         line-height  : 1.7
         margin-left  : 5%
         margin-right : 5%
