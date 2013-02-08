@@ -214,17 +214,75 @@ One of the biggest benefits of using JSON-Schema validation is that it will allo
 
 It can be quite tideous building a good schema describing your data. And of course, if you change your data structures, you need to update your schema (in addition to your code). But considering how this approach will simplify your codebase, I would definately say it's well worth it.
 
-## Complex example
+# Real world example
+
+**Data**
 
 	{
 		"title"   : "Kapsokisio",
 		"origin"  : "Kenya",
-		"variety" : [SL28,SL34],
-		"process" : WASHED,
-		"weight"  : { 
-		    "amount" : 350, 
-		    "unit"   : "g" 
+		"variety" : ["SL28","SL34","Burbon"],
+		"process" : "Washed",
+		"roast" : {
+			"level" : 4,
+			"date"  : "08.02.2012"
 		},
-		"roast"   : "light",
-		"roasted" : <date>
+		"bag" : {
+			"weight" : 354,
+			"date"   : "08.02.2012"
+		},
+		"brew_tip" : {
+			"method" : "pourover",
+			"grind"  : "medium",
+			"vessle" : "chemex"
+		}
+	}
+
+**Schema**
+
+	{
+		"type" : "object",
+		"required" : ["title","origin","variety","process","roast","bag"],
+		"properties" : {
+			"title"    : { "type" : "string"  },
+			"origin"   : { "type" : "string"  },
+			"variety"  : { "type" : "array"   },
+			"process"  : { "type" : "string" },
+			"bag"      : { "$ref" : "#/definitions/bag" },
+			"roast"    : { "$ref" : "#/definitions/roast" },
+			"brew_tip" : { "$ref" : "#/definitions/brew_tip" }
+		},
+		"definitions" : {
+			"roast" : {
+				"type" : "object",
+				"required" : ["level", "date"],
+				"properties" : {
+					"level" : { "type" : "integer" },
+					"date"  : { 
+						"type" : "string", 
+						"pattern" : /^\d{2}([./-])\d{2}\1\d{4}$/
+					}
+				}
+			},
+			"bag" : {
+				"type" : "object",
+				"required" : ["weight", "date"],
+				"properties" : {
+					"weight" : { "type" : "number" },
+					"date"   : { 
+						"type" : "string", 
+						"pattern" : /^\d{2}([./-])\d{2}\1\d{4}$/
+					}
+				}
+			},
+			"brew_tip" : {
+				"type" : "object",
+				"required" : ["method","grind","vessle"],
+				"properties" : {
+					"method" : { "type" : "string" },
+					"grind"  : { "type" : "string" },
+					"vessel" : { "type" : "string" }
+				}
+			}
+		}
 	}

@@ -268,19 +268,78 @@ while(err != null) {
 
 <p>It can be quite tideous building a good schema describing your data. And of course, if you change your data structures, you need to update your schema (in addition to your code). But considering how this approach will simplify your codebase, I would definately say it&#39;s well worth it.</p>
 
-<h2>Complex example</h2>
+<h1>Real world example</h1>
+
+<p><strong>Data</strong></p>
 
 <pre><code>{
     &quot;title&quot;   : &quot;Kapsokisio&quot;,
     &quot;origin&quot;  : &quot;Kenya&quot;,
-    &quot;variety&quot; : [SL28,SL34],
-    &quot;process&quot; : WASHED,
-    &quot;weight&quot;  : { 
-        &quot;amount&quot; : 350, 
-        &quot;unit&quot;   : &quot;g&quot; 
+    &quot;variety&quot; : [&quot;SL28&quot;,&quot;SL34&quot;,&quot;Burbon&quot;],
+    &quot;process&quot; : &quot;Washed&quot;,
+    &quot;roast&quot; : {
+        &quot;level&quot; : 4,
+        &quot;date&quot;  : &quot;08.02.2012&quot;
     },
-    &quot;roast&quot;   : &quot;light&quot;,
-    &quot;roasted&quot; : &lt;date&gt;
+    &quot;bag&quot; : {
+        &quot;weight&quot; : 354,
+        &quot;date&quot;   : &quot;08.02.2012&quot;
+    },
+    &quot;brew_tip&quot; : {
+        &quot;method&quot; : &quot;pourover&quot;,
+        &quot;grind&quot;  : &quot;medium&quot;,
+        &quot;vessle&quot; : &quot;chemex&quot;
+    }
+}
+</code></pre>
+
+<p><strong>Schema</strong></p>
+
+<pre><code>{
+    &quot;type&quot; : &quot;object&quot;,
+    &quot;required&quot; : [&quot;title&quot;,&quot;origin&quot;,&quot;variety&quot;,&quot;process&quot;,&quot;roast&quot;,&quot;bag&quot;],
+    &quot;properties&quot; : {
+        &quot;title&quot;    : { &quot;type&quot; : &quot;string&quot;  },
+        &quot;origin&quot;   : { &quot;type&quot; : &quot;string&quot;  },
+        &quot;variety&quot;  : { &quot;type&quot; : &quot;array&quot;   },
+        &quot;process&quot;  : { &quot;type&quot; : &quot;string&quot; },
+        &quot;bag&quot;      : { &quot;$ref&quot; : &quot;#/definitions/bag&quot; },
+        &quot;roast&quot;    : { &quot;$ref&quot; : &quot;#/definitions/roast&quot; },
+        &quot;brew_tip&quot; : { &quot;$ref&quot; : &quot;#/definitions/brew_tip&quot; }
+    },
+    &quot;definitions&quot; : {
+        &quot;roast&quot; : {
+            &quot;type&quot; : &quot;object&quot;,
+            &quot;required&quot; : [&quot;level&quot;, &quot;date&quot;],
+            &quot;properties&quot; : {
+                &quot;level&quot; : { &quot;type&quot; : &quot;integer&quot; },
+                &quot;date&quot;  : { 
+                    &quot;type&quot; : &quot;string&quot;, 
+                    &quot;pattern&quot; : /^\d{2}([./-])\d{2}\1\d{4}$/
+                }
+            }
+        },
+        &quot;bag&quot; : {
+            &quot;type&quot; : &quot;object&quot;,
+            &quot;required&quot; : [&quot;weight&quot;, &quot;date&quot;],
+            &quot;properties&quot; : {
+                &quot;weight&quot; : { &quot;type&quot; : &quot;number&quot; },
+                &quot;date&quot;   : { 
+                    &quot;type&quot; : &quot;string&quot;, 
+                    &quot;pattern&quot; : /^\d{2}([./-])\d{2}\1\d{4}$/
+                }
+            }
+        },
+        &quot;brew_tip&quot; : {
+            &quot;type&quot; : &quot;object&quot;,
+            &quot;required&quot; : [&quot;method&quot;,&quot;grind&quot;,&quot;vessle&quot;],
+            &quot;properties&quot; : {
+                &quot;method&quot; : { &quot;type&quot; : &quot;string&quot; },
+                &quot;grind&quot;  : { &quot;type&quot; : &quot;string&quot; },
+                &quot;vessel&quot; : { &quot;type&quot; : &quot;string&quot; }
+            }
+        }
+    }
 }
 </code></pre>
 
