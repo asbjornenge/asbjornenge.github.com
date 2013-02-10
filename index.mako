@@ -4,7 +4,7 @@
 	% for path in wwc:
 		<% post = wwc[path] %>
 		% if post['published']:
-			${showblog(wwc[post])}
+			${showblog(wwc[path])}
 		% endif
 	% endfor
 </%block>

@@ -8,9 +8,11 @@
         <link rel="stylesheet" href="/css/reset.css">
         <link rel="stylesheet" href="/css/fonts.css">
         <link rel="stylesheet" href="/css/asbjornenge.css">
+        <!--
         <link rel="stylesheet" href="/css/font-awesome.min.css">
-        <link href='http://fonts.googleapis.com/css?family=Elsie' rel='stylesheet' type='text/css'>
-        <link href='http://fonts.googleapis.com/css?family=Bilbo+Swash+Caps' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="/css/highlight/googlecode.css">
+        <script src="/js/lib/highlight.pack.js"></script>
+        -->
         <script src="/js/lib/ga.js"></script>
         <script src="/js/lib/jquery-1.9.0.min.js"></script>
         <script src="/js/lib/tap.js"></script>
@@ -37,7 +39,9 @@
         </div>
         <div style="clear:both"></div>
         <div id="content">
-            <h1>JSON Schema Validation</h1>
+            <h1><a href="/wwc/json_schema.html">JSON Schema Validation</a></h1>
+
+<div class="date">10.02.2013</div>
 
 <p>Your probably talking JSON with a RESTful api, right?<br>
 If you care about creating a great experience, you need to take error handling seriously. Handling timeouts and http error codes is pretty straight forward, but handling corrupt data can be tricky. It often leaves an ugly footprint in your code. Lot&#39;s of <strong>if</strong>&#39;s and <strong>hasOwnProperty</strong>&#39;s. Instead, using <a href="http://json-schema.org">json-schema</a>, you can validate your JSON data first and be sure it is as expected.</p>
@@ -59,7 +63,7 @@ If you care about creating a great experience, you need to take error handling s
 
 <pre><code>{
     &quot;type&quot; : &quot;object&quot;,
-    &quot;required&quot; : [&quot;title&quot;]
+    &quot;required&quot; : [&quot;title&quot;],
     &quot;properties&quot; : {
         &quot;title&quot; : { &quot;type&quot; : &quot;string&quot; } 
     }
@@ -70,7 +74,7 @@ If you care about creating a great experience, you need to take error handling s
 
 <h3>Specification</h3>
 
-<p>The latest <a href="http://www.ieft.org">IETF</a> draft is currently <a href="http://tools.ietf.org/html/draft-zyp-json-schema-03">v3</a>, but they have a v4 &quot;<em>…being prepared for submission in early 2013</em>&quot;. <strong>This post will focus on v4</strong>.</p>
+<p>The latest <a href="http://www.ieft.org">IETF</a> draft is currently <a href="http://tools.ietf.org/html/draft-zyp-json-schema-03">v3</a>, but they have a v4 <em>being prepared for submission in early 2013</em>. <strong>This post will focus on v4</strong>.</p>
 
 <h3>Software</h3>
 
@@ -89,8 +93,8 @@ It&#39;s more a collection of the things I stubled across trying to figure out h
     &quot;type&quot; : [&quot;object&quot;,&quot;string&quot;]
 }
 
-tv4.validate({}, schema) =&gt; true
-tv4.validate([], schema) =&gt; false
+tv4.validate({}, schema) // true
+tv4.validate([], schema) // false
 </code></pre>
 
 <h3><em>enum</em></h3>
@@ -101,8 +105,8 @@ tv4.validate([], schema) =&gt; false
     &quot;enum&quot; : [[1,true,0], {}, 28, &quot;Burbon&quot;]
 }
 
-tv4.validate([1,true,0], schema) =&gt; true
-tv4.validate(34, schema) =&gt; false
+tv4.validate([1,true,0], schema) // true
+tv4.validate(34, schema) // false
 </code></pre>
 
 <h3><em>required</em></h3>
@@ -113,8 +117,8 @@ tv4.validate(34, schema) =&gt; false
     &quot;required&quot; : [&quot;title&quot;,&quot;origin&quot;]
 }
 
-tv4.validate({&quot;title&quot; : &quot;&quot;, &quot;origin&quot; : &quot;&quot;}, schema) =&gt; true
-tv4.validate({&quot;title&quot; : &quot;&quot;}, schema) =&gt; false
+tv4.validate({&quot;title&quot; : &quot;&quot;, &quot;origin&quot; : &quot;&quot;}, schema) // true
+tv4.validate({&quot;title&quot; : &quot;&quot;}, schema) // false
 </code></pre>
 
 <h3><em>properties</em></h3>
@@ -128,8 +132,8 @@ tv4.validate({&quot;title&quot; : &quot;&quot;}, schema) =&gt; false
     }
 }
 
-tv4.validate({&quot;title&quot; : &quot;&quot;, &quot;weight&quot; : 2}, schema) =&gt; true
-tv4.validate({&quot;title&quot; : &quot;&quot;, &quot;weight&quot; : &quot;2&quot;}, schema) =&gt; false
+tv4.validate({&quot;title&quot; : &quot;&quot;, &quot;weight&quot; : 2}, schema) // true
+tv4.validate({&quot;title&quot; : &quot;&quot;, &quot;weight&quot; : &quot;2&quot;}, schema) // false
 </code></pre>
 
 <h3><em>items</em></h3>
@@ -143,8 +147,8 @@ tv4.validate({&quot;title&quot; : &quot;&quot;, &quot;weight&quot; : &quot;2&quo
     ]
 }
 
-tv4.validate([&quot;&quot;,{}], schema) =&gt; true
-tv4.validate([&quot;&quot;,true], schema) =&gt; false
+tv4.validate([&quot;&quot;,{}], schema) // true
+tv4.validate([&quot;&quot;,true], schema) // false
 </code></pre>
 
 <h3><em>pattern</em></h3>
@@ -157,8 +161,8 @@ tv4.validate([&quot;&quot;,true], schema) =&gt; false
     }
 }
 
-tv4.validate({&quot;url&quot; : &quot;http://google.com&quot;}, schema) =&gt; true
-tv4.validate({&quot;url&quot; : &quot;htt:/googleco.m&quot;}, schema) =&gt; false
+tv4.validate({&quot;url&quot; : &quot;http://google.com&quot;}, schema) // true
+tv4.validate({&quot;url&quot; : &quot;htt:/googleco.m&quot;}, schema) // false
 </code></pre>
 
 <h3><em>$ref</em></h3>
@@ -180,9 +184,9 @@ tv4.validate({&quot;url&quot; : &quot;htt:/googleco.m&quot;}, schema) =&gt; fals
     }
 }
 
-tv4.validate([{&quot;origin&quot; : &quot;kenya&quot;}], schema) =&gt; true
-tv4.validate([{&quot;origin&quot; : &quot;brazil&quot;}], schema) =&gt; false
-tv4.validate([&quot;kenya&quot;,&quot;rawanda&quot;], schema) =&gt; false
+tv4.validate([{&quot;origin&quot; : &quot;kenya&quot;}], schema) // true
+tv4.validate([{&quot;origin&quot; : &quot;brazil&quot;}], schema) // false
+tv4.validate([&quot;kenya&quot;,&quot;rawanda&quot;], schema) // false
 </code></pre>
 
 <h3><em>allOf</em></h3>
@@ -196,8 +200,8 @@ tv4.validate([&quot;kenya&quot;,&quot;rawanda&quot;], schema) =&gt; false
     ]
 }
 
-tv4.validate(6, schema) =&gt; true
-tv4.validate(5, schema) =&gt; false
+tv4.validate(6, schema) // true
+tv4.validate(5, schema) // false
 </code></pre>
 
 <h3><em>oneOf</em></h3>
@@ -211,8 +215,8 @@ tv4.validate(5, schema) =&gt; false
     ]
 }
 
-tv4.validate(5, schema) =&gt; true
-tv4.validate(6, schema) =&gt; false
+tv4.validate(5, schema) // true
+tv4.validate(6, schema) // false
 </code></pre>
 
 <h3><em>anyOf</em></h3>
@@ -226,8 +230,8 @@ tv4.validate(6, schema) =&gt; false
     ]
 }
 
-tv4.validate(5, schema) =&gt; true
-tv4.validate(6, schema) =&gt; true
+tv4.validate(5, schema) // true
+tv4.validate(6, schema) // true
 </code></pre>
 
 <h3><em>not</em></h3>
@@ -238,8 +242,8 @@ tv4.validate(6, schema) =&gt; true
     &quot;not&quot; : { &quot;type&quot; : &quot;string&quot; }
 }
 
-tv4.validate(1, schema) =&gt; true
-tv4.validate(&quot;test&quot;, schema) =&gt; false
+tv4.validate(1, schema) // true
+tv4.validate(&quot;test&quot;, schema) // false
 </code></pre>
 
 <h3>Error handling</h3>
@@ -266,7 +270,7 @@ while(err != null) {
 
 <h2>Cons</h2>
 
-<p>It can be quite tideous building a good schema describing your data. And of course, if you change your data structures, you need to update your schema (in addition to your code). But considering how this approach will simplify your codebase, I would definately say it&#39;s well worth it.</p>
+<p>It can be quite tedious building a good schema describing your data. And of course, if you change your data structures, you need to update your schema (in addition to your code). But considering how this approach will simplify your codebase, I would definately say it&#39;s well worth it.</p>
 
 <h1>Real world example</h1>
 

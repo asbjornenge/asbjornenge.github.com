@@ -1,4 +1,5 @@
-# JSON Schema Validation
+# [JSON Schema Validation](/wwc/json_schema.html)
+<div class="date">10.02.2013</div>
 
 Your probably talking JSON with a RESTful api, right?  
 If you care about creating a great experience, you need to take error handling seriously. Handling timeouts and http error codes is pretty straight forward, but handling corrupt data can be tricky. It often leaves an ugly footprint in your code. Lot's of **if**'s and **hasOwnProperty**'s. Instead, using [json-schema](http://json-schema.org), you can validate your JSON data first and be sure it is as expected.
@@ -18,7 +19,7 @@ You can define a corresponding JSON Schema:
 
 	{
 		"type" : "object",
-		"required" : ["title"]
+		"required" : ["title"],
 		"properties" : {
 			"title" : { "type" : "string" } 
 		}
@@ -28,7 +29,7 @@ You can validate your data using that schema. If it is valid, you can be sure th
 
 ### Specification
 
-The latest [IETF](http://www.ieft.org) draft is currently [v3](http://tools.ietf.org/html/draft-zyp-json-schema-03), but they have a v4 "*…being prepared for submission in early 2013*". **This post will focus on v4**.
+The latest [IETF](http://www.ieft.org) draft is currently [v3](http://tools.ietf.org/html/draft-zyp-json-schema-03), but they have a v4 *being prepared for submission in early 2013*. **This post will focus on v4**.
 
 ### Software
 
@@ -47,8 +48,8 @@ Using "type" you can specify the datatype required for the current object. The v
 		"type" : ["object","string"]
 	}
 	
-	tv4.validate({}, schema) => true
-	tv4.validate([], schema) => false
+	tv4.validate({}, schema) // true
+	tv4.validate([], schema) // false
 
 ### *enum*
 
@@ -58,8 +59,8 @@ Using "enum" you can define an array with elements of any type. Data must be equ
 		"enum" : [[1,true,0], {}, 28, "Burbon"]
 	}
 	
-	tv4.validate([1,true,0], schema) => true
-	tv4.validate(34, schema) => false
+	tv4.validate([1,true,0], schema) // true
+	tv4.validate(34, schema) // false
 	
 ### *required*
 
@@ -69,8 +70,8 @@ Using "required" you can define an array of required properties. It's value is a
 		"required" : ["title","origin"]
 	}
 	
-	tv4.validate({"title" : "", "origin" : ""}, schema) => true
-	tv4.validate({"title" : ""}, schema) => false
+	tv4.validate({"title" : "", "origin" : ""}, schema) // true
+	tv4.validate({"title" : ""}, schema) // false
 
 ### *properties*
 
@@ -83,8 +84,8 @@ Using "properties" you can further specify an objects properties. It is an objec
 		}
 	}
 
-	tv4.validate({"title" : "", "weight" : 2}, schema) => true
-	tv4.validate({"title" : "", "weight" : "2"}, schema) => false
+	tv4.validate({"title" : "", "weight" : 2}, schema) // true
+	tv4.validate({"title" : "", "weight" : "2"}, schema) // false
 
 ### *items*
 
@@ -97,8 +98,8 @@ Using "items" you can specify the requirements for the items in an array. It can
 		]
 	}
 	
-	tv4.validate(["",{}], schema) => true
-	tv4.validate(["",true], schema) => false
+	tv4.validate(["",{}], schema) // true
+	tv4.validate(["",true], schema) // false
 
 ### *pattern*
 
@@ -110,8 +111,8 @@ Using "pattern" you can validate using regular expressions. Powerful stuff!
 		}
 	}
 	
-	tv4.validate({"url" : "http://google.com"}, schema) => true
-	tv4.validate({"url" : "htt:/googleco.m"}, schema) => false
+	tv4.validate({"url" : "http://google.com"}, schema) // true
+	tv4.validate({"url" : "htt:/googleco.m"}, schema) // false
 
 ### *$ref*
 
@@ -132,9 +133,9 @@ Using "$ref" you can reference other schemas. You can use a URI or an # for inte
     	}
     }
     
-    tv4.validate([{"origin" : "kenya"}], schema) => true
-    tv4.validate([{"origin" : "brazil"}], schema) => false
-    tv4.validate(["kenya","rawanda"], schema) => false
+    tv4.validate([{"origin" : "kenya"}], schema) // true
+    tv4.validate([{"origin" : "brazil"}], schema) // false
+    tv4.validate(["kenya","rawanda"], schema) // false
 
 ### *allOf*
 
@@ -147,8 +148,8 @@ Using "allOf" you can define an array of schemas where your data elements must v
 		]
 	}
 	
-	tv4.validate(6, schema) => true
-	tv4.validate(5, schema) => false
+	tv4.validate(6, schema) // true
+	tv4.validate(5, schema) // false
 	
 ### *oneOf*
 
@@ -161,8 +162,8 @@ Using "oneOf" you can define an array of schemas where your data elements must v
 		]
 	}
 	
-	tv4.validate(5, schema) => true
-	tv4.validate(6, schema) => false
+	tv4.validate(5, schema) // true
+	tv4.validate(6, schema) // false
 	
 ### *anyOf*
 
@@ -175,8 +176,8 @@ Using "anyOf" you can define an array of schemas where your data elements can va
 		]
 	}
 	
-	tv4.validate(5, schema) => true
-	tv4.validate(6, schema) => true
+	tv4.validate(5, schema) // true
+	tv4.validate(6, schema) // true
 
 ### *not*
 
@@ -186,8 +187,8 @@ Using "not" you can define a schema your data elements should to not validate ag
 		"not" : { "type" : "string" }
 	}
 	
-	tv4.validate(1, schema) => true
-	tv4.validate("test", schema) => false
+	tv4.validate(1, schema) // true
+	tv4.validate("test", schema) // false
 
 
 ### Error handling
@@ -212,7 +213,7 @@ One of the biggest benefits of using JSON-Schema validation is that it will allo
 
 ## Cons
 
-It can be quite tideous building a good schema describing your data. And of course, if you change your data structures, you need to update your schema (in addition to your code). But considering how this approach will simplify your codebase, I would definately say it's well worth it.
+It can be quite tedious building a good schema describing your data. And of course, if you change your data structures, you need to update your schema (in addition to your code). But considering how this approach will simplify your codebase, I would definately say it's well worth it.
 
 # Real world example
 

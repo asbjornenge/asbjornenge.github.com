@@ -5,19 +5,38 @@ $smartphone : "only screen and (max-width : 640px)"
 $tablet : "only screen and (max-width : 1024px)"
 
 $text-color : #333
+$text-border-color : #ccc
 $separator-color : #f06d19
 
 // Margins
 
 h1
-    margin : 25px 0px 25px 0px
+    margin : 45px 0px 25px 0px
     font-family : "museo-slab",Georiga,serif
     line-height : 1.6
-    border-bottom : 1px solid #ccc
-p
-    margin : 5px 0 45px 0
+    border-bottom : 1px solid $text-border-color
+    font-weight : normal
+    padding-right : 20%
     @media #{$smartphone}
-        margin : -1px 0 25px 0 
+        margin : 30px 0px 20px 0px
+        line-height : 1.4
+h1 a
+    text-decoration : none!important
+
+h2
+    margin-top : 45px
+    @media #{$smartphone}
+        margin-top : 25px
+
+h3
+    margin-top : 45px
+    @media #{$smartphone}
+        margin-top : 25px
+
+p
+    margin : 5px 0 25px 0
+    @media #{$smartphone}
+        margin : -1px 0 15px 0 
 
 pre
     margin : 45px 0 45px 0
@@ -31,10 +50,6 @@ a
 a:hover 
     color  : $text-color
     cursor : pointer
-h1
-    font-weight : normal
-h1 a
-    text-decoration : none!important
 
 blockquote
     padding : 30px 13px 45px 15px
@@ -222,4 +237,13 @@ body
         display : none
 
 
+// Other classes
+
+.date
+    margin-top : -51px
+    font-size : 85%
+    color : $text-border-color
+    float : right
+    @media #{$smartphone}
+        margin-top : -38px
 

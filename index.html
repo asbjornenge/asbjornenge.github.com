@@ -8,9 +8,11 @@
         <link rel="stylesheet" href="/css/reset.css">
         <link rel="stylesheet" href="/css/fonts.css">
         <link rel="stylesheet" href="/css/asbjornenge.css">
+        <!--
         <link rel="stylesheet" href="/css/font-awesome.min.css">
-        <link href='http://fonts.googleapis.com/css?family=Elsie' rel='stylesheet' type='text/css'>
-        <link href='http://fonts.googleapis.com/css?family=Bilbo+Swash+Caps' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="/css/highlight/googlecode.css">
+        <script src="/js/lib/highlight.pack.js"></script>
+        -->
         <script src="/js/lib/ga.js"></script>
         <script src="/js/lib/jquery-1.9.0.min.js"></script>
         <script src="/js/lib/tap.js"></script>
@@ -41,6 +43,318 @@
 	
 		
 		
+			
+    <div id="68fef665">
+    	<h1><a href="/wwc/json_schema.html">JSON Schema Validation</a></h1>
+
+<div class="date">10.02.2013</div>
+
+<p>Your probably talking JSON with a RESTful api, right?<br>
+If you care about creating a great experience, you need to take error handling seriously. Handling timeouts and http error codes is pretty straight forward, but handling corrupt data can be tricky. It often leaves an ugly footprint in your code. Lot&#39;s of <strong>if</strong>&#39;s and <strong>hasOwnProperty</strong>&#39;s. Instead, using <a href="http://json-schema.org">json-schema</a>, you can validate your JSON data first and be sure it is as expected.</p>
+
+<h2>JSON-Schema</h2>
+
+<blockquote>
+<p>A JSON Media Type for Describing the Structure and Meaning of JSON Documents</p>
+</blockquote>
+
+<p>Example; If you have some JSON Data:</p>
+
+<pre><code>{
+    &quot;title&quot; : &quot;Kapsokisio&quot;
+}
+</code></pre>
+
+<p>You can define a corresponding JSON Schema:</p>
+
+<pre><code>{
+    &quot;type&quot; : &quot;object&quot;,
+    &quot;required&quot; : [&quot;title&quot;],
+    &quot;properties&quot; : {
+        &quot;title&quot; : { &quot;type&quot; : &quot;string&quot; } 
+    }
+}
+</code></pre>
+
+<p>You can validate your data using that schema. If it is valid, you can be sure this data is an object with a title property of type string.</p>
+
+<h3>Specification</h3>
+
+<p>The latest <a href="http://www.ieft.org">IETF</a> draft is currently <a href="http://tools.ietf.org/html/draft-zyp-json-schema-03">v3</a>, but they have a v4 <em>being prepared for submission in early 2013</em>. <strong>This post will focus on v4</strong>.</p>
+
+<h3>Software</h3>
+
+<p>There is a variety of <a href="http://json-schema.org/implementations.html">implementations</a> available. Since I choose to focus on v4 and since I&#39;m a webnerd, <strong>I&#39;ll be using the <a href="https://github.com/geraintluff/tv4">tv4</a> validator for the examples</strong>.</p>
+
+<h2>Usage</h2>
+
+<p><strong>NB!</strong> This article is in no way a usage reference!!<br>
+It&#39;s more a collection of the things I stubled across trying to figure out how this JSON-Schema thing works. Some important bits, and some of the things I found really useful. See the <a href="#further">further reading</a> section for more possibilites and options.</p>
+
+<h3><em>type</em></h3>
+
+<p>Using &quot;type&quot; you can specify the datatype required for the current object. The value can be a string or an array. Available values are; <strong>object, array, string, boolean, integer, number, null</strong>. The following requires the data to be either an object or a string.</p>
+
+<pre><code>{
+    &quot;type&quot; : [&quot;object&quot;,&quot;string&quot;]
+}
+
+tv4.validate({}, schema) // true
+tv4.validate([], schema) // false
+</code></pre>
+
+<h3><em>enum</em></h3>
+
+<p>Using &quot;enum&quot; you can define an array with elements of any type. Data must be equal to one of the elements to validate.</p>
+
+<pre><code>{
+    &quot;enum&quot; : [[1,true,0], {}, 28, &quot;Burbon&quot;]
+}
+
+tv4.validate([1,true,0], schema) // true
+tv4.validate(34, schema) // false
+</code></pre>
+
+<h3><em>required</em></h3>
+
+<p>Using &quot;required&quot; you can define an array of required properties. It&#39;s value is an array of strings.</p>
+
+<pre><code>{
+    &quot;required&quot; : [&quot;title&quot;,&quot;origin&quot;]
+}
+
+tv4.validate({&quot;title&quot; : &quot;&quot;, &quot;origin&quot; : &quot;&quot;}, schema) // true
+tv4.validate({&quot;title&quot; : &quot;&quot;}, schema) // false
+</code></pre>
+
+<h3><em>properties</em></h3>
+
+<p>Using &quot;properties&quot; you can further specify an objects properties. It is an object where each value is a separate schema.</p>
+
+<pre><code>{
+    &quot;properties&quot; : {
+        &quot;title&quot;   : { &quot;type&quot; : &quot;string&quot; },
+        &quot;weight&quot;  : { &quot;type&quot; : &quot;number&quot; }
+    }
+}
+
+tv4.validate({&quot;title&quot; : &quot;&quot;, &quot;weight&quot; : 2}, schema) // true
+tv4.validate({&quot;title&quot; : &quot;&quot;, &quot;weight&quot; : &quot;2&quot;}, schema) // false
+</code></pre>
+
+<h3><em>items</em></h3>
+
+<p>Using &quot;items&quot; you can specify the requirements for the items in an array. It can be a single schema or an array of schemas. The following requires the elements in this array to be a string or an object.</p>
+
+<pre><code>{
+    items : [
+        { &quot;type&quot; : &quot;string&quot; },
+        { &quot;type&quot; : &quot;object&quot; }
+    ]
+}
+
+tv4.validate([&quot;&quot;,{}], schema) // true
+tv4.validate([&quot;&quot;,true], schema) // false
+</code></pre>
+
+<h3><em>pattern</em></h3>
+
+<p>Using &quot;pattern&quot; you can validate using regular expressions. Powerful stuff!</p>
+
+<pre><code>{
+    &quot;properties&quot; : {
+        &quot;url&quot; : { &quot;type&quot; : &quot;string&quot;, &quot;pattern&quot; : /(http|ftp|https):\/\/[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;amp;:\/~+#-]*[\w@?^=%&amp;amp;\/~+#-])?/ }
+    }
+}
+
+tv4.validate({&quot;url&quot; : &quot;http://google.com&quot;}, schema) // true
+tv4.validate({&quot;url&quot; : &quot;htt:/googleco.m&quot;}, schema) // false
+</code></pre>
+
+<h3><em>$ref</em></h3>
+
+<p>Using &quot;$ref&quot; you can reference other schemas. You can use a URI or an # for internal referencing. Using <em>definitions</em> as a location for your internal referenced schemas is not a rule but a common practice.</p>
+
+<pre><code>{
+    &quot;items&quot; : { 
+        &quot;$ref&quot; : &quot;#/definitions/bean&quot;
+    },
+    &quot;definitions&quot; : {
+        &quot;bean&quot; : {
+            &quot;type&quot; : &quot;object&quot;,
+            &quot;required&quot; : [&quot;origin&quot;],
+            &quot;properties&quot; : {
+                &quot;origin&quot; : { &quot;enum&quot; : [&quot;kenya&quot;,&quot;rawanda&quot;] }
+            }
+        }
+    }
+}
+
+tv4.validate([{&quot;origin&quot; : &quot;kenya&quot;}], schema) // true
+tv4.validate([{&quot;origin&quot; : &quot;brazil&quot;}], schema) // false
+tv4.validate([&quot;kenya&quot;,&quot;rawanda&quot;], schema) // false
+</code></pre>
+
+<h3><em>allOf</em></h3>
+
+<p>Using &quot;allOf&quot; you can define an array of schemas where your data elements must validate against all of them.</p>
+
+<pre><code>{
+    &quot;allOf&quot; : [
+        { &quot;type&quot; : &quot;integer&quot; },
+        { &quot;minimum&quot; : 6 }
+    ]
+}
+
+tv4.validate(6, schema) // true
+tv4.validate(5, schema) // false
+</code></pre>
+
+<h3><em>oneOf</em></h3>
+
+<p>Using &quot;oneOf&quot; you can define an array of schemas where your data elements must validate against one (and only one) of them.</p>
+
+<pre><code>{
+    &quot;oneOf&quot; : [
+        { &quot;type&quot;    : &quot;integer&quot; },
+        { &quot;minimum&quot; : 6 }
+    ]
+}
+
+tv4.validate(5, schema) // true
+tv4.validate(6, schema) // false
+</code></pre>
+
+<h3><em>anyOf</em></h3>
+
+<p>Using &quot;anyOf&quot; you can define an array of schemas where your data elements can validate against any (at least one) of them.</p>
+
+<pre><code>{
+    &quot;anyOf&quot; : [
+        { &quot;type&quot;    : &quot;integer&quot;  },
+        { &quot;minimum&quot; : 6 }
+    ]
+}
+
+tv4.validate(5, schema) // true
+tv4.validate(6, schema) // true
+</code></pre>
+
+<h3><em>not</em></h3>
+
+<p>Using &quot;not&quot; you can define a schema your data elements should to not validate against.</p>
+
+<pre><code>{
+    &quot;not&quot; : { &quot;type&quot; : &quot;string&quot; }
+}
+
+tv4.validate(1, schema) // true
+tv4.validate(&quot;test&quot;, schema) // false
+</code></pre>
+
+<h3>Error handling</h3>
+
+<p><strong>(tv4 specific)</strong></p>
+
+<p>I just thought I&#39;d quickly mention how tv4 handles a failure:</p>
+
+<pre><code>tv4.validate([],{&quot;type&quot; : &quot;object&quot;})
+var err = tv4.error
+while(err != null) {
+    console.log(err.message, err.schemaPath, err.dataPath)
+    err = err.subErrors
+}
+</code></pre>
+
+<h2><a id="further"></a>Further reading</h2>
+
+<p>I would really recommend reading through the <a href="https://github.com/geraintluff/tv4/tree/master/tests/tests">tests for tv4</a>, they provide excellent usage examples for the different possibilites. On the JSON-Schema <a href="http://json-schema.org/">website</a> you will find the <a href="http://json-schema.org/documentation.html">documentation</a> and some great <a href="http://json-schema.org/example2.html">examples</a>.</p>
+
+<h2>Pros</h2>
+
+<p>One of the biggest benefits of using JSON-Schema validation is that it will allow you a cleaner codebase. You can trust your data. That in turn improves readability and maintainability which leads to better and more robust applications. In the end; a better user experience.</p>
+
+<h2>Cons</h2>
+
+<p>It can be quite tedious building a good schema describing your data. And of course, if you change your data structures, you need to update your schema (in addition to your code). But considering how this approach will simplify your codebase, I would definately say it&#39;s well worth it.</p>
+
+<h1>Real world example</h1>
+
+<p><strong>Data</strong></p>
+
+<pre><code>{
+    &quot;title&quot;   : &quot;Kapsokisio&quot;,
+    &quot;origin&quot;  : &quot;Kenya&quot;,
+    &quot;variety&quot; : [&quot;SL28&quot;,&quot;SL34&quot;,&quot;Burbon&quot;],
+    &quot;process&quot; : &quot;Washed&quot;,
+    &quot;roast&quot; : {
+        &quot;level&quot; : 4,
+        &quot;date&quot;  : &quot;08.02.2012&quot;
+    },
+    &quot;bag&quot; : {
+        &quot;weight&quot; : 354,
+        &quot;date&quot;   : &quot;08.02.2012&quot;
+    },
+    &quot;brew_tip&quot; : {
+        &quot;method&quot; : &quot;pourover&quot;,
+        &quot;grind&quot;  : &quot;medium&quot;,
+        &quot;vessle&quot; : &quot;chemex&quot;
+    }
+}
+</code></pre>
+
+<p><strong>Schema</strong></p>
+
+<pre><code>{
+    &quot;type&quot; : &quot;object&quot;,
+    &quot;required&quot; : [&quot;title&quot;,&quot;origin&quot;,&quot;variety&quot;,&quot;process&quot;,&quot;roast&quot;,&quot;bag&quot;],
+    &quot;properties&quot; : {
+        &quot;title&quot;    : { &quot;type&quot; : &quot;string&quot;  },
+        &quot;origin&quot;   : { &quot;type&quot; : &quot;string&quot;  },
+        &quot;variety&quot;  : { &quot;type&quot; : &quot;array&quot;   },
+        &quot;process&quot;  : { &quot;type&quot; : &quot;string&quot; },
+        &quot;bag&quot;      : { &quot;$ref&quot; : &quot;#/definitions/bag&quot; },
+        &quot;roast&quot;    : { &quot;$ref&quot; : &quot;#/definitions/roast&quot; },
+        &quot;brew_tip&quot; : { &quot;$ref&quot; : &quot;#/definitions/brew_tip&quot; }
+    },
+    &quot;definitions&quot; : {
+        &quot;roast&quot; : {
+            &quot;type&quot; : &quot;object&quot;,
+            &quot;required&quot; : [&quot;level&quot;, &quot;date&quot;],
+            &quot;properties&quot; : {
+                &quot;level&quot; : { &quot;type&quot; : &quot;integer&quot; },
+                &quot;date&quot;  : { 
+                    &quot;type&quot; : &quot;string&quot;, 
+                    &quot;pattern&quot; : /^\d{2}([./-])\d{2}\1\d{4}$/
+                }
+            }
+        },
+        &quot;bag&quot; : {
+            &quot;type&quot; : &quot;object&quot;,
+            &quot;required&quot; : [&quot;weight&quot;, &quot;date&quot;],
+            &quot;properties&quot; : {
+                &quot;weight&quot; : { &quot;type&quot; : &quot;number&quot; },
+                &quot;date&quot;   : { 
+                    &quot;type&quot; : &quot;string&quot;, 
+                    &quot;pattern&quot; : /^\d{2}([./-])\d{2}\1\d{4}$/
+                }
+            }
+        },
+        &quot;brew_tip&quot; : {
+            &quot;type&quot; : &quot;object&quot;,
+            &quot;required&quot; : [&quot;method&quot;,&quot;grind&quot;,&quot;vessle&quot;],
+            &quot;properties&quot; : {
+                &quot;method&quot; : { &quot;type&quot; : &quot;string&quot; },
+                &quot;grind&quot;  : { &quot;type&quot; : &quot;string&quot; },
+                &quot;vessel&quot; : { &quot;type&quot; : &quot;string&quot; }
+            }
+        }
+    }
+}
+</code></pre>
+
+    </div>
+
 
             <div class="push"></div>
         </div>
