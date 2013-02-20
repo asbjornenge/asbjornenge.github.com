@@ -27,9 +27,17 @@ You can define a corresponding JSON Schema:
 
 You can validate your data using that schema. If it is valid, you can be sure this data is an object with a title property of type string.
 
-### Specification
+### <a id="specification"></a> Specification
 
 The latest [IETF](http://www.ieft.org) draft is currently [v3](http://tools.ietf.org/html/draft-zyp-json-schema-03), but they have a v4 *being prepared for submission in early 2013*. **This post will focus on v4**.
+
+**UPDATE**  
+The new drafts are up!
+
+**Core:**  
+[http://tools.ietf.org/html/draft-zyp-json-schema-04](http://tools.ietf.org/html/draft-zyp-json-schema-04)  
+**Validation:**  
+[http://tools.ietf.org/html/draft-fge-json-schema-validation-00](http://tools.ietf.org/html/draft-fge-json-schema-validation-00)
 
 ### Software
 
