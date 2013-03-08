@@ -1,7 +1,7 @@
 # [Zero Todo](/wwc/zero_todo.html)
 <div class="date">08.03.2013</div>
 
-> Todo workflow for inbox zerioists.
+> Todo workflow for inbox zeroists.
 
 I'm an [inbox zeroist](http://inboxzero.com/); my inbox is my todo list.
 
