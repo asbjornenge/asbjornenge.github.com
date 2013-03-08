@@ -39,11 +39,15 @@ p
         margin : -1px 0 15px 0 
 
 pre
+    border : 1px solid #ccc
+    border-radius : 5px
+    padding : 20px
     margin : 45px 0 45px 0
-    width  : 100%
+    width  : 97%
     overflow : scroll
     @media #{$smartphone}
         margin : 25px 0 25px 0
+        padding : 10px 0 10px 10px
 
 a
     color : $text-color
@@ -81,6 +85,10 @@ blockquote p
         margin-top : 5px
     @media #{$smartphone}
         margin-top : -2px
+
+img
+    @media #{$smartphone}
+        max-width : 300px
 
 body
     width  : 100%
@@ -211,6 +219,7 @@ body
     text-rendering: optimizeLegibility
     -webkit-font-feature-settings: 'liga', 'dlig'
     @media #{$tablet}
+        font-size     : 18px
         min-height    : 568px
         margin-top    : 10px
         margin-left   : 10%

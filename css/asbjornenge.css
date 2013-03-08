@@ -32,12 +32,16 @@ p {
       margin: -1px 0 15px 0; } }
 
 pre {
+  border: 1px solid #cccccc;
+  border-radius: 5px;
+  padding: 20px;
   margin: 45px 0 45px 0;
-  width: 100%;
+  width: 97%;
   overflow: scroll; }
   @media only screen and (max-width: 640px) {
     pre {
-      margin: 25px 0 25px 0; } }
+      margin: 25px 0 25px 0;
+      padding: 10px 0 10px 10px; } }
 
 a {
   color: #333333; }
@@ -79,6 +83,10 @@ blockquote p {
   @media only screen and (max-width: 640px) {
     blockquote p {
       margin-top: -2px; } }
+
+@media only screen and (max-width: 640px) {
+  img {
+    max-width: 300px; } }
 
 body {
   width: 100%;
@@ -218,6 +226,7 @@ body {
   -webkit-font-feature-settings: "liga", "dlig"; }
   @media only screen and (max-width: 1024px) {
     #content {
+      font-size: 18px;
       min-height: 568px;
       margin-top: 10px;
       margin-left: 10%;

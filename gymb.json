@@ -14,6 +14,12 @@
             "path" : "wwc/json_schema.html",
             "published" : "10.02.2013",
             "title" : "JSON Schema"
+        },
+        "zero_todo.md" : {
+            "id" : "98c6d461",
+            "path" : "wwc/zero_todo.html",
+            "published" : "08.03.2013",
+            "title" : "Zero Todo"
         }
     }
 }
