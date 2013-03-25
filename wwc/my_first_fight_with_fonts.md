@@ -1,4 +1,12 @@
-# My first real fight with fonts
+# In my @font-face
+
+> My first real fight with fonts
+
+#### Disclaimer
+
+Before I even start this I should probably state that this adventures leads into unfamiliar terrain and over half my findings are probably half-witted nonsense. There. I should probably start all my blogposts like that.
+
+#### Introduction
 
 Fonts are important. Most of what we see on our screens is text in some form, or typeface, to dive right into the syntax. 
 
@@ -54,17 +62,34 @@ NB! The solution is a possible performance drain if used unwisely - measuring of
 
 The second [approach](http://processingjs.nihongoresources.com/FontMetrics/) is using the canvas element. The 2d context of a canvas has *font*, *fillText* and *measureText* functions. Unfortunately [*measureText*](http://www.w3.org/TR/2012/WD-2dcontext-20120329/#dom-context-2d-measuretext) only deals with the [width](http://www.w3.org/TR/2012/WD-2dcontext-20120329/#textmetrics) metric, but that seems to be about to [change](http://www.w3.org/TR/2dcontext/#textmetrics) (!!). For now though, the approach is to dump and analyze the raw pixel data and figure out how many pixels are used vertically to draw different letters of the font.
 
+This approach also works perfectly for the calculation part, and thanks to the awesome [fontmetrics.js](http://processingjs.nihongoresources.com/FontMetrics/fontmetrics.js) it's easy.  
 
+But again, for the actual positioning, I was soon stuck in a pitch black room (next to a tiny, grey, startling little cat with diarrhea. Sitting on a matressless, iron-sprung bed with its huge eyes mewing at me. Meow. Smoking as well, probably. And then some terrible guy the colour of an aubergine round the corner holding a mug of beef tea and wearing a string vest going “meew. Fuckn brrr aaah” ~ Dylan Moran).
 
-## Font-face
+## @font-face
 
-### Timing
+The days of web typography is upon us. We are no longer limited to a handful of built-in fonts, but using technologies like [@font-face](http://sixrevisions.com/css/font-face-guide/) we can embed "any" font on our page and have it render "beautifully" on the client's browser.
+
+There are however quite a few [pitfalls](http://www.fontsquirrel.com/blog/2010/11/troubleshooting-font-face-problems) & [legibility](http://www.owlfolio.org/htmletc/legibility-of-embedded-web-fonts/) issues.
 
 ### Rendering
 
+The one that hit me hard in the face is the fact that different browsers, and even the same browsers on different operating systems, deal very differently with how they render fonts. Even different versions of the same operating system will sometimes render fonts very differently.
+
+> At typical body-text sizes, the computer has to draw each letter using only 15 or so pixels in each direction. It’s not possible to draw each letter exactly as the typographer intended, and keep all the lines crisp and smooth, with that few pixels. Windows, OSX, and Linux all resolve this dilemma differently: to oversimplify a bit, OSX tries harder to preserve the font shapes, Windows tries harder to make the lines sharp, and Linux tries to do both at once and winds up achieving neither. ~ Zachary Weinberg @ http://www.owlfolio.org
+
+Sometimes the font won't even render inside it's bounding box (!!!!), that makes any font metric calculatino futile :-(
+
+### Timing
+
+Another issue with embedded font's is knowing when the font is loaded. If you try to measure prematurely you will end up measuring the fallback font, and thats no good. 
+
+The only viable solution I have come across is using a "dummy" fallback font that will encode a character as a zero-width unit. Putting that in a paragraph and polling for a real width. It's not a great solution but it works.
+
 ## Font.js
 
-* Timing issues - when is the font loaded?
+Fotunately 
+
 
 http://pomax.nihongoresources.com/pages/Font.js/
 
@@ -77,3 +102,5 @@ http://mudcu.be/journal/2011/01/html5-typographic-metrics/
 http://www.owlfolio.org/htmletc/legibility-of-embedded-web-fonts/
 
 http://en.wikipedia.org/wiki/Baseline_(typography)
+
+http://stackoverflow.com/questions/1134586/how-can-you-find-the-height-of-text-on-an-html-canvas
