@@ -88,19 +88,37 @@ The only viable solution I have come across is using a "dummy" fallback font tha
 
 ## Font.js
 
-Fotunately 
+Fotunately someone has already thread this path for us.  
+[Font.js](http://pomax.nihongoresources.com/pages/Font.js/) adds a **Font** object to your javascript toolbelt. It's designed to behave similar to the **Image** object.
 
+	var font = new Font();
+	font.onload  = function() {}
+	font.onerror = function() {}
+	font.src = "http://your.domain.com/fonts/font.otf"
 
-http://pomax.nihongoresources.com/pages/Font.js/
+It handles **timing** issue using the detailed solution above, and will call your *onload* function when the font is available.  
+It gives you **metrics**
 
-http://www.brunildo.org/test/xheight.pl
+	font.metrics -> {}
+	font.measureText(string, size) -> {}
 
-http://www.icavia.com/2010/09/solving-font-face-alignment-issues/
+They even handle the **rendering** issue (to some extent).
 
-http://mudcu.be/journal/2011/01/html5-typographic-metrics/
+*Font.js actually draws text offscreen, does a scanline pass to find out what the "real" ascent and descent is, and then sets height to ascent + 1 + descent ("1" for the baseline itself). This generally works quite well, but will lead to incorrect heights for fonts that don't implement the Latin blocks =)   
+~ Michiel Kamermans*
 
-http://www.owlfolio.org/htmletc/legibility-of-embedded-web-fonts/
+One important thing to note is that the font's are loaded using **XMLHttpRequest**'s. This is important since it is the only way to get the font data so it can be inspected and manipulated. But it does mean you have to deal with hosting your own fonts or setting up [CORS](http://en.wikipedia.org/wiki/Cross-origin_resource_sharing) to avoid *Access-Control-Allow-Origin* issues. 
 
-http://en.wikipedia.org/wiki/Baseline_(typography)
+Font.js is a great library for solving most of the current headaches related to fonts.
 
-http://stackoverflow.com/questions/1134586/how-can-you-find-the-height-of-text-on-an-html-canvas
+* bower
+
+## Resources
+
+http://pomax.nihongoresources.com/pages/Font.js/  
+http://www.brunildo.org/test/xheight.pl  
+http://www.icavia.com/2010/09/solving-font-face-alignment-issues/  
+http://mudcu.be/journal/2011/01/html5-typographic-metrics/  
+http://www.owlfolio.org/htmletc/legibility-of-embedded-web-fonts/  
+http://en.wikipedia.org/wiki/Baseline_(typography)  
+http://stackoverflow.com/questions/1134586/how-can-you-find-the-height-of-text-on-an-html-canvas  
