@@ -62,24 +62,18 @@ function position_nav_button(selected) {
 function show_social_icons() {
 	var social = $('#social');
 	if (social.hasClass('shown')) return;
-	social.find('.github').addClass("animated bounceInDown");
-	setTimeout(function() {	
-		social.find('.twitter').addClass("animated bounceInDown");
-		social.addClass('shown');
-	},200)
+	social.children().addClass('animated bounceInDown');
+	social.addClass('shown');
 }
 
 function hide_social_icons() {
 	var social = $('#social');
 	if(!social.hasClass('shown')) return;
-	social.find('.twitter').removeClass('bounceInDown').addClass('bounceOutUp');
-	setTimeout(function() {
-		social.find('.github').removeClass('bounceInDown').addClass('bounceOutUp');
-	},200);
+	social.children().removeClass('bounceInDown').addClass('bounceOutUp');
 	setTimeout(function() {
 		social.removeClass("shown");
 		social.children().removeClass('animated bounceOutUp');
-	},600)
+	},1000)
 }
 
 var current_xhr;
