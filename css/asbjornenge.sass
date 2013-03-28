@@ -213,6 +213,34 @@ body
         margin-top: 6px
         margin-left: 10px
 
+#social
+    position  : absolute
+    top       : 125px
+    right     : 10px
+    font-size : 2.5em
+    opacity   : 0
+    @media #{$tablet}
+        top   : 70px
+        right : 8px
+        font-size : 2em
+    @media #{$smartphone}
+        font-size : 1.7em
+
+    &.shown
+        opacity : 1
+
+    &:after
+        content : " "
+        display : block
+        clear   : both
+
+    div
+        float : left
+        margin-right : 20px
+
+    a
+        text-decoration: none
+
 #content
     color          : $text-color
     font-size      : 18px

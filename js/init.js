@@ -32,15 +32,19 @@ function move_nav_button(path) {
 	if (/^(\/wwc\/)/.test(path)) path = "/"
 	switch(path) {
 		case '/about.html':
+			show_social_icons();
 			position_nav_button($('#menu .about'))
 			break;
 		case '/crly.html':
+			hide_social_icons();
 			position_nav_button($('#menu .crly'))
 			break;
 		case '/software.html':
+			hide_social_icons();
 			position_nav_button($('#menu .software'))
 			break;
 		case '/':
+			hide_social_icons();
 			position_nav_button($('#menu .blog'))
 			break;
 		default:
@@ -53,6 +57,29 @@ function position_nav_button(selected) {
 	var width = selected.width();
 	var left  = $(window).width() - $("#menu").width() + pos.left + (width/2);
 	$('#head .nav_selector').css('left',left);
+}
+
+function show_social_icons() {
+	var social = $('#social');
+	if (social.hasClass('shown')) return;
+	social.find('.github').addClass("animated bounceInDown");
+	setTimeout(function() {	
+		social.find('.twitter').addClass("animated bounceInDown");
+		social.addClass('shown');
+	},200)
+}
+
+function hide_social_icons() {
+	var social = $('#social');
+	if(!social.hasClass('shown')) return;
+	social.find('.twitter').removeClass('bounceInDown').addClass('bounceOutUp');
+	setTimeout(function() {
+		social.find('.github').removeClass('bounceInDown').addClass('bounceOutUp');
+	},200);
+	setTimeout(function() {
+		social.removeClass("shown");
+		social.children().removeClass('animated bounceOutUp');
+	},600)
 }
 
 var current_xhr;
