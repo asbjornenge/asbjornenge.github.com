@@ -9,21 +9,26 @@ h1 {
     h1 {
       margin: 30px 0px 20px 0px;
       line-height: 1.4; } }
-
-h1 a {
-  text-decoration: none !important; }
+  h1 a {
+    text-decoration: none !important; }
 
 h2 {
-  margin-top: 45px; }
+  margin-top: 45px;
+  margin-bottom: 10px; }
   @media only screen and (max-width: 640px) {
     h2 {
       margin-top: 25px; } }
 
 h3 {
-  margin-top: 45px; }
+  margin-top: 45px;
+  margin-bottom: 10px; }
   @media only screen and (max-width: 640px) {
     h3 {
       margin-top: 25px; } }
+
+h4 {
+  margin-top: 10px;
+  margin-bottom: 10px; }
 
 p {
   margin: 5px 0 25px 0; }
@@ -33,6 +38,7 @@ p {
 
 pre {
   border: 1px solid #cccccc;
+  font-size: 0.9em;
   border-radius: 5px;
   padding: 20px;
   margin: 45px 0 45px 0;
@@ -214,8 +220,8 @@ body {
 
 #content {
   color: #333333;
-  font-size: 20px;
-  line-height: 32px;
+  font-size: 18px;
+  line-height: 28px;
   min-height: 640px;
   margin-top: 14px;
   margin-left: 18%;
