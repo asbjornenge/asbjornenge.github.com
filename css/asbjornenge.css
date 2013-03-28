@@ -227,10 +227,11 @@ body {
   @media only screen and (max-width: 1024px) {
     #social {
       top: 70px;
-      right: 8px;
+      right: 20px;
       font-size: 2em; } }
   @media only screen and (max-width: 640px) {
     #social {
+      right: 8px;
       font-size: 1.7em; } }
   #social.shown {
     opacity: 1; }
