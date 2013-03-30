@@ -49,6 +49,139 @@
 	
 		
 			
+    <div id="b6a35118">
+    	<h1><a href="/wwc/out_of_sorts.html">Out of sorts</a></h1>
+
+<div class="date">30.03.2013</div>
+
+<blockquote>
+<p>My first real fight with fonts.</p>
+</blockquote>
+
+<h4>Disclaimer</h4>
+
+<p>Before I even start this I should probably state that this adventure leads into unfamiliar terrain, and over half my findings are probably half-witted nonsense. There. I should probably start all my blogposts like that.</p>
+
+<h2>Introduction</h2>
+
+<p>Fonts are important. Most of what we see on our screens is text in some form, or typeface, to dive right into the syntax. </p>
+
+<p>Starting out on my current font adventure I was quite shocked by how little I knew about the font world. I had been developing websites and apps full of text for years, but hardly knew what a baseline was. To some extent that is a good thing, it had just worked. On the other hand, it is a level of control over my design I had been completely ingorant about.</p>
+
+<h2>The design bullet</h2>
+
+<p>The current problem I was facing seemed simple enough; allow a line of text to include a bullet. Easy as pie.</p>
+
+<pre><code>&lt;span style=&quot;display:list-item&quot;&gt;Some Text&lt;/span&gt;
+</code></pre>
+
+<p>Turned out it wasn&#39;t quite so easy. These bullets were part of our clients design manual, but they were not the same as the bullet glyph of the font. Modifying the font was also out of the question because of licensing.</p>
+
+<p>But, there was a clear definition; the bullet was a square of <em>height</em> and <em>width</em> <em>x</em> relative the <em>font-size</em>, <strong>vertically aligned</strong> (centered) with the fonts <a href="http://en.wikipedia.org/wiki/Baseline_(typography)"><strong>x-height</strong></a>.</p>
+
+<p>Calculating the x-height of a target element is easy enough using css&#39;s <a href="http://www.w3.org/Style/Examples/007/units#units"><strong>ex</strong></a> unit.</p>
+
+<pre><code>$(&#39;&lt;div style=&quot;width:1ex&quot;&gt;&lt;/div&gt;&#39;).appendTo(target)[0].offsetWidth
+</code></pre>
+
+<p>But the x-height itself was of little use. To vertically align my bullet with the x-height, I needed to know the margin, bottom or top, of the <strong>baseline</strong> or <strong>median</strong>; I needed more metrics.</p>
+
+<p>Alright, easy enough. Let&#39;s see… <em>&quot;javascript font metrics&quot;</em>. Uhm…  </p>
+
+<h4>The bad news</h4>
+
+<p>There is no built-in, easy, standard way of extracting the metrics of a font.  </p>
+
+<h4>The good news</h4>
+
+<p>It&#39;s possible to calculate! AND, there is a great <a href="https://github.com/Pomax/Font.js">library</a> that will do most of the heavy lifting for you! We&#39;ll get to that.</p>
+
+<h2>Calculation</h2>
+
+<p>To calculate a fonts vertical metrics, there are two approaches as far as I can tell.</p>
+
+<p><strong>1. Measuring dom elements</strong></p>
+
+<p>The first <a href="http://www.brunildo.org/test/xheight.pl">approach</a> is to use a bunch of dom elements with specific font-related metrics (1em, 1ex, etc.) and measure these in px (offsetWidth) at different levels and at different font-size&#39;s.</p>
+
+<p>The approach seems to work quite well for the calculation part. Sturdy across browsers and fonts. For the actual positioning there were other icebergs floating around.</p>
+
+<p>NB! The solution is a possible performance drain if used unwisely - measuring offsetWidth might cause unwanted reflow (repaint of your dom elements).</p>
+
+<p><strong>2. Canvas</strong></p>
+
+<p>The second <a href="http://processingjs.nihongoresources.com/FontMetrics/">approach</a> is using the canvas element. The 2d context of a canvas has <em>font</em>, <em>fillText</em> and <em>measureText</em> functions. Unfortunately <a href="http://www.w3.org/TR/2012/WD-2dcontext-20120329/#dom-context-2d-measuretext"><em>measureText</em></a> only deals with the <a href="http://www.w3.org/TR/2012/WD-2dcontext-20120329/#textmetrics">width</a> metric, but that seems to be about to <a href="http://www.w3.org/TR/2dcontext/#textmetrics">change</a> (!!). For now though, the approach is to dump and analyze the raw pixel data and figure out how many pixels are used vertically to draw different letters of the font.</p>
+
+<p>This approach also works perfectly for the calculation part, and thanks to the awesome <a href="http://processingjs.nihongoresources.com/FontMetrics/fontmetrics.js">fontmetrics.js</a> it&#39;s easy.  </p>
+
+<p>But again, for the actual positioning, I was soon stuck in a pitch black room (next to a tiny, grey, startling little cat with diarrhea. Sitting on a matressless, iron-sprung bed with its huge eyes mewing at me. Meow. Smoking as well, probably. And then some terrible guy the colour of an aubergine round the corner holding a mug of beef tea and wearing a string vest going “meew. Fuckn brrr aaah” ~ Dylan Moran).</p>
+
+<h2>@font-face</h2>
+
+<p>The days of web typography is upon us. We are no longer limited to a handful of built-in fonts. Using technologies like <a href="http://sixrevisions.com/css/font-face-guide/">@font-face</a> we can embed &quot;any&quot; font on our page and have it render &quot;beautifully&quot; on the client&#39;s browser.</p>
+
+<p>There are however quite a few <a href="http://www.fontsquirrel.com/blog/2010/11/troubleshooting-font-face-problems">pitfalls</a> &amp; <a href="http://www.owlfolio.org/htmletc/legibility-of-embedded-web-fonts/">legibility</a> issues.</p>
+
+<h3>Rendering</h3>
+
+<p>The one that hit me hard in the face is the fact that different browsers, and even the same browsers on different operating systems, deal very differently with how they render fonts. Even different versions of the same operating system will sometimes render fonts very differently.</p>
+
+<p><em>At typical body-text sizes, the computer has to draw each letter using only 15 or so pixels in each direction. It’s not possible to draw each letter exactly as the typographer intended, and keep all the lines crisp and smooth, with that few pixels. Windows, OSX, and Linux all resolve this dilemma differently: to oversimplify a bit, OSX tries harder to preserve the font shapes, Windows tries harder to make the lines sharp, and Linux tries to do both at once and winds up achieving neither.<br>
+~ Zachary Weinberg</em></p>
+
+<p>Sometimes the font won&#39;t even render inside it&#39;s bounding box! (!!!!) For my current problem, that makes any font metric calculation futile. Turns out, this library I&#39;ve been mumbling about had a solution for even this.</p>
+
+<h3>Timing</h3>
+
+<p>Another issue with embedded fonts is knowing when the font is loaded. If you try to measure prematurely you will end up measuring the fallback font, and thats no good. </p>
+
+<p>The only viable solution I have come across is using a &quot;dummy&quot; fallback font that will encode a character as a zero-width unit. Putting that in a paragraph and polling for a real width. It&#39;s not a great solution but it works.</p>
+
+<h2>Font.js</h2>
+
+<p>Fortunately someone has already thread this path for us.<br>
+<a href="http://pomax.nihongoresources.com/pages/Font.js/">Font.js</a> adds a <strong>Font</strong> object to your javascript toolbelt. It&#39;s designed to behave similar to the <strong>Image</strong> object.</p>
+
+<pre><code>var font = new Font();
+font.onload  = function() {}
+font.onerror = function() {}
+font.src = &quot;http://your.domain.com/fonts/font.otf&quot;
+</code></pre>
+
+<p>It handles <strong>timing</strong> issue using the detailed solution above, and will call your <em>onload</em> function when the font is available. It gives you <strong>metrics</strong>.</p>
+
+<pre><code>font.metrics -&gt; {}
+font.measureText(string, size) -&gt; {}
+</code></pre>
+
+<p>They even handle the <strong>rendering</strong> issue (to some extent).</p>
+
+<p><em>Font.js actually draws text offscreen, does a scanline pass to find out what the &quot;real&quot; ascent and descent is, and then sets height to ascent + 1 + descent (&quot;1&quot; for the baseline itself). This generally works quite well, but will lead to incorrect heights for fonts that don&#39;t implement the Latin blocks =)<br>
+~ Michiel Kamermans</em></p>
+
+<p>One important thing to note is that the fonts are loaded using <strong>XMLHttpRequest</strong>&#39;s. This is important since it is the only way to get the font data so it can be inspected and manipulated. But it does mean you have to deal with hosting your own fonts or setting up <a href="http://en.wikipedia.org/wiki/Cross-origin_resource_sharing">CORS</a> to avoid <em>Access-Control-Allow-Origin</em> issues. </p>
+
+<p>Font.js is a great library for solving most of the current headaches related to fonts.</p>
+
+<p>Grab it from the github <a href="https://github.com/Pomax/Font.js">repo</a> or via <a href="http://twitter.github.com/bower/">bower</a>.</p>
+
+<pre><code>bower install Font.js
+</code></pre>
+
+<h2>Resources</h2>
+
+<p><a href="http://pomax.nihongoresources.com/pages/Font.js/">http://pomax.nihongoresources.com/pages/Font.js/</a><br>
+<a href="http://www.brunildo.org/test/xheight.pl">http://www.brunildo.org/test/xheight.pl</a><br>
+<a href="http://www.icavia.com/2010/09/solving-font-face-alignment-issues/">http://www.icavia.com/2010/09/solving-font-face-alignment-issues/</a><br>
+<a href="http://mudcu.be/journal/2011/01/html5-typographic-metrics/">http://mudcu.be/journal/2011/01/html5-typographic-metrics/</a><br>
+<a href="http://www.owlfolio.org/htmletc/legibility-of-embedded-web-fonts/">http://www.owlfolio.org/htmletc/legibility-of-embedded-web-fonts/</a><br>
+<a href="http://en.wikipedia.org/wiki/Baseline_(typography)">http://en.wikipedia.org/wiki/Baseline_(typography)</a><br>
+<a href="http://stackoverflow.com/questions/1134586/how-can-you-find-the-height-of-text-on-an-html-canvas">http://stackoverflow.com/questions/1134586/how-can-you-find-the-height-of-text-on-an-html-canvas</a>  </p>
+
+    </div>
+
+		
+			
     <div id="98c6d461">
     	<h1><a href="/wwc/zero_todo.html">Zero Todo</a></h1>
 

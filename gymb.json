@@ -15,6 +15,12 @@
             "published" : "10.02.2013",
             "title" : "JSON Schema"
         },
+        "out_of_sorts.md" : {
+            "id" : "b6a35118",
+            "path" : "wwc/out_of_sorts.html",
+            "published" : "30.03.2013",
+            "title" : "Out of sorts"
+        },
         "zero_todo.md" : {
             "id" : "98c6d461",
             "path" : "wwc/zero_todo.html",
