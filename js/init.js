@@ -143,6 +143,8 @@ function update_content(path, data) {
 		$("#label").text(new_label);
 	if (new_logo != old_logo)
 		$("#logo").attr('src', new_logo);
+	var script = $('<script type="text/javascript">setTimeout(function() {animate_quicklinks("'+path+'")},100)</script>');
+	new_content.append(script);
 	$("#content").replaceWith(new_content);
-	animate_quicklinks(path);
+	// animate_quicklinks(path);
 }
