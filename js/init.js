@@ -1,6 +1,7 @@
 $(document).ready(function() {
 
 	move_nav_button(window.location.pathname);
+	animate_quicklinks(window.location.pathname);
 
 	$('.nav_item').click(function(e) {
 		e.preventDefault();
@@ -32,28 +33,44 @@ function move_nav_button(path) {
 	if (/^(\/wwc\/)/.test(path)) path = "/"
 	switch(path) {
 		case '/about.html':
-			hide_feed_icons();
-			show_social_icons();
 			position_nav_button($('#menu .about'))
 			break;
 		case '/crly.html':
-			hide_feed_icons();
-			hide_social_icons();
 			position_nav_button($('#menu .crly'))
 			break;
 		case '/software.html':
-			hide_feed_icons();
-			hide_social_icons();
 			position_nav_button($('#menu .software'))
 			break;
 		case '/':
-			hide_social_icons();
-			show_feed_icons();
 			position_nav_button($('#menu .blog'))
 			break;
 		default:
 			console.log('Unknown path '+path);
 	}
+}
+
+function animate_quicklinks(path) {
+	if (/^(\/wwc\/)/.test(path)) path = "/"
+	switch(path) {
+		case '/about.html':
+			hide_feed_icons();
+			show_social_icons();
+			break;
+		case '/crly.html':
+			hide_feed_icons();
+			hide_social_icons();
+			break;
+		case '/software.html':
+			hide_feed_icons();
+			hide_social_icons();
+			break;
+		case '/':
+			hide_social_icons();
+			show_feed_icons();
+			break;
+		default:
+			console.log('Unknown path '+path);
+	}	
 }
 
 function position_nav_button(selected) {
@@ -127,4 +144,5 @@ function update_content(path, data) {
 	if (new_logo != old_logo)
 		$("#logo").attr('src', new_logo);
 	$("#content").replaceWith(new_content);
+	animate_quicklinks(path);
 }
