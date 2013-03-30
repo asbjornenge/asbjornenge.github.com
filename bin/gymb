@@ -6,6 +6,7 @@
 
 import sys, os, json, argparse, uuid, codecs
 import misaka as m
+import PyRSS2Gen, datetime, time
 from mako.template import Template
 from mako.lookup import TemplateLookup
 
@@ -85,7 +86,31 @@ def meta_blog(config, args):
 ## Build actions
 #
 
+def build_rss(config, args):
+    for blog in config["blogs"]:
+        items = []
+        for post in config[blog].keys():
+            _post = config[blog][post]
+            if  not _post['published']: continue
+            _url  = 'http://www.asbjornenge.com/%s' % _post['path']
+            _date = time.strptime(_post['published'],'%m.%d.%Y')
+            item = PyRSS2Gen.RSSItem(
+                     title = _post['title'],
+                     link  = _url,
+                     description = _post['title'],
+                     guid = PyRSS2Gen.Guid(_url),
+                     pubDate = datetime.datetime.fromtimestamp(time.mktime(_date)))
+            items.append(item)
+        rss = PyRSS2Gen.RSS2(
+            title = "Web, words and coffee",
+            link = "http://www.asbjornenge.com",
+            description = "Web, words and coffee",
+            lastBuildDate = datetime.datetime.now(),
+            items = items)
+        rss.write_xml(open(blog+"/rss.xml", "w"),"utf-8")
+
 def build(config, args):
+    build_rss(config, args)
     makofiles = []
     mdfiles = []
     for (path, dirs, files) in os.walk('.'):
