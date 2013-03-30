@@ -218,45 +218,45 @@ body {
       margin-top: 6px;
       margin-left: 10px; } }
 
-#social {
+#social, #feed {
   position: absolute;
   top: 125px;
   right: 10px;
   font-size: 2.5em;
   opacity: 0; }
   @media only screen and (max-width: 1024px) {
-    #social {
+    #social, #feed {
       top: 80px;
       right: 20px;
       font-size: 2em; } }
   @media only screen and (max-width: 640px) {
-    #social {
+    #social, #feed {
       top: 70px;
       right: 8px;
       font-size: 1.7em; } }
-  #social.shown {
+  #social.shown, #feed.shown {
     opacity: 1; }
-  #social:after {
+  #social:after, #feed:after {
     content: " ";
     display: block;
     clear: both; }
-  #social div {
+  #social div, #feed div {
     float: left;
     margin-right: 20px; }
-    #social div.twitter {
+    #social div.twitter, #feed div.twitter {
       -webkit-animation-delay: 0.2s;
       -moz-animation-delay: 0.2s;
       -ms-animation-delay: 0.2s;
       -o-animation-delay: 0.2s;
       animation-delay: 0.2s; }
-    #social div.itunes {
+    #social div.itunes, #feed div.itunes {
       margin-left: -6px;
       -webkit-animation-delay: 0.4s;
       -moz-animation-delay: 0.4s;
       -ms-animation-delay: 0.4s;
       -o-animation-delay: 0.4s;
       animation-delay: 0.4s; }
-  #social a {
+  #social a, #feed a {
     text-decoration: none; }
 
 #content {

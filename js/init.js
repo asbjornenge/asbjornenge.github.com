@@ -32,19 +32,23 @@ function move_nav_button(path) {
 	if (/^(\/wwc\/)/.test(path)) path = "/"
 	switch(path) {
 		case '/about.html':
+			hide_feed_icons();
 			show_social_icons();
 			position_nav_button($('#menu .about'))
 			break;
 		case '/crly.html':
+			hide_feed_icons();
 			hide_social_icons();
 			position_nav_button($('#menu .crly'))
 			break;
 		case '/software.html':
+			hide_feed_icons();
 			hide_social_icons();
 			position_nav_button($('#menu .software'))
 			break;
 		case '/':
 			hide_social_icons();
+			show_feed_icons();
 			position_nav_button($('#menu .blog'))
 			break;
 		default:
@@ -58,6 +62,27 @@ function position_nav_button(selected) {
 	var left  = $(window).width() - $("#menu").width() + pos.left + (width/2);
 	$('#head .nav_selector').css('left',left);
 }
+
+/** FEED **/
+
+function show_feed_icons() {
+	var feed = $('#feed');
+	if (feed.hasClass('shown')) return;
+	feed.children().addClass('animated bounceInDown');
+	feed.addClass('shown');	
+}
+
+function hide_feed_icons() {
+	var feed = $('#feed');
+	if(!feed.hasClass('shown')) return;
+	feed.children().removeClass('bounceInDown').addClass('bounceOutUp');
+	setTimeout(function() {
+		feed.removeClass("shown");
+		feed.children().removeClass('animated bounceOutUp');
+	},1000)
+}
+
+/** SOCIAL **/
 
 function show_social_icons() {
 	var social = $('#social');
