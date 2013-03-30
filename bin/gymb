@@ -93,7 +93,7 @@ def build_rss(config, args):
             _post = config[blog][post]
             if  not _post['published']: continue
             _url  = 'http://www.asbjornenge.com/%s' % _post['path']
-            _date = time.strptime(_post['published'],'%m.%d.%Y')
+            _date = time.strptime(_post['published'],'%d.%m.%Y')
             item = PyRSS2Gen.RSSItem(
                      title = _post['title'],
                      link  = _url,
