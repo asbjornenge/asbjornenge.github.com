@@ -42,7 +42,7 @@ pre {
   border-radius: 5px;
   padding: 20px;
   margin: 45px 0 45px 0;
-  width: 97%;
+  width: 96%;
   overflow: scroll; }
   @media only screen and (max-width: 640px) {
     pre {
@@ -269,6 +269,7 @@ body {
   margin-right: 18%;
   margin-bottom: -100px;
   padding-bottom: 20px;
+  overflow-x: hidden;
   text-rendering: optimizeLegibility;
   -webkit-font-feature-settings: "liga", "dlig"; }
   @media only screen and (max-width: 1024px) {
