@@ -1,4 +1,4 @@
-# [Centipede](https://github.com/asbjornenge/centipede)
+# [Centipede](http://www.asbjornenge.com/centipede)
 
 > A tiny RESTful API microframework
 
