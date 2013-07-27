@@ -8,4 +8,4 @@ Centipede is a [WSGI](http://en.wikipedia.org/wiki/Web_Server_Gateway_Interface)
 
 > Tiny hairy templates
 
-Stubble is my approach to javascript templates. It's a really tiny library both in size (552 B gzipped) and functionality. But it has a nice little declarative plugin system so you can grow it much any way you want.
+Stubble is my approach to javascript templates. It's a really tiny library both in size (552 B gzipped) and functionality. But it has a nice little declarative plugin system so you can grow it most any way you want.
