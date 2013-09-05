@@ -272,6 +272,8 @@ body {
   margin-bottom: -100px;
   padding-bottom: 20px;
   overflow-x: hidden;
+  max-width: 800px;
+  margin: auto;
   text-rendering: optimizeLegibility;
   -webkit-font-feature-settings: "liga", "dlig"; }
   @media only screen and (max-width: 1024px) {
