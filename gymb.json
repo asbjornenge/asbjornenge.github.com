@@ -5,27 +5,68 @@
     "wwc" : {
         "introducing_gymb.md" : {
             "id" : "f134a8e7",
+            "key" : "introducing_gymb.md",
             "path" : "wwc/introducing_gymb.html",
             "published" : false,
             "title" : "Introducing Gymb"
         },
         "json_schema.md" : {
             "id" : "68fef665",
+            "key" : "json_schema.md",
             "path" : "wwc/json_schema.html",
             "published" : "10.02.2013",
             "title" : "JSON Schema"
         },
         "out_of_sorts.md" : {
             "id" : "b6a35118",
+            "key" : "out_of_sorts.md",
             "path" : "wwc/out_of_sorts.html",
             "published" : "30.03.2013",
             "title" : "Out of sorts"
         },
+        "vagrant_skydocking.md" : {
+            "id" : "342e195d",
+            "key" : "vagrant_skydocking.md",
+            "path" : "wwc/vagrant_skydocking.html",
+            "published" : "29.01.2014",
+            "title" : "Vagrant skydocking"
+        },
         "zero_todo.md" : {
             "id" : "98c6d461",
+            "key" : "zero_todo.md",
             "path" : "wwc/zero_todo.html",
             "published" : "08.03.2013",
             "title" : "Zero Todo"
         }
-    }
+    },
+    "wwc_sorted" : [
+        {
+            "id" : "342e195d",
+            "key" : "vagrant_skydocking.md",
+            "path" : "wwc/vagrant_skydocking.html",
+            "published" : "29.01.2014",
+            "title" : "Vagrant skydocking"
+        },
+        {
+            "id" : "b6a35118",
+            "key" : "out_of_sorts.md",
+            "path" : "wwc/out_of_sorts.html",
+            "published" : "30.03.2013",
+            "title" : "Out of sorts"
+        },
+        {
+            "id" : "98c6d461",
+            "key" : "zero_todo.md",
+            "path" : "wwc/zero_todo.html",
+            "published" : "08.03.2013",
+            "title" : "Zero Todo"
+        },
+        {
+            "id" : "68fef665",
+            "key" : "json_schema.md",
+            "path" : "wwc/json_schema.html",
+            "published" : "10.02.2013",
+            "title" : "JSON Schema"
+        }
+    ]
 }

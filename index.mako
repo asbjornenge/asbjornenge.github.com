@@ -1,10 +1,11 @@
 <%inherit file="base.html"/>
 <%block name="content">
 	<% wwc = config['wwc'] %>
-	% for path in wwc:
-		<% post = wwc[path] %>
+  <% sorted = config['wwc_sorted'] %>
+	% for blog in sorted:
+		<% post = wwc[blog['key']] %>
 		% if post['published']:
-			${showblog(wwc[path])}
+			${showblog(wwc[blog['key']])}
 		% endif
 	% endfor
 </%block>

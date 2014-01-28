@@ -26,8 +26,20 @@ gimp_template = """<%inherit file="base.html"/><%block name="content">${markdown
 ## Config actions
 #
 
+from operator import itemgetter
+
 def read_config():
-    return json.loads(open(config_file, encoding="utf-8").read())
+    config  = json.loads(open(config_file, encoding="utf-8").read())
+    _sorted = []
+    for d in config['wwc']:
+       dd = config['wwc'][d]
+       dd['key'] = d
+       if dd['published']:
+         _sorted.append(dd)
+    _sorted.sort(key=lambda item:time.strptime(item['published'],'%d.%m.%Y'), reverse=True)
+    print _sorted 
+    config['wwc_sorted'] = _sorted
+    return config
 
 def clean_config(config):
     if config.has_key('markdown'):
