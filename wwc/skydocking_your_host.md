@@ -10,8 +10,8 @@ Instead of having to forward ports and using lots of -p flags when spawning cont
 
 First; bind the docker daemon to a specific ip using the **-bip** setting.
 
-	$> vi /etc/init/docker.conf # <- ubuntu
-	 $DOCKER_OPTS -bip 10.2.0.10/16
+	$> sudo vi /etc/init/docker.conf # <- ubuntu ✌(-‿-)✌
+	   $DOCKER_OPTS -bip 10.2.0.10/16
 	 
 Create a network bridge in your Vagrantfile using the same ip.
 
@@ -41,8 +41,6 @@ You now have a bridge from your host to your docker network!
 	2 packets transmitted, 2 received, 0% packet loss, time 1009ms
 	rtt min/avg/max/mdev = 0.103/0.167/0.232/0.065 ms
 
-Aha!
-
 ![AHA](https://raw2.github.com/jglovier/gifs/gh-pages/aha/aha.gif)
 
 ## Skydock
@@ -51,12 +49,52 @@ Docker is all about distributed systems; packing single components inside contai
 
 (Docker provides a -link parameter for linking containers. But this quickly falls short in complex scenarios.)
 
-I was just about to dig into service discrovery solutions like [etcd](https://github.com/coreos/etcd) or similar, when [Michael Crosby](http://crosbymichael.com/) posted his [skydock](https://github.com/crosbymichael/skydock) ([video](https://www.youtube.com/watch?v=Nw42q1ofrV0)). It's brilliant!
+I was just about to dig into service discrovery solutions like [etcd](https://github.com/coreos/etcd) or similar, when [Michael Crosby](http://crosbymichael.com/) posted his [skydock](https://github.com/crosbymichael/skydock) ([video](https://www.youtube.com/watch?v=Nw42q1ofrV0)). It's brilliant! I won't go into setting up skydock, just check out the awesome tutorial by Michael.
 
-So, with skydock my containers can discover eachother via DNS. Awesome! But, especially for development, it would be really nice if I could use these names directly from my host (OSX).
+So, with skydock my containers can discover eachother via DNS. Awesome! But, with my network bridge set up, my host can discover them too!! No? That would be really nice for development...
 
-	curl elasticsearch.dev.domain.com:9200 # <- me want!
+	$> curl elasticsearch.dev.domain.com:9200 # <- me want!
+	curl: (6) Could not resolve host: elasticsearch.dev.domain.com # ﴾͡๏̯͡๏﴿
+
+Ah, we need to do is hook up the docker0 interface as a nameserver.
+
+	$> sudo vi /etc/resolv.conf
+	   nameserver 10.2.0.10
+	$> dig elasticsearch.dev.domain.com
+	;; ANSWER SECTION:
+	elasticsearch.dev.domain.com.	20	IN	A	10.2.0.7
+
+Now, hopefull that will be it for you and your all set to curl containers from the comforts of your host terminal. I had one last issue to solve...
+
+	$> curl elasticsearch.dev.domain.com:9200
+	curl: (6) Could not resolve host: es.dev.taghub.net # w00000000t???
+
+Apparently OSX is rather weird in how it handles DNS. **dig**, **host**, etc. can resolve the host just fine, but other tools like **curl** and even **ping** does not obey resolv.conf. I eventually stumbled across the issue and found [this](https://github.com/michthom/AlwaysAppendSearchDomains) script that apparently solves it for most people. It didn't help. I'm on Maverics btw. Eventually I added the DNS server via OSX [network preferences](http://support.apple.com/kb/PH14159) which did the trick.
+
+	$> curl elasticsearch.dev.domain.com:9200
+	{
+  		"ok" : true,
+  		"status" : 200,
+  		"name" : "Damian, Margo",
+  		"version" : {
+    		"number" : "1.0.0.Beta2",
+    		"build_hash" : "296cfbe390dc51bb00c00ba48ad0c8a9efabcfe9",
+    		"build_timestamp" : "2013-12-02T15:46:27Z",
+    		"build_snapshot" : false,
+    		"lucene_version" : "4.6"
+  		},
+  		"tagline" : "You Know, for Search"
+	}
+
+![HAPPY](http://i0.kym-cdn.com/profiles/icons/big/000/055/347/1313845263510.gif)
+
+I'm now a happy curl’er of containers!!
+
+enjoy.
 
 ## Credits
 
-I followed [this](Integrate Docker Containers into your Host Network) guide by [Lukas Pustina](https://twitter.com/drivebytesting) to set up my networking.
+[Docker](http://docker.io), [Skydock](https://github.com/crosbymichael/skydock) and [Skydns](https://github.com/skynetservices/skydns) all deserve a big fat ♥‿♥.  
+I followed [this](Integrate Docker Containers into your Host Network) guide by [Lukas Pustina](https://twitter.com/drivebytesting) to set up my networking.  
+Gifs from [here](https://github.com/jglovier/gifs) and faces from [there](https://github.com/maxogden/cool-ascii-faces).  
+Thanks!
