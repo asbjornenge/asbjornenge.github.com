@@ -1,4 +1,4 @@
-# Skydocking your host
+# Vagrant Skydocking
 
 ## A bridge over vagrant water
 
@@ -31,7 +31,7 @@ After reloading vagrant we need to **link** the bridge interface, *eth1* (<- mig
 	
 You now have a **bridge** from your host to your docker network!!
 
-	$> IP=`sudo docker inspect -format='{{.NetworkSettings.IPAddress}}' 5aa2a5199204`
+	$> IP=`docker inspect -format='{{.NetworkSettings.IPAddress}}' 5aa2a5199204`
 	$> ping $IP
 	PING 10.2.0.7 (10.2.0.7) 56(84) bytes of data.
 	64 bytes from 10.2.0.7: icmp_req=1 ttl=64 time=0.232 ms
@@ -49,9 +49,9 @@ Docker is all about distributed systems; packing single components inside contai
 
 (Docker provides a -link parameter for linking containers. But this quickly falls short in complex scenarios.)
 
-I was just about to dig into service discrovery solutions like [etcd](https://github.com/coreos/etcd) or similar, when [Michael Crosby](http://crosbymichael.com/) posted his [skydock](https://github.com/crosbymichael/skydock) ([video](https://www.youtube.com/watch?v=Nw42q1ofrV0)). It's brilliant! It basically let's you discover your service via DNS and a few naming conventions. I won't go into setting up skydock, just check out the awesome [tutorial](https://github.com/crosbymichael/skydock) by Michael.
+I was just about to dig into service discrovery solutions like [etcd](https://github.com/coreos/etcd) or similar, when [Michael Crosby](http://crosbymichael.com/) posted his [skydock](https://github.com/crosbymichael/skydock) ([video](https://www.youtube.com/watch?v=Nw42q1ofrV0)). It's brilliant! It let's you discover your service via **DNS**. I won't go into setting up skydock, just check out the awesome [tutorial](https://github.com/crosbymichael/skydock) by Michael.
 
-So, with skydock my containers can discover eachother via DNS. Awesome! But, with my network bridge set up, so can my host!! No? That would be really nice for development...
+So, with skydock my containers can discover eachother via DNS names like *myservice.env.domain.com*. Awesome! But, with my network bridge set up, so can my host!! No? That would be really nice for development...
 
 	$> curl elasticsearch.dev.domain.com:9200
 	curl: (6) Could not resolve host: elasticsearch.dev.domain.com
@@ -64,14 +64,14 @@ So, with skydock my containers can discover eachother via DNS. Awesome! But, wit
 	;; ANSWER SECTION:
 	elasticsearch.dev.domain.com.	20	IN	A	10.2.0.7
 
-✌(-‿-)✌ ... Hoplah! Now, hopefull that will be it for you and you're all set to curl containers from the comforts of your host terminal! I however, had one more issue to solve...
+✌(-‿-)✌ ... Hoplah! Now, hopefully that will be it for you and you're all set to curl containers from the comforts of your host terminal! I however, had one more issue to solve...
 
 	$> curl elasticsearch.dev.domain.com:9200
 	curl: (6) Could not resolve host: elasticsearch.dev.domain.com # w00000000t???
 
 ### OSX weirdness
 
-Apparently OSX is rather weird in how it handles DNS. **dig**, **host**, etc. can resolve the host just fine, but other tools like **curl** and even **ping** does not obey resolv.conf. I eventually stumbled across the issue and found [this](https://github.com/michthom/AlwaysAppendSearchDomains) script that apparently solves it for most people. It didn't help. I'm on Maverics btw. Eventually I added the DNS server via OSX [network preferences](http://support.apple.com/kb/PH14159) which did the trick.
+Apparently OSX is rather weird in how it handles DNS. **dig**, **host**, etc. can resolve the host just fine, but other tools like **curl** and even **ping** does not obey resolv.conf. I eventually stumbled across the issue and found [this](https://github.com/michthom/AlwaysAppendSearchDomains) script that apparently solves it for most people. It didn't help. Eventually I added the DNS server via OSX [network preferences](http://support.apple.com/kb/PH14159), and that did the trick.
 
 	$> curl elasticsearch.dev.domain.com:9200
 	{
