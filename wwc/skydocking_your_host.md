@@ -1,6 +1,6 @@
 # Skydocking your host
 
-## A bridge over troubled water
+## A bridge over vagrant water
 
 I've been working quite a bit with [docker](http://docker.io) lately. If you haven't yet checked it out; it's about time. Docker is already popping paradigms.
 
@@ -51,12 +51,12 @@ Docker is all about distributed systems; packing single components inside contai
 
 I was just about to dig into service discrovery solutions like [etcd](https://github.com/coreos/etcd) or similar, when [Michael Crosby](http://crosbymichael.com/) posted his [skydock](https://github.com/crosbymichael/skydock) ([video](https://www.youtube.com/watch?v=Nw42q1ofrV0)). It's brilliant! I won't go into setting up skydock, just check out the awesome tutorial by Michael.
 
-So, with skydock my containers can discover eachother via DNS. Awesome! But, with my network bridge set up, my host can discover them too!! No? That would be really nice for development...
+So, with skydock my containers can discover eachother via DNS. Awesome! But, with my network bridge set up, so can my host!! No? That would be really nice for development...
 
-	$> curl elasticsearch.dev.domain.com:9200 # <- me want!
-	curl: (6) Could not resolve host: elasticsearch.dev.domain.com # ﴾͡๏̯͡๏﴿
+	$> curl elasticsearch.dev.domain.com:9200
+	curl: (6) Could not resolve host: elasticsearch.dev.domain.com
 
-Ah, we need to do is hook up the docker0 interface as a nameserver.
+﴾͡๏̯͡๏﴿ ... Ah, we need to do is hook up the docker0 interface as a nameserver.
 
 	$> sudo vi /etc/resolv.conf
 	   nameserver 10.2.0.10
@@ -64,7 +64,7 @@ Ah, we need to do is hook up the docker0 interface as a nameserver.
 	;; ANSWER SECTION:
 	elasticsearch.dev.domain.com.	20	IN	A	10.2.0.7
 
-Now, hopefull that will be it for you and your all set to curl containers from the comforts of your host terminal. I had one last issue to solve...
+✌(-‿-)✌ ... Now, hopefull that will be it for you and your all set to curl containers from the comforts of your host terminal. I had one last issue to solve...
 
 	$> curl elasticsearch.dev.domain.com:9200
 	curl: (6) Could not resolve host: es.dev.taghub.net # w00000000t???
