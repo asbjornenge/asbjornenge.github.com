@@ -126,7 +126,7 @@ elasticsearch.dev.domain.com.   20  IN  A   10.2.0.7
 <p>✌(-‿-)✌ ... Now, hopefull that will be it for you and your all set to curl containers from the comforts of your host terminal. I had one last issue to solve...</p>
 
 <pre><code>$&gt; curl elasticsearch.dev.domain.com:9200
-curl: (6) Could not resolve host: es.dev.taghub.net # w00000000t???
+curl: (6) Could not resolve host: elasticsearch.dev.domain.com # w00000000t???
 </code></pre>
 
 <p>Apparently OSX is rather weird in how it handles DNS. <strong>dig</strong>, <strong>host</strong>, etc. can resolve the host just fine, but other tools like <strong>curl</strong> and even <strong>ping</strong> does not obey resolv.conf. I eventually stumbled across the issue and found <a href="https://github.com/michthom/AlwaysAppendSearchDomains">this</a> script that apparently solves it for most people. It didn&#39;t help. I&#39;m on Maverics btw. Eventually I added the DNS server via OSX <a href="http://support.apple.com/kb/PH14159">network preferences</a> which did the trick.</p>

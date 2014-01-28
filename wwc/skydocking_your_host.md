@@ -67,7 +67,7 @@ So, with skydock my containers can discover eachother via DNS. Awesome! But, wit
 ✌(-‿-)✌ ... Now, hopefull that will be it for you and your all set to curl containers from the comforts of your host terminal. I had one last issue to solve...
 
 	$> curl elasticsearch.dev.domain.com:9200
-	curl: (6) Could not resolve host: es.dev.taghub.net # w00000000t???
+	curl: (6) Could not resolve host: elasticsearch.dev.domain.com # w00000000t???
 
 Apparently OSX is rather weird in how it handles DNS. **dig**, **host**, etc. can resolve the host just fine, but other tools like **curl** and even **ping** does not obey resolv.conf. I eventually stumbled across the issue and found [this](https://github.com/michthom/AlwaysAppendSearchDomains) script that apparently solves it for most people. It didn't help. I'm on Maverics btw. Eventually I added the DNS server via OSX [network preferences](http://support.apple.com/kb/PH14159) which did the trick.
 
