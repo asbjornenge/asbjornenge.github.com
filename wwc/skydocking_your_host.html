@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Web, Words & Coffee</title>
+        <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+
+        <link rel="stylesheet" href="/css/reset.css">
+        <link rel="stylesheet" href="/css/fonts.css">
+        <link rel="stylesheet" href="/css/asbjornenge.css">
+        <link rel="stylesheet" href="/css/font-awesome.min.css">
+        <link rel="stylesheet" href="/css/animate.min.css">
+        <link rel="shortcut icon" href="https://www.gravatar.com/avatar/198a385bacf129e4b07f2b9e748787df?s=128">
+        <!--
+        <link rel="stylesheet" href="/css/highlight/googlecode.css">
+        <script src="/js/lib/highlight.pack.js"></script>
+        -->
+        <script src="/js/lib/ga.js"></script>
+        <script src="/js/lib/jquery-1.9.0.min.js"></script>
+        <script src="/js/lib/tap.js"></script>
+        <script src="/js/init.js" type="text/javascript"></script>
+    </head>
+    <body>
+        <div id="head">
+            <a link="/" class="nav_item">
+                <img id="logo" src="https://www.gravatar.com/avatar/198a385bacf129e4b07f2b9e748787df?s=80"/>
+            </a>
+            <div id="label">Web, Words & Coffee</div>
+            <ul id="menu">
+                <li class="about nav_item" link="/about.html">About</li>
+                <li class="separator">:</li>
+                <!--
+                <li class="crly nav_item" link="/crly.html">Crly</li>
+                <li class="separator">:</li>
+                -->
+                <!--
+                <li class="software nav_item" link="/software.html">Software</li>
+                <li class="separator">:</li>
+                -->
+                <li class="blog nav_item" link="/">Blog</li>
+            </ul>
+            <span class="nav_selector">&nbsp;</span>
+        </div>
+        <div style="clear:both"></div>
+        <div id="social">
+            <div class="github"><a href="http://github.com/asbjornenge"><i class="icon-github"></i></a></div>
+            <div class="twitter"><a href="http://twitter.com/asbjornenge"><i class="icon-twitter"></i></a></div>
+            <div class="itunes"><a href="https://itunes.apple.com/us/artist/asbjorn-enge/id528981222"><i class="icon-music"></i></a></div>
+        </div>
+        <div id="feed">
+            <div class="rss"><a href="http://www.asbjornenge.com/wwc/rss.xml"><i class="icon-rss"></i></a></div>
+        </div>
+        <div id="content">
+            <h1>Skydocking your host</h1>
+
+<h2>A bridge over vagrant water</h2>
+
+<p>I&#39;ve been working quite a bit with <a href="http://docker.io">docker</a> lately. If you haven&#39;t yet checked it out; it&#39;s about time. Docker is already popping paradigms.</p>
+
+<p>Since I&#39;m on OSX I&#39;m running my docker host on Virtualbox via <a href="http://www.vagrantup.com/">Vagrant</a>.</p>
+
+<p>Instead of having to forward ports and using lots of -p flags when spawning containers I wanted to bridge my host with the docker interface (inside virtualbox) so that I could ping my containers &quot;directly&quot; from my OSX terminal.</p>
+
+<p>First; bind the docker daemon to a specific ip using the <strong>-bip</strong> setting.</p>
+
+<pre><code>$&gt; sudo vi /etc/init/docker.conf # &lt;- ubuntu ✌(-‿-)✌
+   $DOCKER_OPTS -bip 10.2.0.10/16
+</code></pre>
+
+<p>Create a network bridge in your Vagrantfile using the same ip.</p>
+
+<pre><code>Vagrant::VERSION &gt;= &quot;1.1.0&quot; and Vagrant.configure(&quot;2&quot;) do |config|
+    config.vm.network &quot;private_network&quot;, ip: &quot;10.2.0.10&quot;, netmask: &quot;255.255.0.0&quot;
+    config.vm.provider :virtualbox do |vb|
+        vb.customize [&quot;modifyvm&quot;, :id, &quot;--nicpromisc2&quot;, &quot;allow-all&quot;]
+    end
+end
+</code></pre>
+
+<p>The <strong>vb.customize</strong> is to allow forwarding packets for the bridge interface. The <strong>--nicpromisc2</strong> translates to &quot;Promiscuous mode for nic 2&quot;, where nic2 -&gt; eth1. So --nocpromisc3 would change that setting for eth2, etc.</p>
+
+<p>After reloading vagrant, inside the container, we need to link the bridge interface (eth1 &lt;- might differ in your vm) to the docker interface (docker0).</p>
+
+<pre><code>$&gt; sudo ip addr del 10.2.0.10/16 dev eth1
+$&gt; sudo ip link set eth1 master docker0
+</code></pre>
+
+<p>You now have a bridge from your host to your docker network!</p>
+
+<pre><code>$&gt; IP=`sudo docker inspect -format=&#39;{{.NetworkSettings.IPAddress}}&#39; 5aa2a5199204`
+$&gt; ping $IP
+PING 10.2.0.7 (10.2.0.7) 56(84) bytes of data.
+64 bytes from 10.2.0.7: icmp_req=1 ttl=64 time=0.232 ms
+64 bytes from 10.2.0.7: icmp_req=2 ttl=64 time=0.103 ms
+^C
+--- 10.2.0.7 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1009ms
+rtt min/avg/max/mdev = 0.103/0.167/0.232/0.065 ms
+</code></pre>
+
+<p><img src="https://raw2.github.com/jglovier/gifs/gh-pages/aha/aha.gif" alt="AHA"></p>
+
+<h2>Skydock</h2>
+
+<p>Docker is all about distributed systems; packing single components inside containers and have them talk to eachother. One of the painpoints when shattering your monolith is linking all those loose components together.</p>
+
+<p>(Docker provides a -link parameter for linking containers. But this quickly falls short in complex scenarios.)</p>
+
+<p>I was just about to dig into service discrovery solutions like <a href="https://github.com/coreos/etcd">etcd</a> or similar, when <a href="http://crosbymichael.com/">Michael Crosby</a> posted his <a href="https://github.com/crosbymichael/skydock">skydock</a> (<a href="https://www.youtube.com/watch?v=Nw42q1ofrV0">video</a>). It&#39;s brilliant! I won&#39;t go into setting up skydock, just check out the awesome tutorial by Michael.</p>
+
+<p>So, with skydock my containers can discover eachother via DNS. Awesome! But, with my network bridge set up, so can my host!! No? That would be really nice for development...</p>
+
+<pre><code>$&gt; curl elasticsearch.dev.domain.com:9200
+curl: (6) Could not resolve host: elasticsearch.dev.domain.com
+</code></pre>
+
+<p>﴾͡๏̯͡๏﴿ ... Ah, we need to do is hook up the docker0 interface as a nameserver.</p>
+
+<pre><code>$&gt; sudo vi /etc/resolv.conf
+   nameserver 10.2.0.10
+$&gt; dig elasticsearch.dev.domain.com
+;; ANSWER SECTION:
+elasticsearch.dev.domain.com.   20  IN  A   10.2.0.7
+</code></pre>
+
+<p>✌(-‿-)✌ ... Now, hopefull that will be it for you and your all set to curl containers from the comforts of your host terminal. I had one last issue to solve...</p>
+
+<pre><code>$&gt; curl elasticsearch.dev.domain.com:9200
+curl: (6) Could not resolve host: es.dev.taghub.net # w00000000t???
+</code></pre>
+
+<p>Apparently OSX is rather weird in how it handles DNS. <strong>dig</strong>, <strong>host</strong>, etc. can resolve the host just fine, but other tools like <strong>curl</strong> and even <strong>ping</strong> does not obey resolv.conf. I eventually stumbled across the issue and found <a href="https://github.com/michthom/AlwaysAppendSearchDomains">this</a> script that apparently solves it for most people. It didn&#39;t help. I&#39;m on Maverics btw. Eventually I added the DNS server via OSX <a href="http://support.apple.com/kb/PH14159">network preferences</a> which did the trick.</p>
+
+<pre><code>$&gt; curl elasticsearch.dev.domain.com:9200
+{
+    &quot;ok&quot; : true,
+    &quot;status&quot; : 200,
+    &quot;name&quot; : &quot;Damian, Margo&quot;,
+    &quot;version&quot; : {
+        &quot;number&quot; : &quot;1.0.0.Beta2&quot;,
+        &quot;build_hash&quot; : &quot;296cfbe390dc51bb00c00ba48ad0c8a9efabcfe9&quot;,
+        &quot;build_timestamp&quot; : &quot;2013-12-02T15:46:27Z&quot;,
+        &quot;build_snapshot&quot; : false,
+        &quot;lucene_version&quot; : &quot;4.6&quot;
+    },
+    &quot;tagline&quot; : &quot;You Know, for Search&quot;
+}
+</code></pre>
+
+<p><img src="http://i0.kym-cdn.com/profiles/icons/big/000/055/347/1313845263510.gif" alt="HAPPY"></p>
+
+<p>I&#39;m now a happy curl’er of containers!!</p>
+
+<p>enjoy.</p>
+
+<h2>Credits</h2>
+
+<p><a href="http://docker.io">Docker</a>, <a href="https://github.com/crosbymichael/skydock">Skydock</a> and <a href="https://github.com/skynetservices/skydns">Skydns</a> all deserve a big fat ♥‿♥.<br>
+I followed <a href="Integrate%20Docker%20Containers%20into%20your%20Host%20Network">this</a> guide by <a href="https://twitter.com/drivebytesting">Lukas Pustina</a> to set up my networking.<br>
+Gifs from <a href="https://github.com/jglovier/gifs">here</a> and faces from <a href="https://github.com/maxogden/cool-ascii-faces">there</a>.<br>
+Thanks!</p>
+
+            <div class="push"></div>
+        </div>
+        <div id="footer">enjoy.</div>
+    </body>
+</html>
