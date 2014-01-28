@@ -114,7 +114,7 @@ rtt min/avg/max/mdev = 0.103/0.167/0.232/0.065 ms
 curl: (6) Could not resolve host: elasticsearch.dev.domain.com
 </code></pre>
 
-<p>﴾͡๏̯͡๏﴿ ... Ah, we need to do is hook up the docker0 interface as a nameserver.</p>
+<p>﴾͡๏̯͡๏﴿ ... Ah, we need to hook up the docker0 interface as a nameserver.</p>
 
 <pre><code>$&gt; sudo vi /etc/resolv.conf
    nameserver 10.2.0.10
@@ -123,7 +123,7 @@ $&gt; dig elasticsearch.dev.domain.com
 elasticsearch.dev.domain.com.   20  IN  A   10.2.0.7
 </code></pre>
 
-<p>✌(-‿-)✌ ... Now, hopefull that will be it for you and you&#39;re all set to curl containers from the comforts of your host terminal. I however, had one more issue to solve...</p>
+<p>✌(-‿-)✌ ... Hoplah! Now, hopefull that will be it for you and you&#39;re all set to curl containers from the comforts of your host terminal! I however, had one more issue to solve...</p>
 
 <pre><code>$&gt; curl elasticsearch.dev.domain.com:9200
 curl: (6) Could not resolve host: elasticsearch.dev.domain.com # w00000000t???

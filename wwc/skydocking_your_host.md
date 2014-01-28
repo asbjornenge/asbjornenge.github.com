@@ -56,7 +56,7 @@ So, with skydock my containers can discover eachother via DNS. Awesome! But, wit
 	$> curl elasticsearch.dev.domain.com:9200
 	curl: (6) Could not resolve host: elasticsearch.dev.domain.com
 
-﴾͡๏̯͡๏﴿ ... Ah, we need to do is hook up the docker0 interface as a nameserver.
+﴾͡๏̯͡๏﴿ ... Ah, we need to hook up the docker0 interface as a nameserver.
 
 	$> sudo vi /etc/resolv.conf
 	   nameserver 10.2.0.10
@@ -64,7 +64,7 @@ So, with skydock my containers can discover eachother via DNS. Awesome! But, wit
 	;; ANSWER SECTION:
 	elasticsearch.dev.domain.com.	20	IN	A	10.2.0.7
 
-✌(-‿-)✌ ... Now, hopefull that will be it for you and you're all set to curl containers from the comforts of your host terminal. I however, had one more issue to solve...
+✌(-‿-)✌ ... Hoplah! Now, hopefull that will be it for you and you're all set to curl containers from the comforts of your host terminal! I however, had one more issue to solve...
 
 	$> curl elasticsearch.dev.domain.com:9200
 	curl: (6) Could not resolve host: elasticsearch.dev.domain.com # w00000000t???
