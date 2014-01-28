@@ -67,7 +67,7 @@
    $DOCKER_OPTS -bip 10.2.0.10/16
 </code></pre>
 
-<p>Create a network bridge in your Vagrantfile using the same ip.</p>
+<p>Create a <strong>private_network</strong> in your Vagrantfile using the same ip.</p>
 
 <pre><code>Vagrant::VERSION &gt;= &quot;1.1.0&quot; and Vagrant.configure(&quot;2&quot;) do |config|
     config.vm.network &quot;private_network&quot;, ip: &quot;10.2.0.10&quot;, netmask: &quot;255.255.0.0&quot;
@@ -77,15 +77,15 @@
 end
 </code></pre>
 
-<p>The <strong>vb.customize</strong> is to allow forwarding packets for the bridge interface. The <strong>--nicpromisc2</strong> translates to &quot;Promiscuous mode for nic 2&quot;, where nic2 -&gt; eth1. So --nocpromisc3 would change that setting for eth2, etc.</p>
+<p>The <em>vb.customize</em> is to allow forwarding packets for the bridge interface. The <em>--nicpromisc2</em> translates to <em>Promiscuous mode for nic2</em>, where nic2 -&gt; eth1. So --nocpromisc3 would change that setting for eth2, etc.</p>
 
-<p>After reloading vagrant, inside the container, we need to link the bridge interface (eth1 &lt;- might differ in your vm) to the docker interface (docker0).</p>
+<p>After reloading vagrant we need to <strong>link</strong> the bridge interface, <em>eth1</em> (&lt;- might differ in your vm), and the docker interface <em>docker0</em>.</p>
 
 <pre><code>$&gt; sudo ip addr del 10.2.0.10/16 dev eth1
 $&gt; sudo ip link set eth1 master docker0
 </code></pre>
 
-<p>You now have a bridge from your host to your docker network!</p>
+<p>You now have a <strong>bridge</strong> from your host to your docker network!!</p>
 
 <pre><code>$&gt; IP=`sudo docker inspect -format=&#39;{{.NetworkSettings.IPAddress}}&#39; 5aa2a5199204`
 $&gt; ping $IP
