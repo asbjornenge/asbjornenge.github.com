@@ -1,4 +1,4 @@
-# Vagrant Skydocking
+# Vagrant skydocking
 
 ## A bridge over vagrant water
 
