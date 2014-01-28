@@ -1,5 +1,5 @@
 # Vagrant skydocking
-
+<div class="date">29.01.2014</div>
 ## A bridge over vagrant water
 
 I've been working quite a bit with [docker](http://docker.io) lately. If you haven't yet checked it out; it's about time. Docker is already popping paradigms.
