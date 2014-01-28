@@ -10,7 +10,7 @@ Instead of having to forward ports and using lots of -p flags when spawning cont
 
 First; bind the docker daemon to a specific ip using the **-bip** setting.
 
-	$> sudo vi /etc/init/docker.conf # <- ubuntu ✌(-‿-)✌
+	$> sudo vi /etc/init/docker.conf # <- ubuntu ¯_(ツ)_/¯
 	   $DOCKER_OPTS -bip 10.2.0.10/16
 	 
 Create a network bridge in your Vagrantfile using the same ip.
@@ -64,10 +64,12 @@ So, with skydock my containers can discover eachother via DNS. Awesome! But, wit
 	;; ANSWER SECTION:
 	elasticsearch.dev.domain.com.	20	IN	A	10.2.0.7
 
-✌(-‿-)✌ ... Now, hopefull that will be it for you and your all set to curl containers from the comforts of your host terminal. I had one last issue to solve...
+✌(-‿-)✌ ... Now, hopefull that will be it for you and you're all set to curl containers from the comforts of your host terminal. I however, had one more issue to solve...
 
 	$> curl elasticsearch.dev.domain.com:9200
 	curl: (6) Could not resolve host: elasticsearch.dev.domain.com # w00000000t???
+
+### OSX weirdness
 
 Apparently OSX is rather weird in how it handles DNS. **dig**, **host**, etc. can resolve the host just fine, but other tools like **curl** and even **ping** does not obey resolv.conf. I eventually stumbled across the issue and found [this](https://github.com/michthom/AlwaysAppendSearchDomains) script that apparently solves it for most people. It didn't help. I'm on Maverics btw. Eventually I added the DNS server via OSX [network preferences](http://support.apple.com/kb/PH14159) which did the trick.
 
@@ -88,11 +90,11 @@ Apparently OSX is rather weird in how it handles DNS. **dig**, **host**, etc. ca
 
 ![HAPPY](http://i0.kym-cdn.com/profiles/icons/big/000/055/347/1313845263510.gif)
 
-I'm now a happy curl’er of containers!!
+I'm now a ᕙ༼ຈل͜ຈ༽ᕗ curl’er of containers!!
 
 ## Credits
 
-[Docker](http://docker.io), [Skydock](https://github.com/crosbymichael/skydock) and [Skydns](https://github.com/skynetservices/skydns) all deserve a big fat ♥‿♥.  
+[Docker](http://docker.io), [Skydock](https://github.com/crosbymichael/skydock) and [Skydns](https://github.com/skynetservices/skydns) all deserve a big fat ♥.  
 I followed [this](https://blog.codecentric.de/en/2014/01/docker-networking-made-simple-3-ways-connect-lxc-containers/) guide by [Lukas Pustina](https://twitter.com/drivebytesting) to set up my networking.  
 Gifs from [here](https://github.com/jglovier/gifs) and faces from [there](https://github.com/maxogden/cool-ascii-faces).  
 Thanks!
