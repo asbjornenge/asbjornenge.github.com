@@ -6,9 +6,9 @@ I've been working quite a bit with [docker](http://docker.io) lately. If you hav
 
 Since I'm on OSX I'm running my docker host on Virtualbox via [Vagrant](http://www.vagrantup.com/).
 
-Instead of having to forward ports and using lots of -p flags when spawning containers I wanted to bridge my host with the docker interface (inside virtualbox) so that I could ping my containers "directly" from my OSX terminal.
+Instead of having to forward ports and using lots of -p args when spawning containers, I wanted to bridge my host with the vm's docker interface, so that I could ping my containers from my OSX terminal.
 
-First; bind the docker daemon to a specific ip using the **-bip** setting.
+First; bind the docker daemon to a specific ip using **-bip** arg.
 
 	$> sudo vi /etc/init/docker.conf # <- ubuntu ¯_(ツ)_/¯
 	   $DOCKER_OPTS -bip 10.2.0.10/16

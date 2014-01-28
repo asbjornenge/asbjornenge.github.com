@@ -59,9 +59,9 @@
 
 <p>Since I&#39;m on OSX I&#39;m running my docker host on Virtualbox via <a href="http://www.vagrantup.com/">Vagrant</a>.</p>
 
-<p>Instead of having to forward ports and using lots of -p flags when spawning containers I wanted to bridge my host with the docker interface (inside virtualbox) so that I could ping my containers &quot;directly&quot; from my OSX terminal.</p>
+<p>Instead of having to forward ports and using lots of -p args when spawning containers, I wanted to bridge my host with the vm&#39;s docker interface, so that I could ping my containers from my OSX terminal.</p>
 
-<p>First; bind the docker daemon to a specific ip using the <strong>-bip</strong> setting.</p>
+<p>First; bind the docker daemon to a specific ip using <strong>-bip</strong> arg.</p>
 
 <pre><code>$&gt; sudo vi /etc/init/docker.conf # &lt;- ubuntu ¯_(ツ)_/¯
    $DOCKER_OPTS -bip 10.2.0.10/16
