@@ -90,11 +90,9 @@ Apparently OSX is rather weird in how it handles DNS. **dig**, **host**, etc. ca
 
 I'm now a happy curl’er of containers!!
 
-enjoy.
-
 ## Credits
 
 [Docker](http://docker.io), [Skydock](https://github.com/crosbymichael/skydock) and [Skydns](https://github.com/skynetservices/skydns) all deserve a big fat ♥‿♥.  
-I followed [this](Integrate Docker Containers into your Host Network) guide by [Lukas Pustina](https://twitter.com/drivebytesting) to set up my networking.  
+I followed [this](https://blog.codecentric.de/en/2014/01/docker-networking-made-simple-3-ways-connect-lxc-containers/) guide by [Lukas Pustina](https://twitter.com/drivebytesting) to set up my networking.  
 Gifs from [here](https://github.com/jglovier/gifs) and faces from [there](https://github.com/maxogden/cool-ascii-faces).  
 Thanks!
