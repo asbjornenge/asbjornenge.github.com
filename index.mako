@@ -1,12 +1,12 @@
 <%inherit file="base.html"/>
 <%block name="content">
-	<% wwc = config['wwc'] %>
-  <% sorted = config['wwc_sorted'] %>
-	% for blog in sorted:
-		<% post = wwc[blog['key']] %>
-		% if post['published']:
-			${showblog(wwc[blog['key']])}
-		% endif
+	<%
+		import time, copy
+		wwc = [post for post in copy.deepcopy(config['wwc']) if post['published']]
+		wwc.sort(key=lambda item:time.strptime(item['published'],'%d.%m.%Y'), reverse=True)
+	%>
+	% for post in wwc:
+		${showblog(post)}
 	% endfor
 </%block>
 

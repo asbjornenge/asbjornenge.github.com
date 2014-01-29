@@ -30,29 +30,17 @@ gimp_template = """<%inherit file="base.html"/><%block name="content">${markdown
 from operator import itemgetter
 
 def read_config():
-    config  = json.loads(open(config_file, encoding="utf-8").read())
-    # _sorted = []
-    # for d in config['wwc']:
-    #    dd = config['wwc'][d]
-    #    dd['key'] = d
-    #    if dd['published']:
-    #      _sorted.append(dd)
-    # _sorted.sort(key=lambda item:time.strptime(item['published'],'%d.%m.%Y'), reverse=True)
-    # print _sorted 
-    # config['wwc_sorted'] = _sorted
-    return config
+    return json.loads(open(config_file, encoding="utf-8").read())
 
 def clean_config(config):
-    if config.has_key('markdown'):
-        del config['markdown']
-    for key in config:
-        if type(config[key]) == dict:
-            clean_config(config[key])
+    for blog in config['blogs']:
+        for post in config[blog]:
+            if post.has_key('markdown'):
+                del post['markdown']
 
 def save_config(config):
-    print "Saving config"
-    # clean_config(config)
-    # open(config_file,'w',encoding="utf-8").write(json.dumps(config, sort_keys=True, indent=4, separators=(',', ' : ')))
+    clean_config(config)
+    open(config_file,'w',encoding="utf-8").write(json.dumps(config, sort_keys=True, indent=4, separators=(',', ' : ')))
 
 ## Blog actions
 #
@@ -82,8 +70,9 @@ def add_blog(config, args):
         uid = uuid.uuid4().hex[:8]
         new_post         = post_structure
         new_post['id']   = uid
+        new_post['md']   = post
         new_post['html'] = args.path.replace('.md','.html')
-        config[blog].prepend(new_post)
+        config[blog].insert(0, new_post)
         print "Added %s to %s" % (post,blog)
 
 def del_blog(config, args):
@@ -108,10 +97,12 @@ def meta_blog(config, args):
 def build_rss(config, args):
     for blog in config["blogs"]:
         items = []
-        for post in config[blog].keys():
-            _post = config[blog][post]
+        date_sorted = [p for p in config[blog] if p['published']]
+        date_sorted.sort(key=lambda item:time.strptime(item['published'],'%d.%m.%Y'), reverse=True)
+        for _post in date_sorted:
+            # _post = config[blog][post]
             if  not _post['published']: continue
-            _url  = 'http://www.asbjornenge.com/%s' % _post['path']
+            _url  = 'http://www.asbjornenge.com/%s' % _post['html']
             _date = time.strptime(_post['published'],'%d.%m.%Y')
             item = PyRSS2Gen.RSSItem(
                      title = _post['title'],
@@ -150,8 +141,9 @@ def build(config, args):
         open(mdf.replace('.md','.html'),'w', encoding="utf-8").write(html)
         blog_post = mdf.split('/')
         if blog_post[1] in config['blogs']:
-            if blog_post[2] in config[blog_post[1]]:
-                config[blog_post[1]][blog_post[2]]['markdown'] = content
+            for registered_blog in config[blog_post[1]]:
+                if registered_blog['md'] == blog_post[2]:
+                    registered_blog['markdown'] = content
     for mf in makofiles:
         mdfile = mf.replace('.mako','.md')
         if (mdfile not in mdfiles):
