@@ -16,7 +16,8 @@ config_file    = 'gymb.json'
 post_structure = {
     "id"        : "",
     "title"     : "",
-    "path"      : "",
+    "md"        : "",
+    "html"      : "",
     "published" : False
 }
 
@@ -30,15 +31,15 @@ from operator import itemgetter
 
 def read_config():
     config  = json.loads(open(config_file, encoding="utf-8").read())
-    _sorted = []
-    for d in config['wwc']:
-       dd = config['wwc'][d]
-       dd['key'] = d
-       if dd['published']:
-         _sorted.append(dd)
-    _sorted.sort(key=lambda item:time.strptime(item['published'],'%d.%m.%Y'), reverse=True)
-    print _sorted 
-    config['wwc_sorted'] = _sorted
+    # _sorted = []
+    # for d in config['wwc']:
+    #    dd = config['wwc'][d]
+    #    dd['key'] = d
+    #    if dd['published']:
+    #      _sorted.append(dd)
+    # _sorted.sort(key=lambda item:time.strptime(item['published'],'%d.%m.%Y'), reverse=True)
+    # print _sorted 
+    # config['wwc_sorted'] = _sorted
     return config
 
 def clean_config(config):
@@ -49,8 +50,9 @@ def clean_config(config):
             clean_config(config[key])
 
 def save_config(config):
-    clean_config(config)
-    open(config_file,'w',encoding="utf-8").write(json.dumps(config, sort_keys=True, indent=4, separators=(',', ' : ')))
+    print "Saving config"
+    # clean_config(config)
+    # open(config_file,'w',encoding="utf-8").write(json.dumps(config, sort_keys=True, indent=4, separators=(',', ' : ')))
 
 ## Blog actions
 #
@@ -78,9 +80,10 @@ def add_blog(config, args):
         if not os.path.exists(args.path):
             open(args.path, 'w', encoding="utf-8").close()
         uid = uuid.uuid4().hex[:8]
-        config[blog][post] = post_structure
-        config[blog][post]['id'] = uid
-        config[blog][post]['path'] = args.path.replace('.md','.html')
+        new_post         = post_structure
+        new_post['id']   = uid
+        new_post['html'] = args.path.replace('.md','.html')
+        config[blog].prepend(new_post)
         print "Added %s to %s" % (post,blog)
 
 def del_blog(config, args):
@@ -89,11 +92,15 @@ def del_blog(config, args):
 def meta_blog(config, args):
     blog, post = get_path(args)
     if post == None:
+        print "stfu"
         return
+    post = [b for b in config[blog] if b['md'] == post or b['html'] == '%s/%s' % (blog,post)]
+    if len(post) == 0:
+        print "Post not registered. Use gymb add before adding meta information."
     if args.title != None:
-        config[blog][post]['title'] = args.title
+        post[0]['title'] = args.title
     if args.published != None:
-        config[blog][post]['published'] = args.published
+        post[0]['published'] = args.published
 
 ## Build actions
 #
