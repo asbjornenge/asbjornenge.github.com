@@ -2,71 +2,41 @@
     "blogs" : [
         "wwc"
     ],
-    "wwc" : {
-        "introducing_gymb.md" : {
+    "wwc" : [
+        {
+            "html" : "wwc/introducing_gymb.html",
             "id" : "f134a8e7",
-            "key" : "introducing_gymb.md",
-            "path" : "wwc/introducing_gymb.html",
+            "md" : "introducing_gymb.md",
             "published" : false,
             "title" : "Introducing Gymb"
         },
-        "json_schema.md" : {
+        {
+            "html" : "wwc/json_schema.html",
             "id" : "68fef665",
-            "key" : "json_schema.md",
-            "path" : "wwc/json_schema.html",
+            "md" : "json_schema.md",
             "published" : "10.02.2013",
             "title" : "JSON Schema"
         },
-        "out_of_sorts.md" : {
-            "id" : "b6a35118",
-            "key" : "out_of_sorts.md",
-            "path" : "wwc/out_of_sorts.html",
-            "published" : "30.03.2013",
-            "title" : "Out of sorts"
-        },
-        "vagrant_skydocking.md" : {
-            "id" : "342e195d",
-            "key" : "vagrant_skydocking.md",
-            "path" : "wwc/vagrant_skydocking.html",
-            "published" : "29.01.2014",
-            "title" : "Vagrant skydocking"
-        },
-        "zero_todo.md" : {
-            "id" : "98c6d461",
-            "key" : "zero_todo.md",
-            "path" : "wwc/zero_todo.html",
-            "published" : "08.03.2013",
-            "title" : "Zero Todo"
-        }
-    },
-    "wwc_sorted" : [
         {
-            "id" : "342e195d",
-            "key" : "vagrant_skydocking.md",
-            "path" : "wwc/vagrant_skydocking.html",
-            "published" : "29.01.2014",
-            "title" : "Vagrant skydocking"
-        },
-        {
+            "html" : "wwc/out_of_sorts.html",
             "id" : "b6a35118",
-            "key" : "out_of_sorts.md",
-            "path" : "wwc/out_of_sorts.html",
+            "md" : "out_of_sorts.md",
             "published" : "30.03.2013",
             "title" : "Out of sorts"
         },
         {
-            "id" : "98c6d461",
-            "key" : "zero_todo.md",
-            "path" : "wwc/zero_todo.html",
-            "published" : "08.03.2013",
-            "title" : "Zero Todo"
+            "html" : "wwc/vagrant_skydocking.html",
+            "id" : "342e195d",
+            "md" : "vagrant_skydocking.md",
+            "published" : "29.01.2014",
+            "title" : "Vagrant skydocking"
         },
         {
-            "id" : "68fef665",
-            "key" : "json_schema.md",
-            "path" : "wwc/json_schema.html",
-            "published" : "10.02.2013",
-            "title" : "JSON Schema"
+            "html" : "wwc/zero_todo.html",
+            "id" : "98c6d461",
+            "md" : "zero_todo.md",
+            "published" : "08.03.2013",
+            "title" : "Zero Todo"
         }
     ]
 }
