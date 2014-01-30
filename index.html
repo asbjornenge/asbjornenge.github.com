@@ -57,23 +57,20 @@
     <div id="342e195d">
     	<h1><a href="/wwc/vagrant_skydocking.html">Vagrant skydocking</a></h1>
 
-<p><div class="date">29.01.2014</div></p>
+<div class="date">29.01.2014</div>
+
+<p><strong>UPDATED 30.01.2014</strong><br>
+Using <strong>route</strong> instead of <strong>linking</strong> interfaces. Original article <a href="/wwc/vagrant_skydocking_link.html">here</a>.</p>
 
 <h2>A bridge over vagrant water</h2>
 
-<p>I&#39;ve been working quite a bit with <a href="http://docker.io">docker</a> lately. If you haven&#39;t yet checked it out; it&#39;s about time. Docker is already popping paradigms.</p>
+<p>I&#39;ve been working quite a bit with <a href="http://docker.io">docker</a> lately. If you haven&#39;t yet checked it out, it&#39;s about time. Docker is already popping paradigms.</p>
 
 <p>Since I&#39;m on OSX I&#39;m running my docker host on Virtualbox via <a href="http://www.vagrantup.com/">Vagrant</a>.</p>
 
-<p>Instead of having to forward ports and using lots of -p args when spawning containers, I wanted to bridge my host with the vm&#39;s docker interface, so that I could ping my containers from my OSX terminal.</p>
+<p>Instead of having to forward ports and using lots of -p args when spawning containers, I wanted to bridge my host and the vm&#39;s docker interface, so that I could ping my containers from my OSX terminal.</p>
 
-<p>First; bind the docker daemon to a specific ip using <strong>-bip</strong> arg.</p>
-
-<pre><code>$&gt; sudo vi /etc/init/docker.conf # &lt;- ubuntu ¯_(ツ)_/¯
-   $DOCKER_OPTS -bip 10.2.0.10/16
-</code></pre>
-
-<p>Create a <strong>private_network</strong> in your Vagrantfile using the same ip.</p>
+<p>Create a <strong>private_network</strong> in your Vagrantfile. I&#39;m picking an ip on a different subnet than the docker0 interface to avoid any potential conflicts.</p>
 
 <pre><code>Vagrant::VERSION &gt;= &quot;1.1.0&quot; and Vagrant.configure(&quot;2&quot;) do |config|
     config.vm.network &quot;private_network&quot;, ip: &quot;10.2.0.10&quot;, netmask: &quot;255.255.0.0&quot;
@@ -85,21 +82,23 @@ end
 
 <p>The <em>vb.customize</em> is to allow forwarding packets for the bridge interface. The <em>--nicpromisc2</em> translates to <em>Promiscuous mode for nic2</em>, where nic2 -&gt; eth1. So --nocpromisc3 would change that setting for eth2, etc.</p>
 
-<p>After reloading vagrant we need to <strong>link</strong> the bridge interface, <em>eth1</em> (&lt;- might differ in your vm), and the docker interface <em>docker0</em>.</p>
+<p>After reloading vagrant we need create a <strong>route</strong> on the host. Basically, any traffic trying to reach the docker subnet (172.17.0.0) should be routed to our new interface inside the vm (10.2.0.10).</p>
 
-<pre><code>$&gt; sudo ip addr del 10.2.0.10/16 dev eth1
-$&gt; sudo ip link set eth1 master docker0
+<pre><code># OSX
+sudo route -n add -net 172.17.0.0 10.2.0.10
+# Linux (untested)
+sudo route -net 172.17.0.0 netmask 255.255.0.0 gw 10.2.0.10
 </code></pre>
 
 <p>You now have a <strong>bridge</strong> from your host to your docker network!!</p>
 
-<pre><code>$&gt; IP=`docker inspect -format=&#39;{{.NetworkSettings.IPAddress}}&#39; 5aa2a5199204`
+<pre><code>$&gt; IP=`docker inspect -format=&#39;{{.NetworkSettings.IPAddress}}&#39; skydns`
 $&gt; ping $IP
-PING 10.2.0.7 (10.2.0.7) 56(84) bytes of data.
-64 bytes from 10.2.0.7: icmp_req=1 ttl=64 time=0.232 ms
-64 bytes from 10.2.0.7: icmp_req=2 ttl=64 time=0.103 ms
+PING 172.17.0.3 (172.17.0.3) 56(84) bytes of data.
+64 bytes from 172.17.0.3: icmp_req=1 ttl=64 time=0.232 ms
+64 bytes from 172.17.0.3: icmp_req=2 ttl=64 time=0.103 ms
 ^C
---- 10.2.0.7 ping statistics ---
+--- 172.17.0.3 ping statistics ---
 2 packets transmitted, 2 received, 0% packet loss, time 1009ms
 rtt min/avg/max/mdev = 0.103/0.167/0.232/0.065 ms
 </code></pre>
@@ -120,13 +119,14 @@ rtt min/avg/max/mdev = 0.103/0.167/0.232/0.065 ms
 curl: (6) Could not resolve host: elasticsearch.dev.domain.com
 </code></pre>
 
-<p>﴾͡๏̯͡๏﴿ ... Ah, we need to hook up the docker0 interface as a nameserver.</p>
+<p>﴾͡๏̯͡๏﴿ ... Ah, we need to hook up the skydns as a nameserver. This is where I stray a little from Michael&#39;s skydock tutorial. I had some issues binding to the docker0 interface (docker v0.7.6), so instead I&#39;m using the skydns container as the nameserver directly (PS! this requires passing a -dns <skydns_ip> arg to each new container).</p>
 
 <pre><code>$&gt; sudo vi /etc/resolv.conf
-   nameserver 10.2.0.10
+   # nameserver 172.17.42.1 &lt;- skydock tutorial
+   nameserver 172.17.0.3 # &lt;- skydns container ip
 $&gt; dig elasticsearch.dev.domain.com
 ;; ANSWER SECTION:
-elasticsearch.dev.domain.com.   20  IN  A   10.2.0.7
+elasticsearch.dev.domain.com.   20  IN  A   172.17.0.7
 </code></pre>
 
 <p>✌(-‿-)✌ ... Hoplah! Now, hopefully that will be it for you and you&#39;re all set to curl containers from the comforts of your host terminal! I however, had one more issue to solve...</p>
@@ -162,7 +162,7 @@ curl: (6) Could not resolve host: elasticsearch.dev.domain.com # w00000000t???
 <h2>Credits</h2>
 
 <p><a href="http://docker.io">Docker</a>, <a href="https://github.com/crosbymichael/skydock">Skydock</a> and <a href="https://github.com/skynetservices/skydns">Skydns</a> all deserve a big fat ♥.<br>
-I followed <a href="https://blog.codecentric.de/en/2014/01/docker-networking-made-simple-3-ways-connect-lxc-containers/">this</a> guide by <a href="https://twitter.com/drivebytesting">Lukas Pustina</a> to set up my networking.<br>
+I followed <a href="https://blog.codecentric.de/en/2014/01/docker-networking-made-simple-3-ways-connect-lxc-containers/">this</a> guide by <a href="https://twitter.com/drivebytesting">Lukas Pustina</a> to set up my vagrant networking.<br>
 Gifs from <a href="https://github.com/jglovier/gifs">here</a> and faces from <a href="https://github.com/maxogden/cool-ascii-faces">there</a>.<br>
 Thanks!</p>
 
