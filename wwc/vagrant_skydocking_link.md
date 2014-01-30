@@ -1,8 +1,5 @@
 # [Vagrant skydocking](/wwc/vagrant_skydocking.html)
 <div class="date">29.01.2014</div>
-
-**UPDATED 30.01.2014** to use **routing** instead of linking interfaces. This is the updated version, original article [here](/wwc/vagrant_skydocking_link.html).
-
 ## A bridge over vagrant water
 
 I've been working quite a bit with [docker](http://docker.io) lately. If you haven't yet checked it out; it's about time. Docker is already popping paradigms.
@@ -11,7 +8,12 @@ Since I'm on OSX I'm running my docker host on Virtualbox via [Vagrant](http://w
 
 Instead of having to forward ports and using lots of -p args when spawning containers, I wanted to bridge my host with the vm's docker interface, so that I could ping my containers from my OSX terminal.
 
-Create a **private_network** in your Vagrantfile using a different subnet than the docker0 interface.
+First; bind the docker daemon to a specific ip using **-bip** arg.
+
+	$> sudo vi /etc/init/docker.conf # <- ubuntu ¯_(ツ)_/¯
+	   $DOCKER_OPTS -bip 10.2.0.10/16
+	 
+Create a **private_network** in your Vagrantfile using the same ip.
 
 	Vagrant::VERSION >= "1.1.0" and Vagrant.configure("2") do |config|
 		config.vm.network "private_network", ip: "10.2.0.10", netmask: "255.255.0.0"
@@ -22,12 +24,10 @@ Create a **private_network** in your Vagrantfile using a different subnet than t
 
 The *vb.customize* is to allow forwarding packets for the bridge interface. The *--nicpromisc2* translates to *Promiscuous mode for nic2*, where nic2 -> eth1. So --nocpromisc3 would change that setting for eth2, etc.
 
-After reloading vagrant we need to **route** traffic against the docker subnet on the host, to the new network.
+After reloading vagrant we need to **link** the bridge interface, *eth1* (<- might differ in your vm), and the docker interface *docker0*.
 
-	# OSX
-	sudo route -n add -net 172.17.0.0 10.2.0.10
-	# Linux
-	sudo route -net 172.17.0.0 netmask 255.255.0.0 gw 10.2.0.10
+	$> sudo ip addr del 10.2.0.10/16 dev eth1
+	$> sudo ip link set eth1 master docker0
 	
 You now have a **bridge** from your host to your docker network!!
 
@@ -95,6 +95,6 @@ I'm now a ᕙ༼ຈل͜ຈ༽ᕗ curl’er of containers!!
 ## Credits
 
 [Docker](http://docker.io), [Skydock](https://github.com/crosbymichael/skydock) and [Skydns](https://github.com/skynetservices/skydns) all deserve a big fat ♥.  
-I followed [this](https://blog.codecentric.de/en/2014/01/docker-networking-made-simple-3-ways-connect-lxc-containers/) guide by [Lukas Pustina](https://twitter.com/drivebytesting) to set up my vagrant networking.  
+I followed [this](https://blog.codecentric.de/en/2014/01/docker-networking-made-simple-3-ways-connect-lxc-containers/) guide by [Lukas Pustina](https://twitter.com/drivebytesting) to set up my networking.  
 Gifs from [here](https://github.com/jglovier/gifs) and faces from [there](https://github.com/maxogden/cool-ascii-faces).  
 Thanks!

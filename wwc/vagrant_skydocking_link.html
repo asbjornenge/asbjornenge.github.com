@@ -53,9 +53,7 @@
         <div id="content">
             <h1><a href="/wwc/vagrant_skydocking.html">Vagrant skydocking</a></h1>
 
-<div class="date">29.01.2014</div>
-
-<p><strong>UPDATED 30.01.2014</strong> to use <strong>routing</strong> instead of linking interfaces. This is the updated version, original article <a href="/wwc/vagrant_skydocking_link.html">here</a>.</p>
+<p><div class="date">29.01.2014</div></p>
 
 <h2>A bridge over vagrant water</h2>
 
@@ -65,7 +63,13 @@
 
 <p>Instead of having to forward ports and using lots of -p args when spawning containers, I wanted to bridge my host with the vm&#39;s docker interface, so that I could ping my containers from my OSX terminal.</p>
 
-<p>Create a <strong>private_network</strong> in your Vagrantfile using a different subnet than the docker0 interface.</p>
+<p>First; bind the docker daemon to a specific ip using <strong>-bip</strong> arg.</p>
+
+<pre><code>$&gt; sudo vi /etc/init/docker.conf # &lt;- ubuntu ¯_(ツ)_/¯
+   $DOCKER_OPTS -bip 10.2.0.10/16
+</code></pre>
+
+<p>Create a <strong>private_network</strong> in your Vagrantfile using the same ip.</p>
 
 <pre><code>Vagrant::VERSION &gt;= &quot;1.1.0&quot; and Vagrant.configure(&quot;2&quot;) do |config|
     config.vm.network &quot;private_network&quot;, ip: &quot;10.2.0.10&quot;, netmask: &quot;255.255.0.0&quot;
@@ -77,12 +81,10 @@ end
 
 <p>The <em>vb.customize</em> is to allow forwarding packets for the bridge interface. The <em>--nicpromisc2</em> translates to <em>Promiscuous mode for nic2</em>, where nic2 -&gt; eth1. So --nocpromisc3 would change that setting for eth2, etc.</p>
 
-<p>After reloading vagrant we need to <strong>route</strong> traffic against the docker subnet on the host, to the new network.</p>
+<p>After reloading vagrant we need to <strong>link</strong> the bridge interface, <em>eth1</em> (&lt;- might differ in your vm), and the docker interface <em>docker0</em>.</p>
 
-<pre><code># OSX
-sudo route -n add -net 172.17.0.0 10.2.0.10
-# Linux
-sudo route -net 172.17.0.0 netmask 255.255.0.0 gw 10.2.0.10
+<pre><code>$&gt; sudo ip addr del 10.2.0.10/16 dev eth1
+$&gt; sudo ip link set eth1 master docker0
 </code></pre>
 
 <p>You now have a <strong>bridge</strong> from your host to your docker network!!</p>
@@ -156,7 +158,7 @@ curl: (6) Could not resolve host: elasticsearch.dev.domain.com # w00000000t???
 <h2>Credits</h2>
 
 <p><a href="http://docker.io">Docker</a>, <a href="https://github.com/crosbymichael/skydock">Skydock</a> and <a href="https://github.com/skynetservices/skydns">Skydns</a> all deserve a big fat ♥.<br>
-I followed <a href="https://blog.codecentric.de/en/2014/01/docker-networking-made-simple-3-ways-connect-lxc-containers/">this</a> guide by <a href="https://twitter.com/drivebytesting">Lukas Pustina</a> to set up my vagrant networking.<br>
+I followed <a href="https://blog.codecentric.de/en/2014/01/docker-networking-made-simple-3-ways-connect-lxc-containers/">this</a> guide by <a href="https://twitter.com/drivebytesting">Lukas Pustina</a> to set up my networking.<br>
 Gifs from <a href="https://github.com/jglovier/gifs">here</a> and faces from <a href="https://github.com/maxogden/cool-ascii-faces">there</a>.<br>
 Thanks!</p>
 
