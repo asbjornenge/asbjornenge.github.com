@@ -1,7 +1,7 @@
 # [Vagrant skydocking](/wwc/vagrant_skydocking.html)
 <div class="date">29.01.2014</div>
 
-*UPDATED 30.01.2014* - Using a **route** instead of **linking** interfaces. A bit simpler. Original article [here](/wwc/vagrant_skydocking_link.html).
+*UPDATED 30.01.2014* - Using a **route** instead of **linking** interfaces. A bit simpler. Original [here](/wwc/vagrant_skydocking_link.html).
 
 ## A bridge over vagrant water
 
