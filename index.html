@@ -110,7 +110,7 @@ rtt min/avg/max/mdev = 0.103/0.167/0.232/0.065 ms
 
 <p>(Docker provides a -link parameter for linking containers. But this quickly falls short in complex scenarios.)</p>
 
-<p>I was just about to dig into service discrovery solutions like <a href="https://github.com/coreos/etcd">etcd</a> or similar, when <a href="http://crosbymichael.com/">Michael Crosby</a> posted his <a href="https://github.com/crosbymichael/skydock">skydock</a> (<a href="https://www.youtube.com/watch?v=Nw42q1ofrV0">video</a>). It&#39;s brilliant! It let&#39;s you discover your service via <strong>DNS</strong>. I won&#39;t go into setting up skydock, just check out the awesome <a href="https://github.com/crosbymichael/skydock">tutorial</a> by Michael.</p>
+<p>I was just about to dig into service discrovery solutions like <a href="https://github.com/coreos/etcd">etcd</a> or similar, when <a href="http://crosbymichael.com/">Michael Crosby</a> posted his <a href="https://github.com/crosbymichael/skydock">skydock</a> (<a href="https://www.youtube.com/watch?v=Nw42q1ofrV0">video</a>). It&#39;s brilliant! It let&#39;s you discover your services via <strong>DNS</strong>. I won&#39;t go into setting up skydock, just check out the awesome <a href="https://github.com/crosbymichael/skydock">tutorial</a> by Michael.</p>
 
 <p>So, with skydock my containers can discover eachother via DNS names like <strong>myservice.env.domain.com</strong>. Awesome! But, with my network bridge set up, so can my host!! No? That would be really nice for development...</p>
 

@@ -49,7 +49,7 @@ Docker is all about distributed systems; packing single components inside contai
 
 (Docker provides a -link parameter for linking containers. But this quickly falls short in complex scenarios.)
 
-I was just about to dig into service discrovery solutions like [etcd](https://github.com/coreos/etcd) or similar, when [Michael Crosby](http://crosbymichael.com/) posted his [skydock](https://github.com/crosbymichael/skydock) ([video](https://www.youtube.com/watch?v=Nw42q1ofrV0)). It's brilliant! It let's you discover your service via **DNS**. I won't go into setting up skydock, just check out the awesome [tutorial](https://github.com/crosbymichael/skydock) by Michael.
+I was just about to dig into service discrovery solutions like [etcd](https://github.com/coreos/etcd) or similar, when [Michael Crosby](http://crosbymichael.com/) posted his [skydock](https://github.com/crosbymichael/skydock) ([video](https://www.youtube.com/watch?v=Nw42q1ofrV0)). It's brilliant! It let's you discover your services via **DNS**. I won't go into setting up skydock, just check out the awesome [tutorial](https://github.com/crosbymichael/skydock) by Michael.
 
 So, with skydock my containers can discover eachother via DNS names like **myservice.env.domain.com**. Awesome! But, with my network bridge set up, so can my host!! No? That would be really nice for development...
 
