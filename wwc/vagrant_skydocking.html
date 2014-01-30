@@ -55,7 +55,7 @@
 
 <div class="date">29.01.2014</div>
 
-<p><strong>UPDATE 30.01.2014</strong> - Using <strong>route</strong> instead of <strong>linking</strong> interfaces. Original article <a href="/wwc/vagrant_skydocking_link.html">here</a>.</p>
+<p><em>UPDATED 30.01.2014</em> - Using a <strong>route</strong> instead of <strong>linking</strong> interfaces. A bit simpler. Original article <a href="/wwc/vagrant_skydocking_link.html">here</a>.</p>
 
 <h2>A bridge over vagrant water</h2>
 
@@ -114,7 +114,7 @@ rtt min/avg/max/mdev = 0.103/0.167/0.232/0.065 ms
 curl: (6) Could not resolve host: elasticsearch.dev.domain.com
 </code></pre>
 
-<p>﴾͡๏̯͡๏﴿ ... Ah, we need to hook up the skydns as a nameserver. This is where I stray a little from Michael&#39;s skydock tutorial. I had some issues binding to the docker0 interface (docker v0.7.6), so instead I&#39;m using the skydns container as the nameserver directly (PS! this requires passing a -dns <skydns_ip> arg to each new container).</p>
+<p>﴾͡๏̯͡๏﴿ ... Ah, we need to hook up skydns as a nameserver. This is where I stray a little from Michael&#39;s skydock tutorial. I had some issues binding to the docker0 interface (docker v0.7.6), so instead I&#39;m using the skydns container as the nameserver directly (PS! this requires passing a -dns <skydns_ip> arg to each new container). Either way, we have to edit resolv.conf.</p>
 
 <pre><code>$&gt; sudo vi /etc/resolv.conf
    # nameserver 172.17.42.1 &lt;- skydock tutorial

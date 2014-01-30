@@ -1,7 +1,7 @@
 # [Vagrant skydocking](/wwc/vagrant_skydocking.html)
 <div class="date">29.01.2014</div>
 
-**UPDATE 30.01.2014** - Using **route** instead of **linking** interfaces. Original article [here](/wwc/vagrant_skydocking_link.html).
+*UPDATED 30.01.2014* - Using a **route** instead of **linking** interfaces. A bit simpler. Original article [here](/wwc/vagrant_skydocking_link.html).
 
 ## A bridge over vagrant water
 
@@ -56,7 +56,7 @@ So, with skydock my containers can discover eachother via DNS names like **myser
 	$> curl elasticsearch.dev.domain.com:9200
 	curl: (6) Could not resolve host: elasticsearch.dev.domain.com
 
-﴾͡๏̯͡๏﴿ ... Ah, we need to hook up the skydns as a nameserver. This is where I stray a little from Michael's skydock tutorial. I had some issues binding to the docker0 interface (docker v0.7.6), so instead I'm using the skydns container as the nameserver directly (PS! this requires passing a -dns <skydns_ip> arg to each new container).
+﴾͡๏̯͡๏﴿ ... Ah, we need to hook up skydns as a nameserver. This is where I stray a little from Michael's skydock tutorial. I had some issues binding to the docker0 interface (docker v0.7.6), so instead I'm using the skydns container as the nameserver directly (PS! this requires passing a -dns <skydns_ip> arg to each new container). Either way, we have to edit resolv.conf.
 
 	$> sudo vi /etc/resolv.conf
 	   # nameserver 172.17.42.1 <- skydock tutorial
