@@ -1,4 +1,4 @@
-# [Vagrant skydocking](/wwc/vagrant_skydocking.html)
+# [Vagrant skydocking](/wwc/vagrant_skydocking_link.html)
 <div class="date">29.01.2014</div>
 ## A bridge over vagrant water
 
