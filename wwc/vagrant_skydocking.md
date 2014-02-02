@@ -25,9 +25,9 @@ The *vb.customize* is to allow forwarding packets for the bridge interface. The 
 After reloading vagrant we need create a **route** on the host. Basically, any traffic trying to reach the docker subnet (172.17.0.0) should be routed to our new interface inside the vm (10.2.0.10).
 
 	# OSX
-	sudo route -n add -net 172.17.0.0 10.2.0.10
+	$> sudo route -n add -net 172.17.0.0 10.2.0.10
 	# Linux (untested)
-	sudo route -net 172.17.0.0 netmask 255.255.0.0 gw 10.2.0.10
+	$> sudo route -net 172.17.0.0 netmask 255.255.0.0 gw 10.2.0.10
 	
 You now have a **bridge** from your host to your docker network!!
 
