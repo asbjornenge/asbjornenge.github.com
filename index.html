@@ -84,9 +84,9 @@ end
 <p>After reloading vagrant we need create a <strong>route</strong> on the host. Basically, any traffic trying to reach the docker subnet (172.17.0.0) should be routed to our new interface inside the vm (10.2.0.10).</p>
 
 <pre><code># OSX
-sudo route -n add -net 172.17.0.0 10.2.0.10
+$&gt; sudo route -n add -net 172.17.0.0 10.2.0.10
 # Linux (untested)
-sudo route -net 172.17.0.0 netmask 255.255.0.0 gw 10.2.0.10
+$&gt; sudo route -net 172.17.0.0 netmask 255.255.0.0 gw 10.2.0.10
 </code></pre>
 
 <p>You now have a <strong>bridge</strong> from your host to your docker network!!</p>
