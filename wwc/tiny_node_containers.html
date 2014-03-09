@@ -70,18 +70,19 @@
 
 <p>Nexe will compile your node app into a single executable binary. No joke! Have a <a href="https://github.com/crcn/nexe">look</a>!</p>
 
-<p>Since we are now compiling, we need to think about things like <em>compile target</em>. Containers run linux, my desktop runs Darwin. A binary compiled on/for Darwin won&#39;t be able run inside a container. So, I made a container for compiling apps with nexe.</p>
+<p>Since we are now compiling, we need to think about things like <em>compile target</em>. Containers run linux. My desktop runs Darwin. A binary compiled on/for Darwin won&#39;t be able run inside a container. So, I made a container for compiling apps with nexe.</p>
 
 <pre><code>docker run -v $(pwd):/app -w /app asbjornenge/nexe-docker -i index.js -o app
 </code></pre>
 
 <h3>Weird bugs</h3>
 
-<p>Granted, nexe is a bit flakey atm. I found two main bugs that I had to work around.</p>
+<p>Granted, nexe is a bit flakey atm. I found two main bugs that I had to work around:</p>
 
-<p>1 -&gt; A default package.json somehow messes up the executable.<br>
-<strong><em>Workaround:</em></strong> <em>I added a build script that will move package.json to pkg.json, build, then move it back.</em><br>
-2 -&gt; When passing arguments to a comiled binary, there must exist a first argument.<br>
+<p>A default package.json somehow messes up the executable.<br>
+<strong><em>Workaround:</em></strong> <em>I added a build script that will move package.json to pkg.json, build, then move it back.</em>  </p>
+
+<p>When passing arguments to a comiled binary, there must exist a first argument.<br>
 <strong><em>Workaround:</em></strong> <em>Just pass a random first argument.</em></p>
 
 <h2>Container</h2>

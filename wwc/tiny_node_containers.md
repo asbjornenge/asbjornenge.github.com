@@ -16,17 +16,18 @@ Until I found [nexe](https://github.com/crcn/nexe)...
 
 Nexe will compile your node app into a single executable binary. No joke! Have a [look](https://github.com/crcn/nexe)!
 
-Since we are now compiling, we need to think about things like *compile target*. Containers run linux, my desktop runs Darwin. A binary compiled on/for Darwin won't be able run inside a container. So, I made a container for compiling apps with nexe.
+Since we are now compiling, we need to think about things like *compile target*. Containers run linux. My desktop runs Darwin. A binary compiled on/for Darwin won't be able run inside a container. So, I made a container for compiling apps with nexe.
  
 	docker run -v $(pwd):/app -w /app asbjornenge/nexe-docker -i index.js -o app
 
 ### Weird bugs
 
-Granted, nexe is a bit flakey atm. I found two main bugs that I had to work around.
+Granted, nexe is a bit flakey atm. I found two main bugs that I had to work around:
 
-1 -> A default package.json somehow messes up the executable.  
+A default package.json somehow messes up the executable.  
 ***Workaround:*** *I added a build script that will move package.json to pkg.json, build, then move it back.*  
-2 -> When passing arguments to a comiled binary, there must exist a first argument.  
+
+When passing arguments to a comiled binary, there must exist a first argument.  
 ***Workaround:*** *Just pass a random first argument.*
 
 ## Container
