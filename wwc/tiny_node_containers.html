@@ -57,23 +57,22 @@
 
 <p>My favorite language at the moment is javascipt. It&#39;s fun &amp; functional!</p>
 
-<p>Since I&#39;m also working quite a bit with <a href="http://docker.io">docker</a>, I&#39;ve been frustrated with the size of nodejs docker images. A typical node container holds <code>node</code>, <code>npm</code>, all your <code>dependencies</code>. Add a few <code>apt-get</code>&#39;s and your quickly looking at &gt; <strong>500 MB</strong>.</p>
+<p>Since I&#39;m also working quite a bit with <a href="http://docker.io">docker</a>, I&#39;ve been frustrated with the size of nodejs docker images. A typical node container holds <code>node</code>, <code>npm</code> and all your <code>dependencies</code>. Add a few <code>apt-get</code>&#39;s and your quickly looking at &gt; <strong>500 MB</strong>.</p>
 
 <p>I even started hacking some <a href="http://golang.org/">Go</a> solely for the ability to compile to a single binary.</p>
 
 <p>Until I found <a href="https://github.com/crcn/nexe">nexe</a>...</p>
 
 <p><img src="https://raw.github.com/jglovier/gifs/gh-pages/excited/ace-ventura-dance.gif" /><br>
-<font color="#999"><em>I can haz javascript aaaaaaaaaaaand binary???</em></font>  </p>
+<font color="#999"><em>I can haz javascript aaaaaand binary???</em></font>  </p>
 
 <h2>Building with nexe</h2>
 
-<p>Nexe will compile your node app into a single executable binary. No joke! Go and have a look.</p>
+<p>Nexe will compile your node app into a single executable binary. No joke! Have a <a href="https://github.com/crcn/nexe">look</a>!</p>
 
-<p>Since we are now compiling, we need to think about things like compile target. Containers run linux, my desktop runs Darwin. A binary compiled on/for Darwin won&#39;t be able run inside containers. So, I made a container for compiling apps with nexe.</p>
+<p>Since we are now compiling, we need to think about things like <strong><em>compile target</em></strong>. Containers run linux, my desktop runs Darwin. A binary compiled on/for Darwin won&#39;t be able run inside a container. So, I made a container for compiling apps with nexe.</p>
 
-<pre><code>echo &quot;console.log(&#39;unicorn&#39;)&quot; &gt; index.js &amp;&amp; 
-docker run -i -t -v $(pwd):/app -w /app asbjornenge/nexe-docker -i index.js -o app
+<pre><code>docker run -v $(pwd):/app -w /app asbjornenge/nexe-docker -i index.js -o app
 </code></pre>
 
 <h3>Weird bugs</h3>
@@ -89,7 +88,7 @@ docker run -i -t -v $(pwd):/app -w /app asbjornenge/nexe-docker -i index.js -o a
 
 <h2>Container</h2>
 
-<p>When distributing these binaries, we can use the simplest container possible and just add the binary.</p>
+<p>When distributing we can use the simplest container possible and just add the binary.</p>
 
 <pre><code>FROM debian:jessie
 ADD app /usr/bin/app
@@ -100,7 +99,7 @@ ENTRYPOINT [&quot;app&quot;]
 
 <p>I used this approach to build <a href="https://github.com/asbjornenge/skylink">skylink</a>, check out the difference!</p>
 
-<p>.. | normal | nexe
+<p>&nbsp; | normal | nexe
 -- | -- | --
 size  | <strong>730.5 MB</strong> | <strong>132.1 MB</strong></p>
 
