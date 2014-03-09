@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Web, Words & Coffee</title>
+        <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+
+        <link rel="stylesheet" href="/css/reset.css">
+        <link rel="stylesheet" href="/css/fonts.css">
+        <link rel="stylesheet" href="/css/asbjornenge.css">
+        <link rel="stylesheet" href="/css/font-awesome.min.css">
+        <link rel="stylesheet" href="/css/animate.min.css">
+        <link rel="shortcut icon" href="https://www.gravatar.com/avatar/198a385bacf129e4b07f2b9e748787df?s=128">
+        <!--
+        <link rel="stylesheet" href="/css/highlight/googlecode.css">
+        <script src="/js/lib/highlight.pack.js"></script>
+        -->
+        <script src="/js/lib/ga.js"></script>
+        <script src="/js/lib/jquery-1.9.0.min.js"></script>
+        <script src="/js/lib/tap.js"></script>
+        <script src="/js/init.js" type="text/javascript"></script>
+    </head>
+    <body>
+        <div id="head">
+            <a link="/" class="nav_item">
+                <img id="logo" src="https://www.gravatar.com/avatar/198a385bacf129e4b07f2b9e748787df?s=80"/>
+            </a>
+            <div id="label">Web, Words & Coffee</div>
+            <ul id="menu">
+                <li class="about nav_item" link="/about.html">About</li>
+                <li class="separator">:</li>
+                <!--
+                <li class="crly nav_item" link="/crly.html">Crly</li>
+                <li class="separator">:</li>
+                -->
+                <!--
+                <li class="software nav_item" link="/software.html">Software</li>
+                <li class="separator">:</li>
+                -->
+                <li class="blog nav_item" link="/">Blog</li>
+            </ul>
+            <span class="nav_selector">&nbsp;</span>
+        </div>
+        <div style="clear:both"></div>
+        <div id="social">
+            <div class="github"><a href="http://github.com/asbjornenge"><i class="icon-github"></i></a></div>
+            <div class="twitter"><a href="http://twitter.com/asbjornenge"><i class="icon-twitter"></i></a></div>
+            <div class="itunes"><a href="https://itunes.apple.com/us/artist/asbjorn-enge/id528981222"><i class="icon-music"></i></a></div>
+        </div>
+        <div id="feed">
+            <div class="rss"><a href="http://www.asbjornenge.com/wwc/rss.xml"><i class="icon-rss"></i></a></div>
+        </div>
+        <div id="content">
+            <h1><a href="/wwc/tiny_node_containers.html">Tiny node containers</a></h1>
+
+<div class="date">09.03.2014</div>
+
+<p>My favorite language at the moment is javascipt. It&#39;s fun &amp; functional!</p>
+
+<p>Since I&#39;m also working quite a bit with <a href="http://docker.io">docker</a>, I&#39;ve been frustrated with the size of nodejs docker images. A typical node container holds <code>node</code>, <code>npm</code>, all your <code>dependencies</code>. Add a few <code>apt-get</code>&#39;s and your quickly looking at &gt; <strong>500 MB</strong>.</p>
+
+<p>I even started hacking some <a href="http://golang.org/">Go</a> solely for the ability to compile to a single binary.</p>
+
+<p>Until I found <a href="https://github.com/crcn/nexe">nexe</a>...</p>
+
+<p><img src="https://raw.github.com/jglovier/gifs/gh-pages/excited/ace-ventura-dance.gif" /><br>
+<font color="#999"><em>I can haz javascript aaaaaaaaaaaand binary???</em></font>  </p>
+
+<h2>Building with nexe</h2>
+
+<p>Nexe will compile your node app into a single executable binary. No joke! Go and have a look.</p>
+
+<p>Since we are now compiling, we need to think about things like compile target. Containers run linux, my desktop runs Darwin. A binary compiled on/for Darwin won&#39;t be able run inside containers. So, I made a container for compiling apps with nexe.</p>
+
+<pre><code>echo &quot;console.log(&#39;unicorn&#39;)&quot; &gt; index.js &amp;&amp; 
+docker run -i -t -v $(pwd):/app -w /app asbjornenge/nexe-docker -i index.js -o app
+</code></pre>
+
+<h3>Weird bugs</h3>
+
+<p>Granted, nexe is a bit flakey atm. I found two main bugs that I had to work around.</p>
+
+<ol>
+<li>A default package.json somehow messes up the executable.<br>
+<strong><em>Workaround:</em></strong> <em>I added a build script that will move package.json to pkg.json, build, then move it back.</em></li>
+<li>When passing arguments to a comiled binary, there must exist a first argument.<br>
+<strong><em>Workaround:</em></strong> <em>Just pass a random first argument.</em></li>
+</ol>
+
+<h2>Container</h2>
+
+<p>When distributing these binaries, we can use the simplest container possible and just add the binary.</p>
+
+<pre><code>FROM debian:jessie
+ADD app /usr/bin/app
+ENTRYPOINT [&quot;app&quot;]
+</code></pre>
+
+<h2>Example</h2>
+
+<p>I used this approach to build <a href="https://github.com/asbjornenge/skylink">skylink</a>, check out the difference!</p>
+
+<p>.. | normal | nexe
+-- | -- | --
+size  | <strong>730.5 MB</strong> | <strong>132.1 MB</strong></p>
+
+<h2>Credits</h2>
+
+<p>Gif from <a href="https://github.com/jglovier/gifs">here</a><br>
+Thanks!</p>
+
+            <div class="push"></div>
+        </div>
+        <div id="footer">enjoy.</div>
+    </body>
+</html>
