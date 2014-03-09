@@ -10,7 +10,7 @@ I even started hacking some [Go](http://golang.org/) solely for the ability to c
 Until I found [nexe](https://github.com/crcn/nexe)...
 
 <img src="https://raw.github.com/jglovier/gifs/gh-pages/excited/ace-ventura-dance.gif" />  
-<font color="#999">*I can haz javascript aaaaaand binary???*</font>  
+<font color="#999">*I can haz javascript aaaand binary???*</font>  
 
 ## Building with nexe
 
@@ -37,13 +37,13 @@ When distributing we can use the simplest container possible and just add the bi
 	ADD app /usr/bin/app
 	ENTRYPOINT ["app"]
 	
-## Example
+## Diff
 
 I used this approach to build [skylink](https://github.com/asbjornenge/skylink), check out the difference!
 
- &nbsp; | normal | nexe
--- | -- | --
-size  | **730.5 MB** | **132.1 MB**
+	      |   normal  |  nexe
+	 ---------------------------
+	 size |  730.5 MB | 132.1 MB
 
 ## Credits
 
