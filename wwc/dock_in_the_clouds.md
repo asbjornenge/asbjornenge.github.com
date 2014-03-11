@@ -1,6 +1,6 @@
 # Dock in the cloud
 
-Sick of having virtualbox & docker dragging your devbox down in the mud?
+Sick of having virtualbox & docker dragging your macbook air down in the mud?
 
 This post came as a result of me having way too many containers running locally.
 
@@ -36,7 +36,7 @@ OSX - install [tuntap](http://tuntaposx.sourceforge.net/).
 
 ## Connecting
 
-	sudo ssh -w 0:0 -i taghubdev.pem root@<ip>
+	sudo ssh -w 0:0 -i key.pem root@<ip>
 
 ## Tunnels & Routes
 
