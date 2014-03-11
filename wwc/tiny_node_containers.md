@@ -48,5 +48,6 @@ I used this approach to build [skylink](https://github.com/asbjornenge/skylink),
 
 ## Credits
 
+♥ to the [nexe](https://github.com/crcn/nexe) folks!  
 Gif from [here](https://github.com/jglovier/gifs).  
 Thanks!
