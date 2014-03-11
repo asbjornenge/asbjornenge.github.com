@@ -1,5 +1,5 @@
 # [Tiny node containers](/wwc/tiny_node_containers.html)
-<div class="date">09.03.2014</div>
+<div class="date">11.03.2014</div>
 
 My favorite language at the moment is javascipt. It's fun & functional!
 
@@ -16,7 +16,7 @@ Until I found [nexe](https://github.com/crcn/nexe)...
 
 Nexe will compile your node app into a single executable binary. No joke! Have a [look](https://github.com/crcn/nexe)!
 
-Since we are now compiling, we need to think about things like *compile target*. Containers run linux. My desktop runs Darwin. A binary compiled on/for Darwin won't be able run inside a container. So, I made a container for compiling apps with nexe.
+Since we are now compiling, we need to think about things like *compile target*. Containers run linux. My desktop runs Darwin. A binary compiled on/for Darwin won't be able run inside a container. So, I made a [container](https://index.docker.io/u/asbjornenge/skylink/) for compiling apps with nexe.
  
 	docker run -v $(pwd):/app -w /app asbjornenge/nexe-docker -i index.js -o app
 
@@ -44,9 +44,9 @@ I used this approach to build [skylink](https://github.com/asbjornenge/skylink),
 
 	      |   normal  |  nexe
 	 ---------------------------
-	 size |  730.5 MB | 132.1 MB
+	 size |  640.3 MB | 133.6 MB
 
 ## Credits
 
-Gif from [here](https://github.com/jglovier/gifs)  
+Gif from [here](https://github.com/jglovier/gifs).  
 Thanks!

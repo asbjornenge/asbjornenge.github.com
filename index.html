@@ -54,6 +54,67 @@
             
 	
 		
+    <div id="416ab009">
+    	<h1><a href="/wwc/tiny_node_containers.html">Tiny node containers</a></h1>
+
+<div class="date">11.03.2014</div>
+
+<p>My favorite language at the moment is javascipt. It&#39;s fun &amp; functional!</p>
+
+<p>Since I&#39;m also working quite a bit with <a href="http://docker.io">docker</a>, I&#39;ve been frustrated with the size of nodejs docker images. A typical node container holds <code>node</code>, <code>npm</code> and all your <code>dependencies</code>. Add a few <code>apt-get</code>&#39;s and your quickly looking at &gt; <strong>500 MB</strong>.</p>
+
+<p>I even started hacking some <a href="http://golang.org/">Go</a> solely for the ability to compile to a single binary.</p>
+
+<p>Until I found <a href="https://github.com/crcn/nexe">nexe</a>...</p>
+
+<p><img src="https://raw.github.com/jglovier/gifs/gh-pages/excited/ace-ventura-dance.gif" /><br>
+<font color="#999"><em>I can haz javascript aaaand binary???</em></font>  </p>
+
+<h2>Building with nexe</h2>
+
+<p>Nexe will compile your node app into a single executable binary. No joke! Have a <a href="https://github.com/crcn/nexe">look</a>!</p>
+
+<p>Since we are now compiling, we need to think about things like <em>compile target</em>. Containers run linux. My desktop runs Darwin. A binary compiled on/for Darwin won&#39;t be able run inside a container. So, I made a <a href="https://index.docker.io/u/asbjornenge/skylink/">container</a> for compiling apps with nexe.</p>
+
+<pre><code>docker run -v $(pwd):/app -w /app asbjornenge/nexe-docker -i index.js -o app
+</code></pre>
+
+<h3>Weird bugs</h3>
+
+<p>Granted, nexe is a bit flakey atm. I found two main bugs that I had to work around:</p>
+
+<p>A default package.json somehow messes up the executable.<br>
+<strong><em>Workaround:</em></strong> <em>I added a build script that will move package.json to pkg.json, build, then move it back.</em>  </p>
+
+<p>When passing arguments to a comiled binary, there must exist a first argument.<br>
+<strong><em>Workaround:</em></strong> <em>Just pass a random first argument.</em></p>
+
+<h2>Container</h2>
+
+<p>When distributing, we can use the simplest container possible, and just add the binary.</p>
+
+<pre><code>FROM debian:jessie
+ADD app /usr/bin/app
+ENTRYPOINT [&quot;app&quot;]
+</code></pre>
+
+<h2>Diff</h2>
+
+<p>I used this approach to build <a href="https://github.com/asbjornenge/skylink">skylink</a>, check out the difference!</p>
+
+<pre><code>      |   normal  |  nexe
+ ---------------------------
+ size |  640.3 MB | 133.6 MB
+</code></pre>
+
+<h2>Credits</h2>
+
+<p>Gif from <a href="https://github.com/jglovier/gifs">here</a>.<br>
+Thanks!</p>
+
+    </div>
+
+		
     <div id="342e195d">
     	<h1><a href="/wwc/vagrant_skydocking.html">Vagrant skydocking</a></h1>
 

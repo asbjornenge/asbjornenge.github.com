@@ -4,6 +4,13 @@
     ],
     "wwc" : [
         {
+            "html" : "wwc/tiny_node_containers.html",
+            "id" : "416ab009",
+            "md" : "tiny_node_containers.md",
+            "published" : "11.03.2014",
+            "title" : "Tiny Node Containers"
+        },
+        {
             "html" : "wwc/introducing_gymb.html",
             "id" : "f134a8e7",
             "md" : "introducing_gymb.md",

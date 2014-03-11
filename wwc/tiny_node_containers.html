@@ -53,7 +53,7 @@
         <div id="content">
             <h1><a href="/wwc/tiny_node_containers.html">Tiny node containers</a></h1>
 
-<div class="date">09.03.2014</div>
+<div class="date">11.03.2014</div>
 
 <p>My favorite language at the moment is javascipt. It&#39;s fun &amp; functional!</p>
 
@@ -70,7 +70,7 @@
 
 <p>Nexe will compile your node app into a single executable binary. No joke! Have a <a href="https://github.com/crcn/nexe">look</a>!</p>
 
-<p>Since we are now compiling, we need to think about things like <em>compile target</em>. Containers run linux. My desktop runs Darwin. A binary compiled on/for Darwin won&#39;t be able run inside a container. So, I made a container for compiling apps with nexe.</p>
+<p>Since we are now compiling, we need to think about things like <em>compile target</em>. Containers run linux. My desktop runs Darwin. A binary compiled on/for Darwin won&#39;t be able run inside a container. So, I made a <a href="https://index.docker.io/u/asbjornenge/skylink/">container</a> for compiling apps with nexe.</p>
 
 <pre><code>docker run -v $(pwd):/app -w /app asbjornenge/nexe-docker -i index.js -o app
 </code></pre>
@@ -100,12 +100,12 @@ ENTRYPOINT [&quot;app&quot;]
 
 <pre><code>      |   normal  |  nexe
  ---------------------------
- size |  730.5 MB | 132.1 MB
+ size |  640.3 MB | 133.6 MB
 </code></pre>
 
 <h2>Credits</h2>
 
-<p>Gif from <a href="https://github.com/jglovier/gifs">here</a><br>
+<p>Gif from <a href="https://github.com/jglovier/gifs">here</a>.<br>
 Thanks!</p>
 
             <div class="push"></div>
