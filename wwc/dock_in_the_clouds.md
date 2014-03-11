@@ -1,57 +1,114 @@
-# Dock in the cloud
+# Dock in the clouds
 
-Sick of having virtualbox & docker dragging your macbook air down in the mud?
+Tired of having virtualbox and a thousand docker containers dragging your macbook air down in the mud?   
+Put your docker host in the clouds!
 
-This post came as a result of me having way too many containers running locally.
+In this post we will create a docker host running in the cloud and hook that up to our local development environment using a SSH based "VPN".
 
-In this post we will create a docker host running in the cloud, hook that up to your local dev box. using a SSH base "VPN".
+Her is a diagram.
+
+        +---------------+               SSH                +----------------+
+        |  development  | tun0         tunnel         tun0 |  docker host   |
+        |               | <------------------------------->|                |
+        |   (client)    | 10.0.0.1                10.0.0.2 | (cloud_server) |
+        +-------+-------+     point to point connection    +-------+--------+
+           eth0 |                                                  | eth0
+    192.168.0.2 |                                                  | 10.0.0.10
+                |                    _  _                          | docker0
+                |                   ( `   )_                       | 172.17.42.1
+                -----------------  (    )    `)  -------------------
+                                  (_   (_ .  _) _)
+                                      INTERNET
 
 ## The Cloud Server
 
-Pick a cloud, any cloud.
+Pick a cloud, any cloud.   
+We'll stick with an Ubuntu 12.04 LTS on [AWS](http://aws.amazon.com/) EC2, but feel free to choose [digitalocean](https://www.digitalocean.com/) or any other supplier and/or linux distribution.
 
-We'll stick with an Ubuntu 12.04 LTS on ec2, but feel free to choose something completely different.
+Create your VPS (follow provider instructions) and log in using ssh.
 
-Allow login as root (noly using keys)
+	$ ssh <cloud_server_ip>
 
-	$> sudo vi /root/.ssh/authorized_keys
-	# remove -> no-port-forwarding,no-agent-forwarding,no-X11-forwarding,command="echo 'Please login as the user \"ubuntu\" rather than the user \"root\".';echo;sleep 10"
+### Prepare Docker
 
-so that it starts with ssh-rsa (your login cert).
+Follow the appropriate [instructions](http://docs.docker.io/en/latest/installation/) to install docker. By default the docker daemon binds to a unix socket only. To be able to communicate with docker over the network, we need to bind to a network interface.
 
-Verify sshd_config
+	$ sudo vi /etc/init/docker.conf
+		"$DOCKER" -d $DOCKER_OPTS -H unix:///var/run/docker.sock -H tcp://0.0.0.0:4243
 
-	$> sudo vi /etc/ssh/sshd_config
-	PermitRootLogin forced-commands-only
-	PermitTunnel yes
-	$> sudo service ssh restart
+### Prepare SSH
 
-Permit ip forwarding
+To make this work, we need to permit root login over ssh. Now, that might seem like a security hazard. But, we are only going to allow login using keys (not passwords), and we are going to plug that hole later on, keep reading.. :-)
 
-	sudo echo 1 > /proc/sys/net/ipv4/ip_forward
+	$ sudo vi /etc/ssh/sshd_config
+		PermitRootLogin yes
+		PermitTunnel yes
+		PasswordAuthentication no # <- optional, but recommended!
+	$ sudo service ssh restart
+
+***Friendly tip:*** *When modifying sshd_config and restarting the ssh service; test your new configuration on a different session/terminal, keeping the one you already have open, just in case something is misconfigured.*
+
+We also need to remove any initial scripting under root's ***autorized_keys*** added to prevent login as root.
+
+	$ sudo vi /root/.ssh/authorized_keys
+
+Remove anything resembling the following...
+  
+	no-port-forwarding,no-agent-forwarding,no-X11-forwarding,command="echo 'Please login as the user \"ubuntu\" rather than the user \"root\".';echo;sleep 10"
+
+...so that your file starts with <code>rsa-ssh \<long_key\></code>.
+
+### Permit forwarding
+
+	$ sudo su -c "echo 1 > /proc/sys/net/ipv4/ip_forward"
 
 ## The Client
 
-OSX - install [tuntap](http://tuntaposx.sourceforge.net/).
+If your on OSX (like me); install [tuntap](http://tuntaposx.sourceforge.net/).  
+Grab the docker client!
+
+	$ curl https://get.docker.io/builds/Darwin/x86_64/docker-latest -o docker
+	$ chmod +x docker
+	$ sudo cp docker /usr/local/bin/
+
+Thats it!
 
 ## Connecting
 
-	sudo ssh -w 0:0 -i key.pem root@<ip>
+Connection to your docker host is as simple as:
 
-## Tunnels & Routes
+	(client) $ sudo ssh -w 0:0 -i key.pem root@<cloud_server_ip>
 
-Setup the tunnel devices
+Passing the <code>-w</code> flag to <code>ssh</code> will have ssh create a tunnel device on each end of the connection. The <code>0:0</code> indicates which tunnel device at each end. Since we have specified 0 at each end, both the device on the server and the client will be <code>tun0</code>. Now we need to route some traffic so we can talk to docker on the server.
 
-	$SERVER> ifconfig tun2 10.2.1.1 pointopoint 10.2.1.2
-	$CLIENT> sudo ifconfig tun2 10.2.1.2 10.2.1.1
-	$CLIENT> ping 10.2.1.1 <- woohoo!
+## Tunnels & Routes & Docker
 
-Setup routes
+Setup the tunnel devices...
 
-	# Client route
-	$CLIENT> sudo route -n add -net 10.2.0.0 10.2.1.1
-	# Docker route
-	$CLIENT> sudo route -n add -net 172.17.0.0 10.2.1.1
+	(server) $ sudo ifconfig tun0 10.0.0.2 pointopoint 10.0.0.1
+	(client) $ sudo ifconfig tun0 10.0.0.1 10.0.0.2
+	(client) $ ping 10.0.0.2
+	PING 10.0.0.2 (10.0.0.2): 56 data bytes
+	64 bytes from 10.0.0.2: icmp_seq=0 ttl=64 time=58.643 ms
+	64 bytes from 10.0.0.2: icmp_seq=1 ttl=64 time=58.410 ms
+	64 bytes from 10.0.0.2: icmp_seq=2 ttl=64 time=58.586 ms
+	^ woohoo!
+
+Setup routes...
+
+	(client) $ sudo route -n add -net 10.0.0.0 10.0.0.2
+	(client) $ sudo route -n add -net 172.0.0.0 10.0.0.2
+
+Set the docker host...
+
+	(client) $ export DOCKER_HOST=tcp://10.0.0.2:4243
+
+Et voila;
+
+	(client) $ docker ps
+	CONTAINER ID        IMAGE                           COMMAND                CREATED             STATUS              PORTS
+
+HUZZA!
 
 ## Auto open tunnel
 
@@ -59,7 +116,18 @@ Setup routes
 		address 10.0.0.2
 		pointopoint 10.0.0.1
 		netmask 255.255.255.0
+
+authorized_keys
+
 	tunnel="0",command="/sbin/ifdown tun0;/sbin/ifup tun0"
+
+ssh_config
+
+	PermitRootLogin forced-commands-only
 
 ## DNS
 
+## Credits
+
+http://www.debian-administration.org/article/539/Setting_up_a_Layer_3_tunneling_VPN_with_using_OpenSSH  
+http://wouter.horre.be/doc/vpn-over-ssh
