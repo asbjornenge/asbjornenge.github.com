@@ -1,7 +1,6 @@
 # Dock in the clouds
 
-Tired of having virtualbox and a thousand docker containers dragging your macbook air down in the mud?   
-Put your docker host in the clouds!
+Tired of having virtualbox and a thousand docker containers dragging your macbook air down in the mud? Put your docker host in the clouds!
 
 In this post we will create a docker host running in the cloud and hook that up to our local development environment using a SSH based "VPN".
 
@@ -23,9 +22,8 @@ Her is a diagram.
 ## The Cloud Server
 
 Pick a cloud, any cloud.   
-We'll stick with an Ubuntu 12.04 LTS on [AWS](http://aws.amazon.com/) EC2, but feel free to choose [digitalocean](https://www.digitalocean.com/) or any other supplier and/or linux distribution.
 
-Create your VPS (follow provider instructions) and log in using ssh.
+We'll stick with an Ubuntu 12.04 LTS on [AWS](http://aws.amazon.com/) EC2, but feel free to choose [digitalocean](https://www.digitalocean.com/) or any other supplier and/or linux distribution. Create your VPS (follow provider instructions) and log in.
 
 	$ ssh <cloud_server_ip>
 
@@ -101,7 +99,7 @@ Setup routes...
 
 Set the docker host...
 
-	(client) $ export DOCKER_HOST=tcp://10.0.0.2:4243
+	(client) $ export DOCKER_HOST=tcp://172.17.42.1:4243
 
 Et voila;
 
@@ -109,6 +107,8 @@ Et voila;
 	CONTAINER ID        IMAGE                           COMMAND                CREATED             STATUS              PORTS
 
 HUZZA!
+
+## Addtional setup & security
 
 ## Auto open tunnel
 
@@ -125,7 +125,15 @@ ssh_config
 
 	PermitRootLogin forced-commands-only
 
+nat (forward into subnet)
+
+	iptables -t nat -A POSTROUTING --source 10.0.0.2 -j SNAT --to-source 1.2.7.4
+
 ## DNS
+
+## Closing thoughts
+
+EC2 VPC VPN
 
 ## Credits
 
