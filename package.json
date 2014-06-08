@@ -1,0 +1,51 @@
+{
+  "name": "asbjornenge.com",
+  "version": "0.0.1",
+  "description": "...",
+  "main": "entry.js",
+  "dependencies": {
+    "gulp": "^3.6.2",
+    "gulp-rename": "^1.2.0",
+    "gulp-size": "^0.3.0",
+    "gulp-uglify": "^0.2.1",
+    "gulp-util": "^2.2.14"
+  },
+  "devDependencies": {
+    "css-loader": "^0.6.12",
+    "envify": "^1.2.1",
+    "express": "^4.1.1",
+    "file-loader": "^0.5.1",
+    "gaze": "^0.5.1",
+    "gulp": "^3.6.2",
+    "gulp-clean": "^0.3.0",
+    "gulp-gzip": "0.0.8",
+    "gulp-rename": "^1.2.0",
+    "gulp-s3": "^0.2.0",
+    "gulp-size": "^0.3.0",
+    "gulp-uglify": "^0.2.1",
+    "gulp-util": "^2.2.14",
+    "handlebars": "^2.0.0-alpha.4",
+    "http-proxy": "^1.1.2",
+    "jsx-loader": "^0.10.0",
+    "lodash": "^2.4.1",
+    "metalsmith": "^0.8.0",
+    "metalsmith-markdown": "^0.2.1",
+    "metalsmith-templates": "^0.5.0",
+    "metalsmith-webpack": "0.0.1",
+    "minimist": "^0.1.0",
+    "nanoemitter": "0.0.1",
+    "nanoxhr": "0.0.1",
+    "react": "^0.10.0",
+    "style-loader": "^0.6.3",
+    "stylus-loader": "^0.2.0",
+    "tiny-lr-fork": "0.0.5",
+    "url-loader": "^0.5.5",
+    "webpack": "^1.1.8"
+  },
+  "scripts": {
+    "test": "mocha",
+    "start": "node server.js"
+  },
+  "author": "asbjornenge",
+  "license": "BSD"
+}
