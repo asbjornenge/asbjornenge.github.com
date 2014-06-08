@@ -307,6 +307,8 @@ body {
         #content .previews .preview {
           height: 80px;
           position: relative; } }
+      #content .previews .preview:last-child {
+        border-bottom: none; }
       #content .previews .preview .previewImageBox {
         float: left;
         height: 100px;
