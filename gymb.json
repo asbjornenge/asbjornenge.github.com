@@ -23,7 +23,7 @@
             "html" : "wwc/json_schema.html",
             "id" : "68fef665",
             "md" : "json_schema.md",
-            "preview" : "Validate your JSON.",
+            "preview" : "Validate that JSON.",
             "previewImage" : "/img/json-schema.png",
             "published" : "10.02.2013",
             "title" : "JSON Schema"
@@ -50,7 +50,7 @@
             "html" : "wwc/zero_todo.html",
             "id" : "98c6d461",
             "md" : "zero_todo.md",
-            "preview" : "Easily add todo items to your inbox.",
+            "preview" : "Todo workflow for inbox zeroists.",
             "previewImage" : "/img/inbox-zero.png",
             "published" : "08.03.2013",
             "title" : "Zero Todo"
