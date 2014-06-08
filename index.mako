@@ -16,9 +16,9 @@
     <div id="${post['id']}" class="preview">
         <div class="previewDate">${post['published']}</div>
         % if post.has_key('previewImage'):
-            <div class="previewImageBox" style="background-image:url(${post['previewImage']})"></div>
+            <div class="previewImageBox previewLink" style="background-image:url(${post['previewImage']})" link="${post['html']}"></div>
         % endif
-        <h3 class="title"><a href="${post['html']}">${post['title']}</a></h3>
+        <h3 class="previewLink" link="${post['html']}">${post['title']}</h3>
         <p>${post.has_key('preview') and post['preview'] or ''}</p>
     </div>
 </%def>

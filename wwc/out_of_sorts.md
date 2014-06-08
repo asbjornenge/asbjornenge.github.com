@@ -1,4 +1,4 @@
-# [Out of sorts](/wwc/out_of_sorts.html)
+# Out of sorts
 <div class="date">30.03.2013</div>
 
 > My first real fight with fonts.
