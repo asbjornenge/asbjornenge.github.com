@@ -53,8 +53,7 @@
         <div id="content">
             <h1>Dock in the clouds</h1>
 
-<p>Tired of having virtualbox and a thousand docker containers dragging your macbook air down in the mud?<br>
-Put your docker host in the clouds!</p>
+<p>Tired of having virtualbox and a thousand docker containers dragging your macbook air down in the mud? Put your docker host in the clouds!</p>
 
 <p>In this post we will create a docker host running in the cloud and hook that up to our local development environment using a SSH based &quot;VPN&quot;.</p>
 
@@ -76,10 +75,9 @@ Put your docker host in the clouds!</p>
 
 <h2>The Cloud Server</h2>
 
-<p>Pick a cloud, any cloud.<br>
-We&#39;ll stick with an Ubuntu 12.04 LTS on <a href="http://aws.amazon.com/">AWS</a> EC2, but feel free to choose <a href="https://www.digitalocean.com/">digitalocean</a> or any other supplier and/or linux distribution.</p>
+<p>Pick a cloud, any cloud.   </p>
 
-<p>Create your VPS (follow provider instructions) and log in using ssh.</p>
+<p>We&#39;ll stick with an Ubuntu 12.04 LTS on <a href="http://aws.amazon.com/">AWS</a> EC2, but feel free to choose <a href="https://www.digitalocean.com/">digitalocean</a> or any other supplier and/or linux distribution. Create your VPS (follow provider instructions) and log in.</p>
 
 <pre><code>$ ssh &lt;cloud_server_ip&gt;
 </code></pre>
@@ -165,7 +163,7 @@ PING 10.0.0.2 (10.0.0.2): 56 data bytes
 
 <p>Set the docker host...</p>
 
-<pre><code>(client) $ export DOCKER_HOST=tcp://10.0.0.2:4243
+<pre><code>(client) $ export DOCKER_HOST=tcp://172.17.42.1:4243
 </code></pre>
 
 <p>Et voila;</p>
@@ -175,6 +173,8 @@ CONTAINER ID        IMAGE                           COMMAND                CREAT
 </code></pre>
 
 <p>HUZZA!</p>
+
+<h2>Addtional setup &amp; security</h2>
 
 <h2>Auto open tunnel</h2>
 
@@ -194,7 +194,16 @@ CONTAINER ID        IMAGE                           COMMAND                CREAT
 <pre><code>PermitRootLogin forced-commands-only
 </code></pre>
 
+<p>nat (forward into subnet)</p>
+
+<pre><code>iptables -t nat -A POSTROUTING --source 10.0.0.2 -j SNAT --to-source 1.2.7.4
+</code></pre>
+
 <h2>DNS</h2>
+
+<h2>Closing thoughts</h2>
+
+<p>EC2 VPC VPN</p>
 
 <h2>Credits</h2>
 

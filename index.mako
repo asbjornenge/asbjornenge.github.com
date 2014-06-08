@@ -6,9 +6,19 @@
 		wwc.sort(key=lambda item:time.strptime(item['published'],'%d.%m.%Y'), reverse=True)
 	%>
 	% for post in wwc:
-		${showblog(post)}
+		${showblogpreview(post)}
 	% endfor
 </%block>
+
+<%def name="showblogpreview(post)">
+    <div id="${post['id']}" class="preview">
+        <span class="title">${post['title']}</span><span class="date">${post['published']}</span>
+        % if post.has_key('previewImage'):
+            <img src="${post['previewImage']}"/>
+        % endif
+        <p>${post.has_key('preview') and post['preview'] or ''}</p>
+    </div>
+</%def>
 
 <%def name="showblog(post)">
     <div id="${post['id']}">

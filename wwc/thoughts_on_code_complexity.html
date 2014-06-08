@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Web, Words & Coffee</title>
+        <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+
+        <link rel="stylesheet" href="/css/reset.css">
+        <link rel="stylesheet" href="/css/fonts.css">
+        <link rel="stylesheet" href="/css/asbjornenge.css">
+        <link rel="stylesheet" href="/css/font-awesome.min.css">
+        <link rel="stylesheet" href="/css/animate.min.css">
+        <link rel="shortcut icon" href="https://www.gravatar.com/avatar/198a385bacf129e4b07f2b9e748787df?s=128">
+        <!--
+        <link rel="stylesheet" href="/css/highlight/googlecode.css">
+        <script src="/js/lib/highlight.pack.js"></script>
+        -->
+        <script src="/js/lib/ga.js"></script>
+        <script src="/js/lib/jquery-1.9.0.min.js"></script>
+        <script src="/js/lib/tap.js"></script>
+        <script src="/js/init.js" type="text/javascript"></script>
+    </head>
+    <body>
+        <div id="head">
+            <a link="/" class="nav_item">
+                <img id="logo" src="https://www.gravatar.com/avatar/198a385bacf129e4b07f2b9e748787df?s=80"/>
+            </a>
+            <div id="label">Web, Words & Coffee</div>
+            <ul id="menu">
+                <li class="about nav_item" link="/about.html">About</li>
+                <li class="separator">:</li>
+                <!--
+                <li class="crly nav_item" link="/crly.html">Crly</li>
+                <li class="separator">:</li>
+                -->
+                <!--
+                <li class="software nav_item" link="/software.html">Software</li>
+                <li class="separator">:</li>
+                -->
+                <li class="blog nav_item" link="/">Blog</li>
+            </ul>
+            <span class="nav_selector">&nbsp;</span>
+        </div>
+        <div style="clear:both"></div>
+        <div id="social">
+            <div class="github"><a href="http://github.com/asbjornenge"><i class="icon-github"></i></a></div>
+            <div class="twitter"><a href="http://twitter.com/asbjornenge"><i class="icon-twitter"></i></a></div>
+            <div class="itunes"><a href="https://itunes.apple.com/us/artist/asbjorn-enge/id528981222"><i class="icon-music"></i></a></div>
+        </div>
+        <div id="feed">
+            <div class="rss"><a href="http://www.asbjornenge.com/wwc/rss.xml"><i class="icon-rss"></i></a></div>
+        </div>
+        <div id="content">
+            <h1>Thoughts on Code Complexity</h1>
+
+<p>First of all let me state that code design patters is a fairly subjective matter. Different people like different abstractions. But, there are some things imho that is hard to disagree with.</p>
+
+<h2>State</h2>
+
+<p>AVOID STATEFUL CONSTRUCTS!</p>
+
+<h3>Problem</h3>
+
+<p>State is when some part of your application holds a piece of information that other parts of your application depend on to work. Unfortunately this is quite a common with popular Object Oriented patterns. Spreading out state to lots of different parts of your applications is generally a bad idea.</p>
+
+<ul>
+<li>It makes your logic hard to follow</li>
+<li>It makes your application hard to test</li>
+<li>It makes your application hard to modify</li>
+</ul>
+
+<p>Let consider a very simple python example.</p>
+
+<pre><code>class MyStatefulClassA:
+    def __init__(self):
+        self.ready = False
+
+    def update(self):
+        self.ready = bool(random.randint(0,1))
+
+class MyDependatClassB:
+    def __init__(self, a):
+        self.a = a
+
+    def test(self, a):
+        return self.a.ready and &quot;Yes&quot; or &quot;No&quot;
+
+a = MyStatefulClassA()
+a.update()
+print &quot;Ready: %s&quot; % MyDependatClassB(a).test()
+</code></pre>
+
+<p>To write a unit test for our <em>MyDependatClassB.test</em> we would first have to instanciate <em>MyStatefulClassA</em>. In our example that is easy, but what if <em>MyStatefulClassA</em> was very complicated. It might hold a database connection and other complicated things that are hard to mock in a test scenario.</p>
+
+<p>Lets say I want to modify my application by renaming the ready field. I now have to do that in both my classes.</p>
+
+<p>Consider a scenario where both the classes were only imports:</p>
+
+<pre><code>from here import MyStatefulClassA
+from there import MyDependatClassB
+
+a = MyStatefulClassA()
+print &quot;Ready: %s&quot; % MyDependatClassB(a).test()
+</code></pre>
+
+<p>It is not in any way clear what is happening here. To follow the logic one would have to open both files and follow their internal logic while still remembering how they were used.</p>
+
+<h3>Solution</h3>
+
+<p>Most applications require some state to be held, but try to keep that state in a single locations. And rather then relying on that state in your application constructs, pass the state to your functions. This will keep your functions pure (only dependant on input) and your logic easier to follow.</p>
+
+<p>Consider a different approach:</p>
+
+<pre><code>from boolutils import randombool, translatebool
+
+ready_state = False
+ready_state = randomBool()
+print &quot;Ready: %s&quot; % translateBool(ready_state)
+</code></pre>
+
+<p>Even without displaying the internal logic of our two classes, it is fairly simple to follow this logic. We have a ready_state. We update that state to a random value. We get a translations for our random value. Easy to follow.</p>
+
+<p>As you can see; naming and level of verbosity is also very important. And that brings us to our next consideration; abstractions.</p>
+
+<h2>Abstractions</h2>
+
+<p>hidden?</p>
+
+<h2>Domain abstractions</h2>
+
+<p>asd</p>
+
+            <div class="push"></div>
+        </div>
+        <div id="footer">enjoy.</div>
+    </body>
+</html>
