@@ -7,6 +7,8 @@
             "html" : "wwc/tiny_node_containers.html",
             "id" : "416ab009",
             "md" : "tiny_node_containers.md",
+            "preview" : "Moby Dick \u2665 compiled javascript!",
+            "previewImage" : "/img/ace-ventura-dance.gif",
             "published" : "11.03.2014",
             "title" : "Tiny Node Containers"
         },
@@ -21,6 +23,8 @@
             "html" : "wwc/json_schema.html",
             "id" : "68fef665",
             "md" : "json_schema.md",
+            "preview" : "Validate your JSON.",
+            "previewImage" : "/img/json-schema.png",
             "published" : "10.02.2013",
             "title" : "JSON Schema"
         },
@@ -28,6 +32,8 @@
             "html" : "wwc/out_of_sorts.html",
             "id" : "b6a35118",
             "md" : "out_of_sorts.md",
+            "preview" : "My first real fight with fonts.",
+            "previewImage" : "/img/out-of-sorts-preview.png",
             "published" : "30.03.2013",
             "title" : "Out of sorts"
         },
@@ -35,6 +41,8 @@
             "html" : "wwc/vagrant_skydocking.html",
             "id" : "342e195d",
             "md" : "vagrant_skydocking.md",
+            "preview" : "Talk easily & directly with your docker containers.",
+            "previewImage" : "/img/docker-whale.png",
             "published" : "29.01.2014",
             "title" : "Vagrant skydocking"
         },
@@ -42,6 +50,8 @@
             "html" : "wwc/zero_todo.html",
             "id" : "98c6d461",
             "md" : "zero_todo.md",
+            "preview" : "Easily add todo items to your inbox.",
+            "previewImage" : "/img/inbox-zero.png",
             "published" : "08.03.2013",
             "title" : "Zero Todo"
         }

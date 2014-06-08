@@ -1,4 +1,4 @@
-# [Tiny node containers](/wwc/tiny_node_containers.html)
+# Tiny node containers
 <div class="date">11.03.2014</div>
 
 My favorite language at the moment is javascipt. It's fun & functional!

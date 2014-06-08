@@ -1,4 +1,4 @@
-# [JSON Schema Validation](/wwc/json_schema.html)
+# JSON Schema Validation
 <div class="date">10.02.2013</div>
 
 Your probably talking JSON with a RESTful api, right?  

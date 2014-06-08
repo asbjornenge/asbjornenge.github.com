@@ -1,4 +1,4 @@
-# [Vagrant skydocking](/wwc/vagrant_skydocking.html)
+# Vagrant skydocking
 <div class="date">29.01.2014</div>
 
 *UPDATED 30.01.2014* - Using a **route** instead of **linking** interfaces. A bit simpler. Original [here](/wwc/vagrant_skydocking_link.html).

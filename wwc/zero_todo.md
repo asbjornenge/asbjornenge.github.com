@@ -1,4 +1,4 @@
-# [Zero Todo](/wwc/zero_todo.html)
+# Zero Todo
 <div class="date">08.03.2013</div>
 
 > Todo workflow for inbox zeroists.
