@@ -5,17 +5,20 @@
 		wwc = [post for post in copy.deepcopy(config['wwc']) if post['published']]
 		wwc.sort(key=lambda item:time.strptime(item['published'],'%d.%m.%Y'), reverse=True)
 	%>
+    <div class="previews">
 	% for post in wwc:
 		${showblogpreview(post)}
 	% endfor
+    </div>
 </%block>
 
 <%def name="showblogpreview(post)">
     <div id="${post['id']}" class="preview">
-        <span class="title">${post['title']}</span><span class="date">${post['published']}</span>
+        <div class="previewDate">${post['published']}</div>
         % if post.has_key('previewImage'):
-            <img src="${post['previewImage']}"/>
+            <div class="previewImageBox" style="background-image:url(${post['previewImage']})"></div>
         % endif
+        <h3 class="title"><a href="${post['html']}">${post['title']}</a></h3>
         <p>${post.has_key('preview') and post['preview'] or ''}</p>
     </div>
 </%def>
