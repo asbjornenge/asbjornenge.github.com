@@ -120,7 +120,7 @@ First, add the <code>tun0</code> interface to <code>/etc/network/interfaces</cod
 		   address 10.0.0.2
 		   pointopoint 10.0.0.1
 		   netmask 255.255.255.0
-		   # Forward traffic into subnet
+		   # Forward traffic into server side network
 		   iptables -t nat -A POSTROUTING --source 10.0.0.2 -j SNAT --to-source 10.0.0.10
 
 Add a command to <code>authorized_keys</code> (first thing in the file) to bring up the interface on connection.
@@ -142,7 +142,9 @@ If you want simple dns based service discovery for you containers over you new c
 
 ## Closing thoughts
 
-EC2 VPC VPN
+I have been applying this technique for connecting to different VPCs I manage on amazon. Once scripted it's really nice being able to connect to a specific environment with one command and be hands on the docker host(s) and the containers in that environment.
+
+Originally I had been hoping to also use a VPC for development purposes aslo. Unfortunately the latency from my location to the datacenter gets annoying when trying to get efficient feedback loops (especially establishing db connections). This seems however not to be a fault of the tuntap ... 
 
 ## Credits
 
