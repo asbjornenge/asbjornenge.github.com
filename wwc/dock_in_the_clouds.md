@@ -36,7 +36,7 @@ Follow the appropriate [instructions](http://docs.docker.io/en/latest/installati
 
 ### Prepare SSH
 
-To make this work, we need to permit root login over ssh. Now, that might seem like a security hazard. But, we are only going to allow login using keys (not passwords), and we are going to plug that hole later on, keep reading.. :-)
+To make this work, we need to permit root login over ssh. Now, that might seem like a security hazard. But, we are only going to allow login using keys (not passwords), and later on we are going to limit the access of root over ssh to only run a specific command.
 
 	$ sudo vi /etc/ssh/sshd_config
 		PermitRootLogin yes
@@ -44,13 +44,13 @@ To make this work, we need to permit root login over ssh. Now, that might seem l
 		PasswordAuthentication no # <- optional, but recommended!
 	$ sudo service ssh restart
 
-***Friendly tip:*** *When modifying sshd_config and restarting the ssh service; test your new configuration on a different session/terminal, keeping the one you already have open, just in case something is misconfigured.*
+**Friendly tip:** *When modifying sshd_config and restarting the ssh service; test your new configuration on a different session/terminal, keeping the one you already have open, just in case you messed up something.*
 
 We also need to remove any initial scripting under root's ***autorized_keys*** added to prevent login as root.
 
 	$ sudo vi /root/.ssh/authorized_keys
 
-Remove anything resembling the following...
+Remove anything resembling the following:
   
 	no-port-forwarding,no-agent-forwarding,no-X11-forwarding,command="echo 'Please login as the user \"ubuntu\" rather than the user \"root\".';echo;sleep 10"
 
@@ -63,6 +63,7 @@ Remove anything resembling the following...
 ## The Client
 
 If your on OSX (like me); install [tuntap](http://tuntaposx.sourceforge.net/).  
+
 Grab the docker client!
 
 	$ curl https://get.docker.io/builds/Darwin/x86_64/docker-latest -o docker
@@ -81,7 +82,7 @@ Passing the <code>-w</code> flag to <code>ssh</code> will have ssh create a tunn
 
 ## Tunnels & Routes & Docker
 
-Setup the tunnel devices...
+Setup the tunnel devices:
 
 	(server) $ sudo ifconfig tun0 10.0.0.2 pointopoint 10.0.0.1
 	(client) $ sudo ifconfig tun0 10.0.0.1 10.0.0.2
@@ -92,16 +93,16 @@ Setup the tunnel devices...
 	64 bytes from 10.0.0.2: icmp_seq=2 ttl=64 time=58.586 ms
 	^ woohoo!
 
-Setup routes...
+Setup routing:
 
 	(client) $ sudo route -n add -net 10.0.0.0 10.0.0.2
 	(client) $ sudo route -n add -net 172.0.0.0 10.0.0.2
 
-Set the docker host...
+Set the docker host:
 
 	(client) $ export DOCKER_HOST=tcp://172.17.42.1:4243
 
-Et voila;
+Et voila:
 
 	(client) $ docker ps
 	CONTAINER ID        IMAGE                           COMMAND                CREATED             STATUS              PORTS
@@ -110,26 +111,34 @@ HUZZA!
 
 ## Addtional setup & security
 
-## Auto open tunnel
+Now, all this is quite a bit to remember, so I definately recommend scripting parts of the setup. One neat thing you can do that will both simplify the process and strengthen security is to only allow root to run a specific command over ssh, and have that command be opening the tunnel.
 
-	iface tun0 inet static
-		address 10.0.0.2
-		pointopoint 10.0.0.1
-		netmask 255.255.255.0
+First, add the <code>tun0</code> interface to <code>/etc/network/interfaces</code>
 
-authorized_keys
+	$ sudo vi /etc/network/interfaces
+	    iface tun0 inet static
+		   address 10.0.0.2
+		   pointopoint 10.0.0.1
+		   netmask 255.255.255.0
+		   # Forward traffic into subnet
+		   iptables -t nat -A POSTROUTING --source 10.0.0.2 -j SNAT --to-source 10.0.0.10
 
-	tunnel="0",command="/sbin/ifdown tun0;/sbin/ifup tun0"
+Add a command to <code>authorized_keys</code> (first thing in the file) to bring up the interface on connection.
 
-ssh_config
+	$ sudo vi /root/.ssh/authorized_keys
+	    tunnel="0",command="/sbin/ifdown tun0;/sbin/ifup tun0" ssh-rsa ....
 
-	PermitRootLogin forced-commands-only
+Only allow commands for root over ssh.
 
-nat (forward into subnet)
+	$ sudo vi /etc/ssh/sshd_config
+	    PermitRootLogin forced-commands-only
+	$ sudo service ssh restart
 
-	iptables -t nat -A POSTROUTING --source 10.0.0.2 -j SNAT --to-source 1.2.7.4
+Now, whenever you ssh in as root the server will try to bring up the tunnel interface.
 
 ## DNS
+
+If you want simple dns based service discovery for you containers over you new cloud bridge, apply the same tools and techniques discussed in my previous article [Vagrant Skydocking](/wwc/vagrant_skydocking.html) to this clound bridge. You will be pinging <code>redis.staging.yourapp</code> in no time.
 
 ## Closing thoughts
 
@@ -139,3 +148,5 @@ EC2 VPC VPN
 
 http://www.debian-administration.org/article/539/Setting_up_a_Layer_3_tunneling_VPN_with_using_OpenSSH  
 http://wouter.horre.be/doc/vpn-over-ssh
+
+enjoy.
