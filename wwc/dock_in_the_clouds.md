@@ -155,6 +155,7 @@ Time to dance!
 ♥ goes out to ssh.  
 And all the amazing unix hackers out there!  
 Including the authors of [this](http://www.debian-administration.org/article/539/Setting_up_a_Layer_3_tunneling_VPN_with_using_OpenSSH) and [that](http://wouter.horre.be/doc/vpn-over-ssh).  
+Gifs from [here](http://gifs.joelglovier.com/).  
 Thank you internet of folks!
 
 enjoy.
