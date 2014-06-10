@@ -144,7 +144,7 @@ If you want simple dns based service discovery for you containers over you new c
 
 I have been applying this technique for connecting to different VPCs I manage on amazon. Once scripted it's really nice being able to connect to a specific environment with one command and be hands on the docker host(s) and the containers in that environment.
 
-Originally I had been hoping to also use a VPC for development purposes aslo. Unfortunately the latency from my location to the datacenter gets annoying when trying to get efficient feedback loops (especially establishing db connections). This seems however not to be a fault of the tuntap ... 
+Originally I had been hoping to also use a VPC for development purposes. Unfortunately the latency from my location to the datacenter gets annoying when trying to get efficient feedback loops (especially establishing db connections). This is however not a fault of this approach, but the distance from me to the datacenter. Your milage may vary. Setting up a development host closer to home using the same approach did the trick.
 
 ## Credits
 

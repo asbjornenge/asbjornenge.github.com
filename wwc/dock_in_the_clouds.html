@@ -92,7 +92,7 @@
 
 <h3>Prepare SSH</h3>
 
-<p>To make this work, we need to permit root login over ssh. Now, that might seem like a security hazard. But, we are only going to allow login using keys (not passwords), and we are going to plug that hole later on, keep reading.. :-)</p>
+<p>To make this work, we need to permit root login over ssh. Now, that might seem like a security hazard. But, we are only going to allow login using keys (not passwords), and later on we are going to limit the access of root over ssh to only run a specific command.</p>
 
 <pre><code>$ sudo vi /etc/ssh/sshd_config
     PermitRootLogin yes
@@ -101,14 +101,14 @@
 $ sudo service ssh restart
 </code></pre>
 
-<p><strong><em>Friendly tip:</em></strong> <em>When modifying sshd_config and restarting the ssh service; test your new configuration on a different session/terminal, keeping the one you already have open, just in case something is misconfigured.</em></p>
+<p><strong>Friendly tip:</strong> <em>When modifying sshd_config and restarting the ssh service; test your new configuration on a different session/terminal, keeping the one you already have open, just in case you messed up something.</em></p>
 
 <p>We also need to remove any initial scripting under root&#39;s <strong><em>autorized_keys</em></strong> added to prevent login as root.</p>
 
 <pre><code>$ sudo vi /root/.ssh/authorized_keys
 </code></pre>
 
-<p>Remove anything resembling the following...</p>
+<p>Remove anything resembling the following:</p>
 
 <pre><code>no-port-forwarding,no-agent-forwarding,no-X11-forwarding,command=&quot;echo &#39;Please login as the user \&quot;ubuntu\&quot; rather than the user \&quot;root\&quot;.&#39;;echo;sleep 10&quot;
 </code></pre>
@@ -122,8 +122,9 @@ $ sudo service ssh restart
 
 <h2>The Client</h2>
 
-<p>If your on OSX (like me); install <a href="http://tuntaposx.sourceforge.net/">tuntap</a>.<br>
-Grab the docker client!</p>
+<p>If your on OSX (like me); install <a href="http://tuntaposx.sourceforge.net/">tuntap</a>.  </p>
+
+<p>Grab the docker client!</p>
 
 <pre><code>$ curl https://get.docker.io/builds/Darwin/x86_64/docker-latest -o docker
 $ chmod +x docker
@@ -143,7 +144,7 @@ $ sudo cp docker /usr/local/bin/
 
 <h2>Tunnels &amp; Routes &amp; Docker</h2>
 
-<p>Setup the tunnel devices...</p>
+<p>Setup the tunnel devices:</p>
 
 <pre><code>(server) $ sudo ifconfig tun0 10.0.0.2 pointopoint 10.0.0.1
 (client) $ sudo ifconfig tun0 10.0.0.1 10.0.0.2
@@ -155,18 +156,18 @@ PING 10.0.0.2 (10.0.0.2): 56 data bytes
 ^ woohoo!
 </code></pre>
 
-<p>Setup routes...</p>
+<p>Setup routing:</p>
 
 <pre><code>(client) $ sudo route -n add -net 10.0.0.0 10.0.0.2
 (client) $ sudo route -n add -net 172.0.0.0 10.0.0.2
 </code></pre>
 
-<p>Set the docker host...</p>
+<p>Set the docker host:</p>
 
 <pre><code>(client) $ export DOCKER_HOST=tcp://172.17.42.1:4243
 </code></pre>
 
-<p>Et voila;</p>
+<p>Et voila:</p>
 
 <pre><code>(client) $ docker ps
 CONTAINER ID        IMAGE                           COMMAND                CREATED             STATUS              PORTS
@@ -176,39 +177,50 @@ CONTAINER ID        IMAGE                           COMMAND                CREAT
 
 <h2>Addtional setup &amp; security</h2>
 
-<h2>Auto open tunnel</h2>
+<p>Now, all this is quite a bit to remember, so I definately recommend scripting parts of the setup. One neat thing you can do that will both simplify the process and strengthen security is to only allow root to run a specific command over ssh, and have that command be opening the tunnel.</p>
 
-<pre><code>iface tun0 inet static
-    address 10.0.0.2
-    pointopoint 10.0.0.1
-    netmask 255.255.255.0
+<p>First, add the <code>tun0</code> interface to <code>/etc/network/interfaces</code></p>
+
+<pre><code>$ sudo vi /etc/network/interfaces
+    iface tun0 inet static
+       address 10.0.0.2
+       pointopoint 10.0.0.1
+       netmask 255.255.255.0
+       # Forward traffic into server side network
+       iptables -t nat -A POSTROUTING --source 10.0.0.2 -j SNAT --to-source 10.0.0.10
 </code></pre>
 
-<p>authorized_keys</p>
+<p>Add a command to <code>authorized_keys</code> (first thing in the file) to bring up the interface on connection.</p>
 
-<pre><code>tunnel=&quot;0&quot;,command=&quot;/sbin/ifdown tun0;/sbin/ifup tun0&quot;
+<pre><code>$ sudo vi /root/.ssh/authorized_keys
+    tunnel=&quot;0&quot;,command=&quot;/sbin/ifdown tun0;/sbin/ifup tun0&quot; ssh-rsa ....
 </code></pre>
 
-<p>ssh_config</p>
+<p>Only allow commands for root over ssh.</p>
 
-<pre><code>PermitRootLogin forced-commands-only
+<pre><code>$ sudo vi /etc/ssh/sshd_config
+    PermitRootLogin forced-commands-only
+$ sudo service ssh restart
 </code></pre>
 
-<p>nat (forward into subnet)</p>
-
-<pre><code>iptables -t nat -A POSTROUTING --source 10.0.0.2 -j SNAT --to-source 1.2.7.4
-</code></pre>
+<p>Now, whenever you ssh in as root the server will try to bring up the tunnel interface.</p>
 
 <h2>DNS</h2>
 
+<p>If you want simple dns based service discovery for you containers over you new cloud bridge, apply the same tools and techniques discussed in my previous article <a href="/wwc/vagrant_skydocking.html">Vagrant Skydocking</a> to this clound bridge. You will be pinging <code>redis.staging.yourapp</code> in no time.</p>
+
 <h2>Closing thoughts</h2>
 
-<p>EC2 VPC VPN</p>
+<p>I have been applying this technique for connecting to different VPCs I manage on amazon. Once scripted it&#39;s really nice being able to connect to a specific environment with one command and be hands on the docker host(s) and the containers in that environment.</p>
+
+<p>Originally I had been hoping to also use a VPC for development purposes. Unfortunately the latency from my location to the datacenter gets annoying when trying to get efficient feedback loops (especially establishing db connections). This is however not a fault of this approach, but the distance from me to the datacenter. Your milage may vary. Setting up a development host closer to home using the same approach did the trick.</p>
 
 <h2>Credits</h2>
 
 <p>http://www.debian-administration.org/article/539/Setting<em>up</em>a<em>Layer</em>3<em>tunneling</em>VPN<em>with</em>using_OpenSSH<br>
 http://wouter.horre.be/doc/vpn-over-ssh</p>
+
+<p>enjoy.</p>
 
             <div class="push"></div>
         </div>
