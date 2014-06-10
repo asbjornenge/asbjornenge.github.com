@@ -102,7 +102,7 @@ Set the docker host:
 
 	(client) $ export DOCKER_HOST=tcp://172.17.42.1:4243
 
-Et voila:
+Et voilà:
 
 	(client) $ docker ps
 	CONTAINER ID        IMAGE                           COMMAND                CREATED             STATUS              PORTS
