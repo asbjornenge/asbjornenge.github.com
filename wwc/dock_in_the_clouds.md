@@ -23,7 +23,7 @@ Her is a diagram.
 
 Pick a cloud, any cloud.   
 
-We'll stick with an Ubuntu 12.04 LTS on [AWS](http://aws.amazon.com/) EC2, but feel free to choose [digitalocean](https://www.digitalocean.com/) or any other supplier and/or linux distribution. Create your VPS (follow provider instructions) and log in.
+We'll stick with an **Ubuntu 12.04 LTS** on [AWS](http://aws.amazon.com/) EC2, but feel free to choose [digitalocean](https://www.digitalocean.com/) or any other supplier and/or linux distribution. Create your VPS (follow provider instructions) and log in.
 
 	$ ssh <cloud_server_ip>
 
@@ -107,7 +107,7 @@ Et voila:
 	(client) $ docker ps
 	CONTAINER ID        IMAGE                           COMMAND                CREATED             STATUS              PORTS
 
-HUZZA!
+![OHHHH](http://gifs.joelglovier.com/ohhh/ohhh-minion.gif)
 
 ## Addtional setup & security
 
@@ -123,7 +123,7 @@ First, add the <code>tun0</code> interface to <code>/etc/network/interfaces</cod
 		   # Forward traffic into server side network
 		   iptables -t nat -A POSTROUTING --source 10.0.0.2 -j SNAT --to-source 10.0.0.10
 
-Add a command to <code>authorized_keys</code> (first thing in the file) to bring up the interface on connection.
+Add a command to root's <code>authorized_keys</code> (first thing in the file) to bring up the interface on connection.
 
 	$ sudo vi /root/.ssh/authorized_keys
 	    tunnel="0",command="/sbin/ifdown tun0;/sbin/ifup tun0" ssh-rsa ....
@@ -138,17 +138,23 @@ Now, whenever you ssh in as root the server will try to bring up the tunnel inte
 
 ## DNS
 
-If you want simple dns based service discovery for you containers over you new cloud bridge, apply the same tools and techniques discussed in my previous article [Vagrant Skydocking](/wwc/vagrant_skydocking.html) to this clound bridge. You will be pinging <code>redis.staging.yourapp</code> in no time.
+If you want simple dns based service discovery for you containers over you new cloud bridge, apply the same tools and techniques discussed in my previous article [Vagrant Skydocking](/wwc/vagrant_skydocking.html) to this cloud bridge. You will be pinging <code>redis.staging.yourapp</code> in no time.
 
 ## Closing thoughts
 
 I have been applying this technique for connecting to different VPCs I manage on amazon. Once scripted it's really nice being able to connect to a specific environment with one command and be hands on the docker host(s) and the containers in that environment.
 
-Originally I had been hoping to also use a VPC for development purposes. Unfortunately the latency from my location to the datacenter gets annoying when trying to get efficient feedback loops (especially establishing db connections). This is however not a fault of this approach, but the distance from me to the datacenter. Your milage may vary. Setting up a development host closer to home using the same approach did the trick.
+Originally I had been hoping to also use a VPC for development purposes. Unfortunately the latency from my location to the datacenter gets annoying when trying to get efficient feedback loops. This is however not a fault of this approach, but the distance from me to the datacenter. Your milage may vary. Setting up a development host closer to home did the trick.
+
+Time to dance!
+
+![DANCE](http://gifs.joelglovier.com/epic/calvin-hobbes-dance.gif)
 
 ## Credits
 
-http://www.debian-administration.org/article/539/Setting_up_a_Layer_3_tunneling_VPN_with_using_OpenSSH  
-http://wouter.horre.be/doc/vpn-over-ssh
+♥ goes out to ssh.  
+And all the amazing unix hackers out there!  
+Including the authors of [this](http://www.debian-administration.org/article/539/Setting_up_a_Layer_3_tunneling_VPN_with_using_OpenSSH) and [that](http://wouter.horre.be/doc/vpn-over-ssh).  
+Thank you internet of folks!
 
 enjoy.
