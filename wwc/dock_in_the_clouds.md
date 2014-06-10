@@ -1,4 +1,6 @@
 # Dock in the clouds
+<div class="date">10.06.2014</div>
+
 
 Tired of having virtualbox and a thousand docker containers dragging your macbook air down in the mud? Put your docker host in the clouds!
 
@@ -157,5 +159,3 @@ And all the amazing unix hackers out there!
 Including the authors of [this](http://www.debian-administration.org/article/539/Setting_up_a_Layer_3_tunneling_VPN_with_using_OpenSSH) and [that](http://wouter.horre.be/doc/vpn-over-ssh).  
 Gifs from [here](http://gifs.joelglovier.com/).  
 Thank you internet of folks!
-
-enjoy.

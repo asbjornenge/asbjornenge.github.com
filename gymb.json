@@ -4,6 +4,15 @@
     ],
     "wwc" : [
         {
+            "html" : "wwc/dock_in_the_clouds.html",
+            "id" : "8bb8ef3f",
+            "md" : "dock_in_the_clouds.md",
+            "preview" : "Move your docker host to the clouds & setup a SSH based \"VPN\".",
+            "previewImage" : "/img/dock-in-the-clouds.png",
+            "published" : "10.06.2014",
+            "title" : "Dock in the clouds"
+        },
+        {
             "html" : "wwc/tiny_node_containers.html",
             "id" : "416ab009",
             "md" : "tiny_node_containers.md",
@@ -42,7 +51,7 @@
             "id" : "342e195d",
             "md" : "vagrant_skydocking.md",
             "preview" : "Talk easily & directly with your docker containers.",
-            "previewImage" : "/img/docker-whale.png",
+            "previewImage" : "/img/vagrant-skydocking.png",
             "published" : "29.01.2014",
             "title" : "Vagrant skydocking"
         },
