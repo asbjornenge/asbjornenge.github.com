@@ -92,7 +92,7 @@
     &quot;$DOCKER&quot; -d $DOCKER_OPTS -H unix:///var/run/docker.sock -H tcp://0.0.0.0:4243
 </code></pre>
 
-<p><strong>WARNING!</strong>  Binding to <code>0.0.0.0</code> will expose the docker host on all network interfaces on the host!! <strong>That might not be what you want.</strong> If you only want to talk to the docker host over the tunnel, you can bind to <code>10.0.0.2</code>. Let&#39;s keep it like this while we are testing, but remember to go back and fix that later.</p>
+<p><strong>WARNING!</strong>  Binding to <code>0.0.0.0</code> will expose the docker host on all network interfaces on the server!! <strong>That might not be what you want.</strong> If you only want to talk to the docker host over the tunnel, you can bind to <code>10.0.0.2</code>. Let&#39;s keep it like this while we are testing, but remember to go back and fix that later.</p>
 
 <h3>Prepare SSH</h3>
 
