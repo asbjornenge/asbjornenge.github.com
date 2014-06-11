@@ -36,6 +36,8 @@ Follow the appropriate [instructions](http://docs.docker.io/en/latest/installati
 	$ sudo vi /etc/init/docker.conf
 		"$DOCKER" -d $DOCKER_OPTS -H unix:///var/run/docker.sock -H tcp://0.0.0.0:4243
 
+**PS!**  Binding to <code>0.0.0.0</code> will expose the docker host on all network interfaces on the host!! **That might not be what you want.** If you only want to talk to the docker host over the tunnel, you can bind to <code>10.0.0.2</code>. Let's keep it like this while we are testing, but remember to go back and fix that later.
+
 ### Prepare SSH
 
 To make this work, we need to permit root login over ssh. Now, that might seem like a security hazard. But, we are only going to allow login using keys (not passwords), and later on we are going to limit the access of root over ssh to only run a specific command.
