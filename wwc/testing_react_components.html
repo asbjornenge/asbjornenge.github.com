@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Web, Words & Coffee</title>
+        <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+
+        <link rel="stylesheet" href="/css/reset.css">
+        <link rel="stylesheet" href="/css/fonts.css">
+        <link rel="stylesheet" href="/css/asbjornenge.css">
+        <link rel="stylesheet" href="/css/font-awesome.min.css">
+        <link rel="stylesheet" href="/css/animate.min.css">
+        <link rel="shortcut icon" href="https://www.gravatar.com/avatar/198a385bacf129e4b07f2b9e748787df?s=128">
+        <!--
+        <link rel="stylesheet" href="/css/highlight/googlecode.css">
+        <script src="/js/lib/highlight.pack.js"></script>
+        -->
+        <script src="/js/lib/ga.js"></script>
+        <script src="/js/lib/jquery-1.9.0.min.js"></script>
+        <script src="/js/lib/tap.js"></script>
+        <script src="/js/init.js" type="text/javascript"></script>
+    </head>
+    <body>
+        <div id="head">
+            <a link="/" class="nav_item">
+                <img id="logo" src="https://www.gravatar.com/avatar/198a385bacf129e4b07f2b9e748787df?s=80"/>
+            </a>
+            <div id="label">Web, Words & Coffee</div>
+            <ul id="menu">
+                <li class="about nav_item" link="/about.html">About</li>
+                <li class="separator">:</li>
+                <!--
+                <li class="crly nav_item" link="/crly.html">Crly</li>
+                <li class="separator">:</li>
+                -->
+                <!--
+                <li class="software nav_item" link="/software.html">Software</li>
+                <li class="separator">:</li>
+                -->
+                <li class="blog nav_item" link="/">Blog</li>
+            </ul>
+            <span class="nav_selector">&nbsp;</span>
+        </div>
+        <div style="clear:both"></div>
+        <div id="social">
+            <div class="github"><a href="http://github.com/asbjornenge"><i class="icon-github"></i></a></div>
+            <div class="twitter"><a href="http://twitter.com/asbjornenge"><i class="icon-twitter"></i></a></div>
+            <div class="itunes"><a href="https://itunes.apple.com/us/artist/asbjorn-enge/id528981222"><i class="icon-music"></i></a></div>
+        </div>
+        <div id="feed">
+            <div class="rss"><a href="http://www.asbjornenge.com/wwc/rss.xml"><i class="icon-rss"></i></a></div>
+        </div>
+        <div id="content">
+            <h1>Testing React Components</h1>
+
+<p><a href="http://facebook.github.io/react/">React</a> offers (imho) a paradigm shifting technology for client side web applications - or GUIs in general for that matter. If you haven&#39;t already; give it a try!</p>
+
+<p>One of the things I really like about React is how it lends itself to <a href="http://en.wikipedia.org/wiki/Test-driven_development">TDD</a> and testing in general. Small, focused components relying mostly on props (parameters) are easy to reason about and requires little mock.</p>
+
+<p>The following are some of my experiences testing React components.</p>
+
+<h2>React Test Utils</h2>
+
+<p>React ships with very good test utilities. Unfortunately the documentation is somewhat hidden away on their website. Here is a <a href="http://facebook.github.io/react/docs/test-utils.html">link</a>.</p>
+
+<p>Here is how to require them:</p>
+
+<pre><code>var React          = require(&#39;react&#39;)
+var ReactAddons    = require(&#39;react/addons&#39;)
+var ReactTestUtils = React.addons.TestUtils  // &lt;- YEAH!
+</code></pre>
+
+<h2>Use jsdom</h2>
+
+<p>For any kind of testing to be tolerable, TDD especially, efficient feedback loops are essential. Having to continously pass things off to a browser, or ever worse; multiple browser, is a pain. Luckily we have <a href="http://nodejs.org/">nodejs</a> &amp; <a href="https://github.com/tmpvar/jsdom">jsdom</a>. The React guys actually use jsdom for their own testing.</p>
+
+<p>I like to wrap up jsdom so that it is not required if a <code>document</code> already exists. That way the tests can run both in node and browsers.</p>
+
+<pre><code>$ vi testdom.js
+  module.exports = function(markup) {
+      if (typeof document !== &#39;undefined&#39;) return
+      var jsdom          = require(&quot;jsdom&quot;).jsdom
+      global.document    = jsdom(markup || &#39;&#39;)
+      global.window      = document.createWindow()
+      // ... add whatever browser globals your tests might need ...
+  }
+
+$ vi test/spec.js
+  require(&#39;../testdom&#39;)(&#39;&lt;html&gt;&lt;body&gt;&lt;/body&gt;&lt;/html&gt;&#39;)
+  console.log(document)
+</code></pre>
+
+<p>Later we will see how we can hook up our tests to a <a href="http://en.wikipedia.org/wiki/Continuous_integration">CI</a> tool for some sweet cross browser coverage.</p>
+
+<h2>Avoid <a href="http://facebook.github.io/react/docs/jsx-in-depth.html">JSX</a></h2>
+
+<p>It&#39;s up to you, but using jsx introduces an additional step everywhere. Just using the React.DOM javascript API is really straight forward.</p>
+
+<h2>Include a common render function</h2>
+
+<p>For each test you want a clean slate. Usually this means rendering the component again. It makes sense wrapping the render code into a function.</p>
+
+<pre><code>var defaultProps = {}
+
+function render(newProps, callback) {
+    var props = _.merge(defaultProps, newProps) // _ is lodash
+    return React.renderComponent(Component(props), document.body, function() {
+        if (typeof callback === &#39;function&#39;) setTimeout(callback)
+    })
+}
+</code></pre>
+
+<p>I find that keeping a set of defaultProps around makes sense. Callers of render can pass their required props (<em>newProps</em>) and have that merged with defaultProps before rendering. Overwriting the defaults if they want. Since we are testing components in isolation we can just mount to <code>document.body</code>. React&#39;s <code>renderComponent</code> takes a callback that is called when the component has finished rendering. I found that pushing my <em>render</em>&#39;s callback to the next tick of the eventloop (using <em>setTimeout</em>) resulted in a more stable test environment.</p>
+
+<h2>Clean up after each test</h2>
+
+<p>If you try to render a React component into a DOM which already have react identifiers, React will merge with whatever is already there. Especially when testing the same component over and over your need to clean up your DOM state.</p>
+
+<p>How to do this depends on your test framework. Here is what I do in <a href="http://visionmedia.github.io/mocha/">mocha</a> (tdd interface):</p>
+
+<pre><code>describe(&#39;My Component&#39;, function() {
+
+    afterEach(function(done) {
+        React.unmountComponentAtNode(document.body) // Assuming mounted to document.body
+        document.body.innerHTML = &quot;&quot;
+        setTimeout(done)
+    })
+
+    ...tests...
+})
+</code></pre>
+
+<p>We use React&#39;s <code>React.unmountComponentAtNode</code> to unmount the component. Just to be safe we also reset body&#39;s innerHTML. I found again that pushing the current callback to the next tick of the eventloop (using <em>setTimeout</em>) once again created a more stable test suite.</p>
+
+<h2>Query</h2>
+
+<h2>Simulate</h2>
+
+<h2>Running test</h2>
+
+<p>I use mocha solely for the <a href="http://www.nyan.cat/">nyancat</a> reporter.  </p>
+
+<pre><code>npm install -g mocha
+</code></pre>
+
+<p>npm test</p>
+
+<h2>Testling</h2>
+
+<p>browser field</p>
+
+            <div class="push"></div>
+        </div>
+        <div id="footer">enjoy.</div>
+    </body>
+</html>
