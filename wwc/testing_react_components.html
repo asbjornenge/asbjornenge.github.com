@@ -66,13 +66,13 @@
 <p>Here is how to require them:</p>
 
 <pre><code>var React          = require(&#39;react&#39;)
-var ReactAddons    = require(&#39;react/addons&#39;)
+var ReactAddons    = require(&#39;react/addons&#39;) // You also need to require the addons
 var ReactTestUtils = React.addons.TestUtils  // &lt;- YEAH!
 </code></pre>
 
 <h2>Use jsdom</h2>
 
-<p>For any kind of testing to be tolerable, TDD especially, efficient feedback loops are essential. Having to continously pass things off to a browser, or ever worse; multiple browser, is a pain. Luckily we have <a href="http://nodejs.org/">nodejs</a> &amp; <a href="https://github.com/tmpvar/jsdom">jsdom</a>. The React guys actually use jsdom for their own testing.</p>
+<p>For any kind of testing to be tolerable, TDD especially, efficient feedback loops are essential. Having to continously pass things off to a browser, or ever worse; multiple browser, is a pain. Luckily we have <a href="http://nodejs.org/">nodejs</a> &amp; <a href="https://github.com/tmpvar/jsdom">jsdom</a>. The React guys themselves use jsdom for testing.</p>
 
 <p>I like to wrap up jsdom so that it is not required if a <code>document</code> already exists. That way the tests can run both in node and browsers.</p>
 
@@ -92,18 +92,19 @@ $ vi test/spec.js
 
 <p>Later we will see how we can hook up our tests to a <a href="http://en.wikipedia.org/wiki/Continuous_integration">CI</a> tool for some sweet cross browser coverage.</p>
 
-<h2>Avoid <a href="http://facebook.github.io/react/docs/jsx-in-depth.html">JSX</a></h2>
+<h2>Avoid JSX</h2>
 
-<p>It&#39;s up to you, but using jsx introduces an additional step everywhere. Just using the React.DOM javascript API is really straight forward.</p>
+<p>It&#39;s up to you, but using <a href="http://facebook.github.io/react/docs/jsx-in-depth.html">jsx</a> introduces an additional step everywhere without adding much of a benefit. Just using the React.DOM javascript API is really straight forward. It&#39;ll take you 2 minutes to figure out.</p>
 
 <h2>Include a common render function</h2>
 
 <p>For each test you want a clean slate. Usually this means rendering the component again. It makes sense wrapping the render code into a function.</p>
 
-<pre><code>var defaultProps = {}
+<pre><code>var _ = require(&#39;lodash&#39;) // or similar
+var defaultProps = {}
 
 function render(newProps, callback) {
-    var props = _.merge(defaultProps, newProps) // _ is lodash
+    var props = _.merge(defaultProps, newProps)
     return React.renderComponent(Component(props), document.body, function() {
         if (typeof callback === &#39;function&#39;) setTimeout(callback)
     })
@@ -122,7 +123,7 @@ function render(newProps, callback) {
 
     afterEach(function(done) {
         React.unmountComponentAtNode(document.body) // Assuming mounted to document.body
-        document.body.innerHTML = &quot;&quot;
+        document.body.innerHTML = &quot;&quot;                // Just to be sure :-P
         setTimeout(done)
     })
 
@@ -132,9 +133,37 @@ function render(newProps, callback) {
 
 <p>We use React&#39;s <code>React.unmountComponentAtNode</code> to unmount the component. Just to be safe we also reset body&#39;s innerHTML. I found again that pushing the current callback to the next tick of the eventloop (using <em>setTimeout</em>) once again created a more stable test suite.</p>
 
-<h2>Query</h2>
+<h2>Query the DOM</h2>
 
-<h2>Simulate</h2>
+<p>You can query the DOM directly using the tool of your choice, I usually just go with <code>document.querySelectorAll</code>. Or you can use the <strong>ReactTestUtils</strong> to query React components.</p>
+
+<pre><code>it(&#39;should render an input&#39;, function(done) {
+    var _tree = render({}, function() {
+        var __input = document.querySelectorAll(&#39;input&#39;)
+        var _input  = ReactTestUtils.findRenderedDOMComponentWithTag(_tree, &#39;input&#39;)
+        assert(...)
+    })
+})
+</code></pre>
+
+<p>As you might have noticed the <strong>ReactTestUtils</strong> require a ReactComponent to query in. The <strong>React.renderComponent</strong> return the rendered component, so I have designed the common <strong><em>reder</em></strong> function to return it as well.</p>
+
+<h2>Simulate events</h2>
+
+<p>The <strong>ReactTestUtils</strong> also let&#39;s you simulate events.</p>
+
+<pre><code>it(&#39;should do something when I click mySpecialButton&#39;, function(done) {
+    var _tree = render({}, function() {
+        var _button  = ReactTestUtils.findRenderedDOMComponentWithClass(_tree, &#39;mySpecialButton&#39;)
+        ReactTestUtils.Simulate.click(_button)
+        assert(...)
+    })
+})
+</code></pre>
+
+<p>For more about the capabilities of <strong>ReactTestUtils</strong> check out the <a href="http://facebook.github.io/react/docs/test-utils.html">docs</a>.</p>
+
+<h2>Faking XMLHttpRequests</h2>
 
 <h2>Running test</h2>
 
