@@ -13,12 +13,12 @@ React ships with very good test utilities. Unfortunately the documentation is so
 Here is how to require them:
 
 	var React          = require('react')
-	var ReactAddons    = require('react/addons')
+	var ReactAddons    = require('react/addons') // You also need to require the addons
 	var ReactTestUtils = React.addons.TestUtils  // <- YEAH!
 
 ## Use jsdom
 
-For any kind of testing to be tolerable, TDD especially, efficient feedback loops are essential. Having to continously pass things off to a browser, or ever worse; multiple browser, is a pain. Luckily we have [nodejs](http://nodejs.org/) & [jsdom](https://github.com/tmpvar/jsdom). The React guys actually use jsdom for their own testing.
+For any kind of testing to be tolerable, TDD especially, efficient feedback loops are essential. Having to continously pass things off to a browser, or ever worse; multiple browser, is a pain. Luckily we have [nodejs](http://nodejs.org/) & [jsdom](https://github.com/tmpvar/jsdom). The React guys themselves use jsdom for testing.
 
 I like to wrap up jsdom so that it is not required if a <code>document</code> already exists. That way the tests can run both in node and browsers.
 
@@ -37,18 +37,19 @@ I like to wrap up jsdom so that it is not required if a <code>document</code> al
 
 Later we will see how we can hook up our tests to a [CI](http://en.wikipedia.org/wiki/Continuous_integration) tool for some sweet cross browser coverage.
 
-## Avoid [JSX](http://facebook.github.io/react/docs/jsx-in-depth.html)
+## Avoid JSX
 
-It's up to you, but using jsx introduces an additional step everywhere. Just using the React.DOM javascript API is really straight forward.
+It's up to you, but using [jsx](http://facebook.github.io/react/docs/jsx-in-depth.html) introduces an additional step everywhere without adding much of a benefit. Just using the React.DOM javascript API is really straight forward. It'll take you 2 minutes to figure out.
 
 ## Include a common render function
 
 For each test you want a clean slate. Usually this means rendering the component again. It makes sense wrapping the render code into a function.
 
+    var _ = require('lodash') // or similar
     var defaultProps = {}
 
     function render(newProps, callback) {
-        var props = _.merge(defaultProps, newProps) // _ is lodash
+        var props = _.merge(defaultProps, newProps)
         return React.renderComponent(Component(props), document.body, function() {
             if (typeof callback === 'function') setTimeout(callback)
         })
@@ -66,7 +67,7 @@ How to do this depends on your test framework. Here is what I do in [mocha](http
 
         afterEach(function(done) {
             React.unmountComponentAtNode(document.body) // Assuming mounted to document.body
-            document.body.innerHTML = ""
+            document.body.innerHTML = ""                // Just to be sure :-P
             setTimeout(done)
         })
 
@@ -75,12 +76,40 @@ How to do this depends on your test framework. Here is what I do in [mocha](http
 
 We use React's <code>React.unmountComponentAtNode</code> to unmount the component. Just to be safe we also reset body's innerHTML. I found again that pushing the current callback to the next tick of the eventloop (using *setTimeout*) once again created a more stable test suite.
 
-## Query
+## Query the DOM
 
-## Simulate
+You can query the DOM directly using the tool of your choice, I usually just go with <code>document.querySelectorAll</code>. Or you can use the **ReactTestUtils** to query React components.
+
+    it('should render an input', function(done) {
+        var _tree = render({}, function() {
+            var __input = document.querySelectorAll('input')
+            var _input  = ReactTestUtils.findRenderedDOMComponentWithTag(_tree, 'input')
+            assert(...)
+        })
+    })
+
+As you might have noticed the **ReactTestUtils** require a ReactComponent to query in. The **React.renderComponent** return the rendered component, so I have designed the common ***reder*** function to return it as well.
+
+## Simulate events
+
+The **ReactTestUtils** also let's you simulate events.
+
+    it('should do something when I click mySpecialButton', function(done) {
+        var _tree = render({}, function() {
+            var _button  = ReactTestUtils.findRenderedDOMComponentWithClass(_tree, 'mySpecialButton')
+            ReactTestUtils.Simulate.click(_button)
+            assert(...)
+        })
+    })
+
+For more about the capabilities of **ReactTestUtils** check out the [docs](http://facebook.github.io/react/docs/test-utils.html).
+
+## Faking XMLHttpRequests
+
 
 
 ## Running test
+
 I use mocha solely for the [nyancat](http://www.nyan.cat/) reporter.  
 
 	npm install -g mocha
