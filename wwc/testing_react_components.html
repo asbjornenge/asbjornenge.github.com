@@ -57,13 +57,13 @@
 
 <p>One of the things I really like about React is how it lends itself to <a href="http://en.wikipedia.org/wiki/Test-driven_development">TDD</a> and testing in general. Small, focused components relying mostly on props (parameters) are easy to reason about and requires little mock.</p>
 
-<p>The following are some of my experiences testing React components.</p>
+<p>The following are some of my experiences testing React components. Ready? Here we go!</p>
+
+<p><img src="http://gifs.joelglovier.com/epic/expedition.gif%20=600x" alt="EXPEDITION"></p>
 
 <h2>React Test Utils</h2>
 
 <p>React ships with very good test utilities. Unfortunately the documentation is somewhat hidden away on their website. Here is a <a href="http://facebook.github.io/react/docs/test-utils.html">link</a>.</p>
-
-<p>Here is how to require them:</p>
 
 <pre><code>var React          = require(&#39;react&#39;)
 var ReactAddons    = require(&#39;react/addons&#39;) // You also need to require the addons
@@ -94,7 +94,9 @@ $ vi test/spec.js
 
 <h2>Avoid JSX</h2>
 
-<p>It&#39;s up to you, but using <a href="http://facebook.github.io/react/docs/jsx-in-depth.html">jsx</a> introduces an additional step everywhere without adding much of a benefit. Just using the React.DOM javascript API is really straight forward. It&#39;ll take you 2 minutes to figure out.</p>
+<p>It&#39;s up to you, but using <a href="http://facebook.github.io/react/docs/jsx-in-depth.html">jsx</a> introduces an additional build step everywhere without adding much of a benefit. Using the React.DOM javascript API is really straight forward. It&#39;ll take you 2 minutes to figure out.</p>
+
+<p><img src="http://gifs.joelglovier.com/fail/kayak-diving.gif" alt="FAIL"></p>
 
 <h2>Include a common render function</h2>
 
@@ -111,11 +113,11 @@ function render(newProps, callback) {
 }
 </code></pre>
 
-<p>I find that keeping a set of defaultProps around makes sense. Callers of render can pass their required props (<em>newProps</em>) and have that merged with defaultProps before rendering. Overwriting the defaults if they want. Since we are testing components in isolation we can just mount to <code>document.body</code>. React&#39;s <code>renderComponent</code> takes a callback that is called when the component has finished rendering. I found that pushing my <em>render</em>&#39;s callback to the next tick of the eventloop (using <em>setTimeout</em>) resulted in a more stable test environment.</p>
+<p>I find that keeping a set of defaultProps around makes sense. Callers of render can pass their required props (<em>newProps</em>) and have that merged with defaultProps before rendering. Overwriting the defaults if they want. Since we are testing components in isolation we can usually just mount to <code>document.body</code>. React&#39;s <code>renderComponent</code> takes a callback that is called when the component has finished rendering. I found that pushing my <em>render</em>&#39;s callback to the next tick of the eventloop (using <em>setTimeout</em>) resulted in a more stable test environment.</p>
 
 <h2>Clean up after each test</h2>
 
-<p>If you try to render a React component into a DOM which already have react identifiers, React will merge with whatever is already there. Especially when testing the same component over and over your need to clean up your DOM state.</p>
+<p>If you try to render a React component into a DOM which already has react identifiers, React will merge with whatever is already there. Especially when testing the same component over and over your need to clean up your DOM state.</p>
 
 <p>How to do this depends on your test framework. Here is what I do in <a href="http://visionmedia.github.io/mocha/">mocha</a> (tdd interface):</p>
 
@@ -131,11 +133,11 @@ function render(newProps, callback) {
 })
 </code></pre>
 
-<p>We use React&#39;s <code>React.unmountComponentAtNode</code> to unmount the component. Just to be safe we also reset body&#39;s innerHTML. I found again that pushing the current callback to the next tick of the eventloop (using <em>setTimeout</em>) once again created a more stable test suite.</p>
+<p>We use React&#39;s <code>React.unmountComponentAtNode</code> to unmount the component. Just to be safe we also reset body&#39;s innerHTML. I found once again that pushing the callback (<em>done</em>) to the next tick of the eventloop (using <em>setTimeout</em>) created a more stable test suite.</p>
 
 <h2>Query the DOM</h2>
 
-<p>You can query the DOM directly using the tool of your choice, I usually just go with <code>document.querySelectorAll</code>. Or you can use the <strong>ReactTestUtils</strong> to query React components.</p>
+<p>You can query the DOM directly using the tool of your choice, or you can use the <strong>ReactTestUtils</strong> to query React components.</p>
 
 <pre><code>it(&#39;should render an input&#39;, function(done) {
     var _tree = render({}, function() {
@@ -146,11 +148,11 @@ function render(newProps, callback) {
 })
 </code></pre>
 
-<p>As you might have noticed the <strong>ReactTestUtils</strong> require a ReactComponent to query in. The <strong>React.renderComponent</strong> return the rendered component, so I have designed the common <strong><em>reder</em></strong> function to return it as well.</p>
+<p>As you might have noticed the <strong>findRenderedDOMComponentWithTag</strong> (and most other functions of <strong>ReactTestUtils</strong>) require a ReactComponent parent/tree to query. Luckily we designed our <strong><em>render</em></strong> function to return the top level component.</p>
 
 <h2>Simulate events</h2>
 
-<p>The <strong>ReactTestUtils</strong> also let&#39;s you simulate events.</p>
+<p>The <strong>ReactTestUtils</strong> also let&#39;s you simulate events. This is very useful!</p>
 
 <pre><code>it(&#39;should do something when I click mySpecialButton&#39;, function(done) {
     var _tree = render({}, function() {
@@ -165,7 +167,7 @@ function render(newProps, callback) {
 
 <h2>Faking XMLHttpRequests</h2>
 
-<p><em>Not really React specific, but I&#39;ll add a note about it anyway.</em></p>
+<p>(<em>Not really React specific, but I&#39;ll add a note about it anyway.</em>)</p>
 
 <p>Need to fake XMLHTTPRequests? There is a <a href="https://www.npmjs.org/package/fakexmlhttprequest">module</a> for that!</p>
 
@@ -188,9 +190,7 @@ describe(&#39;My component&#39;, function() {
     it(&#39;gonna get some data over the wire&#39;, function(done) {
         var onDataReceived = function(data) { assert(...); done() }
         render({ onDataReceived : onDataReceived }, function() {
-            // Component is rendered and should have requested some data
             assert(requests.length &gt; 0)
-            // Respond
             requests[0].respond(200, { &quot;Content-Type&quot;: &quot;application/json&quot; }, JSON.stringify({...}))
         })
     })
@@ -215,24 +215,18 @@ describe(&#39;My component&#39;, function() {
     ...
 
 $ npm test
-
-&gt; mocha -R nyan -w --check-leaks
-
- 1   -__,------,
- 0   -__|  /\_/\ 
- 0   -_~|_( ^ .^) 
-     -_ &quot;&quot;  &quot;&quot; 
-
-  1 test complete (8 ms)
-
-  ◟ watching
 </code></pre>
+
+<p><img src="../img/nyancat.gif%20=150x" alt="NYANCAT"></p>
 
 <h2>Testling</h2>
 
-<p>Running the tests in the node is convenient and fast, but it is <strong>NOT THE SAME</strong> as running them in actual browser. So, we need to hook up some actual browser testing too. <a href="https://ci.testling.com/">Testling</a> is a great alternative and free for open source projects. They have great <a href="https://ci.testling.com/guide/quick_start">documentation</a> and even a special little guide for using <a href="https://ci.testling.com/guide/mocha">mocha</a>.</p>
+<p>Running the tests in node is convenient and fast, but it is <strong>NOT THE SAME</strong> as running them in actual browser. So, we need to hook up some actual browser testing too. <a href="https://ci.testling.com/">Testling</a> is a great alternative and free for open source projects. They have great <a href="https://ci.testling.com/guide/quick_start">documentation</a> and even a special little guide for using <a href="https://ci.testling.com/guide/mocha">mocha</a>. Plus, it will get you some sweet badges like this:</p>
 
-<p>There is one little trick I wanted to add though. Testling users <a href="http://browserify.org/">browserify</a> to create a browser comptaible bundle of your javascripts. Unfortunately jsdom is not compatible with browserify, so we have to tell testling to ignore it.</p>
+<p><a href="https://ci.testling.com/asbjornenge/nanoxhr"><img src="https://ci.testling.com/asbjornenge/nanoxhr.png" alt="browser support">
+</a></p>
+
+<p>There is one little trick I wanted to add though. Testling users <a href="http://browserify.org/">browserify</a> to create a browser compatible bundle of your javascripts. Unfortunately jsdom is not compatible with browserify, so we have to tell testling to ignore it.</p>
 
 <p>In your <code>package.json</code> add a <em>browser</em> field and add tell browserify to ignore <em>jsdom</em>.</p>
 
@@ -246,6 +240,8 @@ $ npm test
 </code></pre>
 
 <p>Since we, in our jsdom wrapper above, only try to require jsdom if no document exists; the browser will never reach that code and we are good. The tests will use the browser&#39;s DOM. </p>
+
+<p><img src="http://gifs.joelglovier.com/fresh-prince/carlton.gif%20=300x" alt="YOU"></p>
 
 <p>Now go get some test coverage for your React components!</p>
 

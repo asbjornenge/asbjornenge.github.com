@@ -4,13 +4,13 @@
 
 One of the things I really like about React is how it lends itself to [TDD](http://en.wikipedia.org/wiki/Test-driven_development) and testing in general. Small, focused components relying mostly on props (parameters) are easy to reason about and requires little mock.
 
-The following are some of my experiences testing React components.
+The following are some of my experiences testing React components. Ready? Here we go!
+
+![EXPEDITION](http://gifs.joelglovier.com/epic/expedition.gif =600x)
 
 ## React Test Utils
 
 React ships with very good test utilities. Unfortunately the documentation is somewhat hidden away on their website. Here is a [link](http://facebook.github.io/react/docs/test-utils.html).
-
-Here is how to require them:
 
 	var React          = require('react')
 	var ReactAddons    = require('react/addons') // You also need to require the addons
@@ -39,7 +39,9 @@ Later we will see how we can hook up our tests to a [CI](http://en.wikipedia.org
 
 ## Avoid JSX
 
-It's up to you, but using [jsx](http://facebook.github.io/react/docs/jsx-in-depth.html) introduces an additional step everywhere without adding much of a benefit. Just using the React.DOM javascript API is really straight forward. It'll take you 2 minutes to figure out.
+It's up to you, but using [jsx](http://facebook.github.io/react/docs/jsx-in-depth.html) introduces an additional build step everywhere without adding much of a benefit. Using the React.DOM javascript API is really straight forward. It'll take you 2 minutes to figure out.
+
+![FAIL](http://gifs.joelglovier.com/fail/kayak-diving.gif)
 
 ## Include a common render function
 
@@ -55,11 +57,11 @@ For each test you want a clean slate. Usually this means rendering the component
         })
     }
 
-I find that keeping a set of defaultProps around makes sense. Callers of render can pass their required props (*newProps*) and have that merged with defaultProps before rendering. Overwriting the defaults if they want. Since we are testing components in isolation we can just mount to <code>document.body</code>. React's <code>renderComponent</code> takes a callback that is called when the component has finished rendering. I found that pushing my *render*'s callback to the next tick of the eventloop (using *setTimeout*) resulted in a more stable test environment.
+I find that keeping a set of defaultProps around makes sense. Callers of render can pass their required props (*newProps*) and have that merged with defaultProps before rendering. Overwriting the defaults if they want. Since we are testing components in isolation we can usually just mount to <code>document.body</code>. React's <code>renderComponent</code> takes a callback that is called when the component has finished rendering. I found that pushing my *render*'s callback to the next tick of the eventloop (using *setTimeout*) resulted in a more stable test environment.
 
 ## Clean up after each test
 
-If you try to render a React component into a DOM which already have react identifiers, React will merge with whatever is already there. Especially when testing the same component over and over your need to clean up your DOM state.
+If you try to render a React component into a DOM which already has react identifiers, React will merge with whatever is already there. Especially when testing the same component over and over your need to clean up your DOM state.
 
 How to do this depends on your test framework. Here is what I do in [mocha](http://visionmedia.github.io/mocha/) (tdd interface):
 
@@ -74,11 +76,11 @@ How to do this depends on your test framework. Here is what I do in [mocha](http
         ...tests...
     })
 
-We use React's <code>React.unmountComponentAtNode</code> to unmount the component. Just to be safe we also reset body's innerHTML. I found again that pushing the current callback to the next tick of the eventloop (using *setTimeout*) once again created a more stable test suite.
+We use React's <code>React.unmountComponentAtNode</code> to unmount the component. Just to be safe we also reset body's innerHTML. I found once again that pushing the callback (*done*) to the next tick of the eventloop (using *setTimeout*) created a more stable test suite.
 
 ## Query the DOM
 
-You can query the DOM directly using the tool of your choice, I usually just go with <code>document.querySelectorAll</code>. Or you can use the **ReactTestUtils** to query React components.
+You can query the DOM directly using the tool of your choice, or you can use the **ReactTestUtils** to query React components.
 
     it('should render an input', function(done) {
         var _tree = render({}, function() {
@@ -88,11 +90,11 @@ You can query the DOM directly using the tool of your choice, I usually just go 
         })
     })
 
-As you might have noticed the **ReactTestUtils** require a ReactComponent to query in. The **React.renderComponent** return the rendered component, so I have designed the common ***reder*** function to return it as well.
+As you might have noticed the **findRenderedDOMComponentWithTag** (and most other functions of **ReactTestUtils**) require a ReactComponent parent/tree to query. Luckily we designed our ***render*** function to return the top level component.
 
 ## Simulate events
 
-The **ReactTestUtils** also let's you simulate events.
+The **ReactTestUtils** also let's you simulate events. This is very useful!
 
     it('should do something when I click mySpecialButton', function(done) {
         var _tree = render({}, function() {
@@ -106,7 +108,7 @@ For more about the capabilities of **ReactTestUtils** check out the [docs](http:
 
 ## Faking XMLHttpRequests
 
-*Not really React specific, but I'll add a note about it anyway.*
+(*Not really React specific, but I'll add a note about it anyway.*)
 
 Need to fake XMLHTTPRequests? There is a [module](https://www.npmjs.org/package/fakexmlhttprequest) for that!
 
@@ -129,9 +131,7 @@ Need to fake XMLHTTPRequests? There is a [module](https://www.npmjs.org/package/
         it('gonna get some data over the wire', function(done) {
             var onDataReceived = function(data) { assert(...); done() }
             render({ onDataReceived : onDataReceived }, function() {
-                // Component is rendered and should have requested some data
                 assert(requests.length > 0)
-                // Respond
                 requests[0].respond(200, { "Content-Type": "application/json" }, JSON.stringify({...}))
             })
         })
@@ -155,22 +155,16 @@ I also find it useful to add my test command to <code>package.json</code> so tha
 
     $ npm test
 
-    > mocha -R nyan -w --check-leaks
-
-     1   -__,------,
-     0   -__|  /\_/\ 
-     0   -_~|_( ^ .^) 
-         -_ ""  "" 
-
-      1 test complete (8 ms)
-
-      ◟ watching
+![NYANCAT](../img/nyancat.gif =150x)
 
 ## Testling
 
-Running the tests in the node is convenient and fast, but it is **NOT THE SAME** as running them in actual browser. So, we need to hook up some actual browser testing too. [Testling](https://ci.testling.com/) is a great alternative and free for open source projects. They have great [documentation](https://ci.testling.com/guide/quick_start) and even a special little guide for using [mocha](https://ci.testling.com/guide/mocha).
+Running the tests in node is convenient and fast, but it is **NOT THE SAME** as running them in actual browser. So, we need to hook up some actual browser testing too. [Testling](https://ci.testling.com/) is a great alternative and free for open source projects. They have great [documentation](https://ci.testling.com/guide/quick_start) and even a special little guide for using [mocha](https://ci.testling.com/guide/mocha). Plus, it will get you some sweet badges like this:
 
-There is one little trick I wanted to add though. Testling users [browserify](http://browserify.org/) to create a browser comptaible bundle of your javascripts. Unfortunately jsdom is not compatible with browserify, so we have to tell testling to ignore it.
+[![browser support](https://ci.testling.com/asbjornenge/nanoxhr.png)
+](https://ci.testling.com/asbjornenge/nanoxhr)
+
+There is one little trick I wanted to add though. Testling users [browserify](http://browserify.org/) to create a browser compatible bundle of your javascripts. Unfortunately jsdom is not compatible with browserify, so we have to tell testling to ignore it.
 
 In your <code>package.json</code> add a *browser* field and add tell browserify to ignore *jsdom*.
 
@@ -183,6 +177,8 @@ In your <code>package.json</code> add a *browser* field and add tell browserify 
     ...
 
 Since we, in our jsdom wrapper above, only try to require jsdom if no document exists; the browser will never reach that code and we are good. The tests will use the browser's DOM. 
+
+![YOU](http://gifs.joelglovier.com/fresh-prince/carlton.gif =300x)
 
 Now go get some test coverage for your React components!
 
