@@ -144,8 +144,54 @@ I use mocha solely for the [nyancat](http://www.nyan.cat/) reporter.
 
 	npm install -g mocha
 
-npm test
+I also find it useful to add my test command to <code>package.json</code> so that I can run my tests consistently with the same command across projects.
+
+    $ vi package.json
+        ...
+        "scripts": {
+            "test": "mocha -R nyan -w --check-leaks",
+        },
+        ...
+
+    $ npm test
+
+    > mocha -R nyan -w --check-leaks
+
+     1   -__,------,
+     0   -__|  /\_/\ 
+     0   -_~|_( ^ .^) 
+         -_ ""  "" 
+
+      1 test complete (8 ms)
+
+      ◟ watching
 
 ## Testling
 
-browser field
+Running the tests in the node is convenient and fast, but it is **NOT THE SAME** as running them in actual browser. So, we need to hook up some actual browser testing too. [Testling](https://ci.testling.com/) is a great alternative and free for open source projects. They have great [documentation](https://ci.testling.com/guide/quick_start) and even a special little guide for using [mocha](https://ci.testling.com/guide/mocha).
+
+There is one little trick I wanted to add though. Testling users [browserify](http://browserify.org/) to create a browser comptaible bundle of your javascripts. Unfortunately jsdom is not compatible with browserify, so we have to tell testling to ignore it.
+
+In your <code>package.json</code> add a *browser* field and add tell browserify to ignore *jsdom*.
+
+    $ vi package.json
+    
+    ...
+    "browser" : {
+        "jsdom" : false
+    },
+    ...
+
+Since we, in our jsdom wrapper above, only try to require jsdom if no document exists; the browser will never reach that code and we are good. The tests will use the browser's DOM. 
+
+Now go get some test coverage for your React components!
+
+## Credits
+
+♥ to the React guys.  
+And the nyancat.  
+And coffee.  
+And tests.
+
+
+enjoy!
