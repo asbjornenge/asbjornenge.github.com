@@ -4,6 +4,15 @@
     ],
     "wwc" : [
         {
+            "html" : "wwc/testing_react_components.html",
+            "id" : "8fe01453",
+            "md" : "testing_react_components.md",
+            "preview" : "Sweet fast feedback loops for TDD with React.",
+            "previewImage" : "/img/testing-react-components.png",
+            "published" : "19.06.2014",
+            "title" : "Testing React Components"
+        },
+        {
             "html" : "wwc/dock_in_the_clouds.html",
             "id" : "8bb8ef3f",
             "md" : "dock_in_the_clouds.md",
