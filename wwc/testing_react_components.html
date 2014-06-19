@@ -154,7 +154,7 @@ function render(newProps, callback) {
 
 <pre><code>it(&#39;should do something when I click mySpecialButton&#39;, function(done) {
     var _tree = render({}, function() {
-        var _button  = ReactTestUtils.findRenderedDOMComponentWithClass(_tree, &#39;mySpecialButton&#39;)
+        var _button = ReactTestUtils.findRenderedDOMComponentWithClass(_tree, &#39;mySpecialButton&#39;)
         ReactTestUtils.Simulate.click(_button)
         assert(...)
     })
@@ -165,6 +165,39 @@ function render(newProps, callback) {
 
 <h2>Faking XMLHttpRequests</h2>
 
+<p><em>Not really React specific, but I&#39;ll add a note about it anyway.</em></p>
+
+<p>Need to fake XMLHTTPRequests? There is a <a href="https://www.npmjs.org/package/fakexmlhttprequest">module</a> for that!</p>
+
+<pre><code>var FakeXMLHTTPRequests = require(&#39;fakexmlhttprequest&#39;)
+
+var requests   = []
+XMLHttpRequest = function() { 
+    var r =  new fakeXMLHttpRequest(arguments)
+    requests.push(r)
+    return r
+}
+
+describe(&#39;My component&#39;, function() {
+
+    afterEach(function() {
+        requests = [] // &lt;- Reset request pool after each test
+        ...
+    })
+
+    it(&#39;gonna get some data over the wire&#39;, function(done) {
+        var onDataReceived = function(data) { assert(...); done() }
+        render({ onDataReceived : onDataReceived }, function() {
+            // Component is rendered and should have requested some data
+            assert(requests.length &gt; 0)
+            // Respond
+            requests[0].respond(200, { &quot;Content-Type&quot;: &quot;application/json&quot; }, JSON.stringify({...}))
+        })
+    })
+
+})
+</code></pre>
+
 <h2>Running test</h2>
 
 <p>I use mocha solely for the <a href="http://www.nyan.cat/">nyancat</a> reporter.  </p>
@@ -172,11 +205,58 @@ function render(newProps, callback) {
 <pre><code>npm install -g mocha
 </code></pre>
 
-<p>npm test</p>
+<p>I also find it useful to add my test command to <code>package.json</code> so that I can run my tests consistently with the same command across projects.</p>
+
+<pre><code>$ vi package.json
+    ...
+    &quot;scripts&quot;: {
+        &quot;test&quot;: &quot;mocha -R nyan -w --check-leaks&quot;,
+    },
+    ...
+
+$ npm test
+
+&gt; mocha -R nyan -w --check-leaks
+
+ 1   -__,------,
+ 0   -__|  /\_/\ 
+ 0   -_~|_( ^ .^) 
+     -_ &quot;&quot;  &quot;&quot; 
+
+  1 test complete (8 ms)
+
+  ◟ watching
+</code></pre>
 
 <h2>Testling</h2>
 
-<p>browser field</p>
+<p>Running the tests in the node is convenient and fast, but it is <strong>NOT THE SAME</strong> as running them in actual browser. So, we need to hook up some actual browser testing too. <a href="https://ci.testling.com/">Testling</a> is a great alternative and free for open source projects. They have great <a href="https://ci.testling.com/guide/quick_start">documentation</a> and even a special little guide for using <a href="https://ci.testling.com/guide/mocha">mocha</a>.</p>
+
+<p>There is one little trick I wanted to add though. Testling users <a href="http://browserify.org/">browserify</a> to create a browser comptaible bundle of your javascripts. Unfortunately jsdom is not compatible with browserify, so we have to tell testling to ignore it.</p>
+
+<p>In your <code>package.json</code> add a <em>browser</em> field and add tell browserify to ignore <em>jsdom</em>.</p>
+
+<pre><code>$ vi package.json
+
+...
+&quot;browser&quot; : {
+    &quot;jsdom&quot; : false
+},
+...
+</code></pre>
+
+<p>Since we, in our jsdom wrapper above, only try to require jsdom if no document exists; the browser will never reach that code and we are good. The tests will use the browser&#39;s DOM. </p>
+
+<p>Now go get some test coverage for your React components!</p>
+
+<h2>Credits</h2>
+
+<p>♥ to the React guys.<br>
+And the nyancat.<br>
+And coffee.<br>
+And tests.</p>
+
+<p>enjoy!</p>
 
             <div class="push"></div>
         </div>
