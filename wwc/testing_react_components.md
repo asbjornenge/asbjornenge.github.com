@@ -6,7 +6,7 @@ One of the things I really like about React is how it lends itself to [TDD](http
 
 The following are some of my experiences testing React components. Ready? Let's go!
 
-<img src="http://gifs.joelglovier.com/epic/expedition.gif" style="width: 600px" alt="EXPEDITION">
+<img src="http://gifs.joelglovier.com/epic/expedition.gif" style="width: 700px" alt="EXPEDITION">
 
 ## React Test Utils
 
@@ -155,11 +155,11 @@ I also find it useful to add my test command to <code>package.json</code> so tha
 
     $ npm test
 
-<img src="../img/nyancat.gif" style="width: 150px" alt="NYANCAT">
+<img src="../img/nyancat.gif" style="width: 250px" alt="NYANCAT">
 
 ## Testling
 
-Running the tests in node is convenient and fast, but it is **NOT THE SAME** as running them in actual browser. So, we need to hook up some actual browser testing too. [Testling](https://ci.testling.com/) is a great alternative and free for open source projects. They have great [documentation](https://ci.testling.com/guide/quick_start) and even a special little guide for using [mocha](https://ci.testling.com/guide/mocha). Plus, it will get you some sweet badges like this:
+Running the tests in node is convenient and fast, but it is **NOT THE SAME** as running them in actual browser. So, we need to hook up some actual browser testing too. [Testling](https://ci.testling.com/) is a great alternative and free for open source projects. They have great [documentation](https://ci.testling.com/guide/quick_start) and even a special little guide for using [mocha](https://ci.testling.com/guide/mocha). Plus, you'll get sweet badges:
 
 [![browser support](https://ci.testling.com/asbjornenge/nanoxhr.png)
 ](https://ci.testling.com/asbjornenge/nanoxhr)
