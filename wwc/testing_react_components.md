@@ -96,7 +96,7 @@ The **ReactTestUtils** also let's you simulate events.
 
     it('should do something when I click mySpecialButton', function(done) {
         var _tree = render({}, function() {
-            var _button  = ReactTestUtils.findRenderedDOMComponentWithClass(_tree, 'mySpecialButton')
+            var _button = ReactTestUtils.findRenderedDOMComponentWithClass(_tree, 'mySpecialButton')
             ReactTestUtils.Simulate.click(_button)
             assert(...)
         })
@@ -106,7 +106,37 @@ For more about the capabilities of **ReactTestUtils** check out the [docs](http:
 
 ## Faking XMLHttpRequests
 
+*Not really React specific, but I'll add a note about it anyway.*
 
+Need to fake XMLHTTPRequests? There is a [module](https://www.npmjs.org/package/fakexmlhttprequest) for that!
+
+    var FakeXMLHTTPRequests = require('fakexmlhttprequest')
+
+    var requests   = []
+    XMLHttpRequest = function() { 
+        var r =  new fakeXMLHttpRequest(arguments)
+        requests.push(r)
+        return r
+    }
+    
+    describe('My component', function() {
+	
+        afterEach(function() {
+            requests = [] // <- Reset request pool after each test
+            ...
+        })
+        
+        it('gonna get some data over the wire', function(done) {
+            var onDataReceived = function(data) { assert(...); done() }
+            render({ onDataReceived : onDataReceived }, function() {
+                // Component is rendered and should have requested some data
+                assert(requests.length > 0)
+                // Respond
+                requests[0].respond(200, { "Content-Type": "application/json" }, JSON.stringify({...}))
+            })
+        })
+	
+    })
 
 ## Running test
 
