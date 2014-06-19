@@ -57,7 +57,7 @@ For each test you want a clean slate. Usually this means rendering the component
         })
     }
 
-I find that keeping a set of defaultProps around makes sense. Callers of render can pass their required props (*newProps*) and have that merged with defaultProps before rendering. Overwriting the defaults if they want. Since we are testing components in isolation we can usually just mount to <code>document.body</code>. React's <code>renderComponent</code> takes a callback that is called when the component has finished rendering. I found that pushing my *render*'s callback to the next tick of the eventloop (using *setTimeout*) resulted in a more stable test environment.
+I find that keeping a set of defaultProps around makes sense. Callers of render can pass their required props (*newProps*) and have that merged with defaultProps before rendering. Overwriting the defaults if they want. Since we are testing components in isolation we can usually just mount to <code>document.body</code>. <code>React.renderComponent</code> takes a callback that is called when the component has finished rendering. I found that pushing my *render*'s callback to the next tick of the eventloop (using *setTimeout*) resulted in a more stable test environment.
 
 ## Clean up after each test
 
@@ -76,7 +76,7 @@ How to do this depends on your test framework. Here is what I do in [mocha](http
         ...tests...
     })
 
-We use React's <code>React.unmountComponentAtNode</code> to unmount the component. Just to be safe we also reset body's innerHTML. I found once again that pushing the callback (*done*) to the next tick of the eventloop (using *setTimeout*) created a more stable test suite.
+We use <code>React.unmountComponentAtNode</code> to unmount the component. Just to be safe we also reset body's innerHTML. I found once again that pushing the callback (*done*) to the next tick of the eventloop (using *setTimeout*) created a more stable test suite.
 
 ## Query the DOM
 
@@ -90,7 +90,7 @@ You can query the DOM directly using the tool of your choice, or you can use the
         })
     })
 
-As you might have noticed the **findRenderedDOMComponentWithTag** (and most other functions of **ReactTestUtils**) require a ReactComponent parent/tree to query. Luckily we designed our ***render*** function to return the top level component.
+As you might have noticed the <code>findRenderedDOMComponentWithTag</code> (and most other functions of **ReactTestUtils**) require a ReactComponent parent/tree to query. Luckily we designed our ***render*** function to return the top level component.
 
 ## Simulate events
 
@@ -187,7 +187,7 @@ Now go get some test coverage for your React components!
 ♥ to the React guys.  
 And the nyancat.  
 And coffee.  
-And tests.
-
+And tests.  
+And [gifs](http://gifs.joelglovier.com/).
 
 enjoy!

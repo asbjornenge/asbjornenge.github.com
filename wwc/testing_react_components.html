@@ -113,7 +113,7 @@ function render(newProps, callback) {
 }
 </code></pre>
 
-<p>I find that keeping a set of defaultProps around makes sense. Callers of render can pass their required props (<em>newProps</em>) and have that merged with defaultProps before rendering. Overwriting the defaults if they want. Since we are testing components in isolation we can usually just mount to <code>document.body</code>. React&#39;s <code>renderComponent</code> takes a callback that is called when the component has finished rendering. I found that pushing my <em>render</em>&#39;s callback to the next tick of the eventloop (using <em>setTimeout</em>) resulted in a more stable test environment.</p>
+<p>I find that keeping a set of defaultProps around makes sense. Callers of render can pass their required props (<em>newProps</em>) and have that merged with defaultProps before rendering. Overwriting the defaults if they want. Since we are testing components in isolation we can usually just mount to <code>document.body</code>. <code>React.renderComponent</code> takes a callback that is called when the component has finished rendering. I found that pushing my <em>render</em>&#39;s callback to the next tick of the eventloop (using <em>setTimeout</em>) resulted in a more stable test environment.</p>
 
 <h2>Clean up after each test</h2>
 
@@ -133,7 +133,7 @@ function render(newProps, callback) {
 })
 </code></pre>
 
-<p>We use React&#39;s <code>React.unmountComponentAtNode</code> to unmount the component. Just to be safe we also reset body&#39;s innerHTML. I found once again that pushing the callback (<em>done</em>) to the next tick of the eventloop (using <em>setTimeout</em>) created a more stable test suite.</p>
+<p>We use <code>React.unmountComponentAtNode</code> to unmount the component. Just to be safe we also reset body&#39;s innerHTML. I found once again that pushing the callback (<em>done</em>) to the next tick of the eventloop (using <em>setTimeout</em>) created a more stable test suite.</p>
 
 <h2>Query the DOM</h2>
 
@@ -148,7 +148,7 @@ function render(newProps, callback) {
 })
 </code></pre>
 
-<p>As you might have noticed the <strong>findRenderedDOMComponentWithTag</strong> (and most other functions of <strong>ReactTestUtils</strong>) require a ReactComponent parent/tree to query. Luckily we designed our <strong><em>render</em></strong> function to return the top level component.</p>
+<p>As you might have noticed the <code>findRenderedDOMComponentWithTag</code> (and most other functions of <strong>ReactTestUtils</strong>) require a ReactComponent parent/tree to query. Luckily we designed our <strong><em>render</em></strong> function to return the top level component.</p>
 
 <h2>Simulate events</h2>
 
@@ -250,7 +250,8 @@ $ npm test
 <p>♥ to the React guys.<br>
 And the nyancat.<br>
 And coffee.<br>
-And tests.</p>
+And tests.<br>
+And <a href="http://gifs.joelglovier.com/">gifs</a>.</p>
 
 <p>enjoy!</p>
 
