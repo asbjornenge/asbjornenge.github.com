@@ -6,7 +6,7 @@ One of the things I really like about React is how it lends itself to [TDD](http
 
 The following are some of my experiences testing React components. Ready? Here we go!
 
-![EXPEDITION](http://gifs.joelglovier.com/epic/expedition.gif =600x)
+<img src="http://gifs.joelglovier.com/epic/expedition.gif" style="width: 600px" alt="EXPEDITION">
 
 ## React Test Utils
 
