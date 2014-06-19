@@ -4,7 +4,7 @@
 
 One of the things I really like about React is how it lends itself to [TDD](http://en.wikipedia.org/wiki/Test-driven_development) and testing in general. Small, focused components relying mostly on props (parameters) are easy to reason about and requires little mock.
 
-The following are some of my experiences testing React components. Ready? Here we go!
+The following are some of my experiences testing React components. Ready? Let's go!
 
 <img src="http://gifs.joelglovier.com/epic/expedition.gif" style="width: 600px" alt="EXPEDITION">
 
@@ -155,7 +155,7 @@ I also find it useful to add my test command to <code>package.json</code> so tha
 
     $ npm test
 
-![NYANCAT](../img/nyancat.gif =150x)
+<img src="../img/nyancat.gif" style="width: 150px" alt="NYANCAT">
 
 ## Testling
 
@@ -178,7 +178,7 @@ In your <code>package.json</code> add a *browser* field and add tell browserify 
 
 Since we, in our jsdom wrapper above, only try to require jsdom if no document exists; the browser will never reach that code and we are good. The tests will use the browser's DOM. 
 
-![YOU](http://gifs.joelglovier.com/fresh-prince/carlton.gif =300x)
+<img src="http://gifs.joelglovier.com/fresh-prince/carlton.gif" style="width: 200px" alt="YOU">
 
 Now go get some test coverage for your React components!
 
