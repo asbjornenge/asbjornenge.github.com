@@ -161,7 +161,7 @@ I also find it useful to add my test command to <code>package.json</code> so tha
 
 Running the tests in node is convenient and fast, but it is **NOT THE SAME** as running them in actual browser. So, we need to hook up some actual browser testing too. [Testling](https://ci.testling.com/) is a great alternative and free for open source projects. They have great [documentation](https://ci.testling.com/guide/quick_start) and even a special little guide for using [mocha](https://ci.testling.com/guide/mocha). Plus, you'll get sweet badges:
 
-[![browser support](https://ci.testling.com/asbjornenge/nanoxhr.png)
+[![browser support](https://ci.testling.com/asbjornenge/nanodom.png)
 ](https://ci.testling.com/asbjornenge/nanoxhr)
 
 There is one little trick I wanted to add though. Testling users [browserify](http://browserify.org/) to create a browser compatible bundle of your javascripts. Unfortunately jsdom is not compatible with browserify, so we have to tell testling to ignore it.
