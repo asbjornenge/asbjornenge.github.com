@@ -16,7 +16,7 @@ Until I found [nexe](https://github.com/crcn/nexe)...
 
 Nexe will compile your node app into a single executable binary. No joke! Have a [look](https://github.com/crcn/nexe)!
 
-Since we are now compiling, we need to think about things like *compile target*. Containers run linux. My desktop runs Darwin. A binary compiled on/for Darwin won't be able run inside a container. So, I made a [container](https://index.docker.io/u/asbjornenge/skylink/) for compiling apps with nexe.
+Since we are now compiling, we need to think about things like *compile target*. Containers run linux. My desktop runs Darwin. A binary compiled on/for Darwin won't be able run inside a container. So, I made a [container](https://index.docker.io/u/asbjornenge/nexe-docker/) for compiling apps with nexe.
  
 	docker run -v $(pwd):/app -w /app asbjornenge/nexe-docker -i index.js -o app
 
