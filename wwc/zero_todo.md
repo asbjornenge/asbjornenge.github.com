@@ -18,7 +18,7 @@ Get your local postfix relaying to a proper smtp server. I followed [this guide]
 	smtp_sasl_security_options = noanonymous
 	smtp_sasl_mechanism_filter = plain // For Yosemite
 
-*PS!* See the update section at the bottom of this article
+**PS!** See the update section at the bottom of this article.
 
 ## $ mail
 
