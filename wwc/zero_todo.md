@@ -16,7 +16,6 @@ The following is an attempt to simplify adding "tasks" to my inbox.
 Get your local postfix relaying to a proper smtp server. I followed [this guide](http://www.garron.me/mac/postfix-relay-gmail-mac-os-x-local-smtp.html) for gmail. Be sure to also add the following to */etc/postfix/main.cf*.
 
 	smtp_sasl_security_options = noanonymous
-	smtp_sasl_mechanism_filter = plain // For Yosemite
 
 **PS!** See the update section at the bottom of this article.
 
