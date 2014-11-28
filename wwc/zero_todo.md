@@ -16,6 +16,9 @@ The following is an attempt to simplify adding "tasks" to my inbox.
 Get your local postfix relaying to a proper smtp server. I followed [this guide](http://www.garron.me/mac/postfix-relay-gmail-mac-os-x-local-smtp.html) for gmail. Be sure to also add the following to */etc/postfix/main.cf*.
 
 	smtp_sasl_security_options = noanonymous
+	smtp_sasl_mechanism_filter = plain // For Yosemite
+
+*PS!* See the update section at the bottom of this article
 
 ## $ mail
 
@@ -36,3 +39,11 @@ Add a hotkey for that extension and check "Selected text in OS X".
 <img width="500px" src="../img/wwc/zero_todo/screenshot2.png"/>
 
 An thats it, you can now select any text in osx and stack it on top of your inbox by pressing your specified hotkey.
+
+## Update
+
+For Yosemite I had to add the following to */etc/postfix/main.cf*
+
+	smtp_sasl_mechanism_filter = plain
+
+Found the solution [here](http://stackoverflow.com/questions/26447316/mac-os-x-10-10-yosemite-postfix-sasl-authentication-failed). Thanks!

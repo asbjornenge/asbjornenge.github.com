@@ -72,7 +72,10 @@
 <p>Get your local postfix relaying to a proper smtp server. I followed <a href="http://www.garron.me/mac/postfix-relay-gmail-mac-os-x-local-smtp.html">this guide</a> for gmail. Be sure to also add the following to <em>/etc/postfix/main.cf</em>.</p>
 
 <pre><code>smtp_sasl_security_options = noanonymous
+smtp_sasl_mechanism_filter = plain // For Yosemite
 </code></pre>
+
+<p><em>PS!</em> See the update section at the bottom of this article</p>
 
 <h2>$ mail</h2>
 
@@ -94,6 +97,15 @@
 <p><img width="500px" src="../img/wwc/zero_todo/screenshot2.png"/></p>
 
 <p>An thats it, you can now select any text in osx and stack it on top of your inbox by pressing your specified hotkey.</p>
+
+<h2>Update</h2>
+
+<p>For Yosemite I had to add the following to <em>/etc/postfix/main.cf</em></p>
+
+<pre><code>smtp_sasl_mechanism_filter = plain
+</code></pre>
+
+<p>Found the solution <a href="http://stackoverflow.com/questions/26447316/mac-os-x-10-10-yosemite-postfix-sasl-authentication-failed">here</a>. Thanks!</p>
 
             <div class="push"></div>
         </div>
