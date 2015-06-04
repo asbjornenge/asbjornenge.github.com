@@ -43,6 +43,9 @@ It's up to you, but using [jsx](http://facebook.github.io/react/docs/jsx-in-dept
 
 ![FAIL](http://gifs.joelglovier.com/fail/kayak-diving.gif)
 
+UPDATE: I've since changed my mind and are now using jsx. Partly because React introduce some breaking changes that would not have been a PITA if I had
+been using jsx, and partly becuse it is a nice visual separation of logic and components.
+
 ## Include a common render function
 
 For each test you want a clean slate. Usually this means rendering the component again. It makes sense wrapping the render code into a function.
