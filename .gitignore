@@ -1,5 +1,6 @@
 .Python
 bin/
 include/
-/lib
+lib/
+local/
 css/.sass-cache/
