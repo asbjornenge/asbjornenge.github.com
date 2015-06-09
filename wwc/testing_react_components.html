@@ -75,6 +75,8 @@ var ReactTestUtils = React.addons.TestUtils  // &lt;- YEAH!
 
 <p>I like to wrap up jsdom so that it is not required if a <code>document</code> already exists. That way the tests can run both in node and browsers.</p>
 
+<p><strong>UPDATE:</strong> There is a <a href="https://www.npmjs.com/package/testdom">module</a> for that (now) :-)</p>
+
 <pre><code>$ vi testdom.js
   module.exports = function(markup) {
       if (typeof document !== &#39;undefined&#39;) return
@@ -115,7 +117,7 @@ function render(newProps, callback) {
 }
 </code></pre>
 
-<p>I find that keeping a set of defaultProps around makes sense. Callers of render can pass their required props (<em>newProps</em>) and have that merged with defaultProps before rendering. Overwriting the defaults if they want. Since we are testing components in isolation we can usually just mount to <code>document.body</code>. <code>React.renderComponent</code> takes a callback that is called when the component has finished rendering. I found that pushing my <em>render</em>&#39;s callback to the next tick of the eventloop (using <em>setTimeout</em>) resulted in a more stable test environment.</p>
+<p>I find that keeping a set of defaultProps around makes sense. Callers of render can pass their required props (<em>newProps</em>) and have that merged with defaultProps before rendering. Overwriting the defaults if they want. Since we are testing components in isolation we can usually just mount to <em>document.body</em>. <code>React.renderComponent</code> takes a callback that is called when the component has finished rendering. I found that pushing my <em>render</em>&#39;s callback to the next tick of the eventloop (using <em>setTimeout</em>) resulted in a more stable test environment.</p>
 
 <h2>Clean up after each test</h2>
 

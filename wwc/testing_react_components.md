@@ -22,6 +22,8 @@ For any kind of testing to be tolerable, TDD especially, efficient feedback loop
 
 I like to wrap up jsdom so that it is not required if a <code>document</code> already exists. That way the tests can run both in node and browsers.
 
+**UPDATE:** There is a [module](https://www.npmjs.com/package/testdom) for that (now) :-)
+
     $ vi testdom.js
       module.exports = function(markup) {
           if (typeof document !== 'undefined') return
@@ -60,7 +62,7 @@ For each test you want a clean slate. Usually this means rendering the component
         })
     }
 
-I find that keeping a set of defaultProps around makes sense. Callers of render can pass their required props (*newProps*) and have that merged with defaultProps before rendering. Overwriting the defaults if they want. Since we are testing components in isolation we can usually just mount to <code>document.body</code>. <code>React.renderComponent</code> takes a callback that is called when the component has finished rendering. I found that pushing my *render*'s callback to the next tick of the eventloop (using *setTimeout*) resulted in a more stable test environment.
+I find that keeping a set of defaultProps around makes sense. Callers of render can pass their required props (*newProps*) and have that merged with defaultProps before rendering. Overwriting the defaults if they want. Since we are testing components in isolation we can usually just mount to *document.body*. <code>React.renderComponent</code> takes a callback that is called when the component has finished rendering. I found that pushing my *render*'s callback to the next tick of the eventloop (using *setTimeout*) resulted in a more stable test environment.
 
 ## Clean up after each test
 
