@@ -49,6 +49,9 @@ function move_nav_button(path) {
 		case '/crly.html':
 			position_nav_button($('#menu .crly'))
 			break;
+		case '/apps.html':
+			position_nav_button($('#menu .apps'))
+			break;
 		case '/software.html':
 			position_nav_button($('#menu .software'))
 			break;
@@ -68,6 +71,10 @@ function animate_quicklinks(path) {
 			show_social_icons();
 			break;
 		case '/crly.html':
+			hide_feed_icons();
+			hide_social_icons();
+			break;
+		case '/apps.html':
 			hide_feed_icons();
 			hide_social_icons();
 			break;
