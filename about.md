@@ -10,3 +10,4 @@ When I'm not hacking code I dabble in the water of words and melody. I write and
 
 I'm also an amateur coffee fanatic. My preferred brewing method is pourover by [Chemex](http://www.chemexcoffeemaker.com). I prefer washed, light and floral african beans. I get my coffee from a number of places including [Coffeeberry](http://www.coffeeberry.no), [Tim Wendelboe](http://timwendelboe.no), [Kaffa](http://www.kaffa.no) and [Square Mile Coffee](http://shop.squaremilecoffee.com).
 
+[![eff](https://www.eff.org/files/2015/12/22/2016-member-badge-circle4.png)](https://www.eff.org/)
